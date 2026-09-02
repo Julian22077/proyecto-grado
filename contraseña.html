@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <a href="perfil.html"><svg xmlns="http://www.w3.org/2000/svg" class="volver" width="24" height="24"
+            fill="currentColor" viewBox="0 0 24 24">
+            <path d="M11.79 6.29 6.09 12l5.7 5.71 1.42-1.42L9.91 13H18v-2H9.91l3.3-3.29z"></path>
+        </svg></a>
+    <center>
+        <form id="CambioContraseña">
+            <div class="actualizar_datos">
+                <h1 class="titu">Actualizar Contraseña</h1>
+                <label for="contraseñaActual">Contraseña actual</label>
+                <input type="password" id="contraseñaActual" placeholder="Contraseña actual">
+                <label for="nuevaContraseña">Nueva contraseña</label>
+                <input type="password" id="nuevaContraseña" placeholder="Nueva contraseña">
+                <label for="confirmarContraseña">Confirmar nueva contraseña</label>
+                <input type="password" id="confirmarContraseña" placeholder="Confirmar nueva contraseña">
+                <button type="submit"> Cambiar contraseña</button>
+            </div>
+        </form>
+    </center>
+    <script type="module" src="./backend/contraseña.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+
+</html>

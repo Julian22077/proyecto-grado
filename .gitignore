@@ -1,0 +1,7 @@
+.env
+.env.*
+back/.env
+back/.env.*
+firebase.json
+calatrava.json
+node_modules/

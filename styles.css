@@ -1,0 +1,1062 @@
+body {
+    margin: 0;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/*menu desplegable*/
+.menu {
+    background-color: rgb(28, 2, 126);
+    width: max-content;
+    border-radius: 0px 10px 10px 10px;
+    padding: .0rem;
+    position: fixed;
+    z-index: 100;
+}
+
+.menu:hover .elemento {
+    grid-template-columns: 40px 1fr;
+}
+
+.menu:hover .logo {
+    grid-template-columns: 40px 1fr;
+}
+
+.lista {
+    list-style: none;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.elemento {
+    padding: .8rem 1.3rem;
+    border-radius: 3px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 40px 0fr;
+    color: rgb(107, 107, 236);
+    fill: rgb(107, 107, 236);
+    transition: grid-template-columns .4s;
+}
+
+.logo {
+    padding: .8rem 1.3rem;
+    border-radius: 3px;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 40px 0fr;
+    color: rgb(9, 191, 247);
+    font-family: monospace;
+    font-size: 20px;
+    transition: grid-template-columns .4s;
+}
+
+.elemento:not(:has(.icono)):hover {
+    background-color: rgb(12, 3, 85);
+    color: rgb(255, 255, 255);
+    fill: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.logo:not(:has(.icono)):hover {
+    background-color: rgb(12, 3, 85);
+    color: rgb(255, 255, 255);
+    fill: rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.logo:has(.icono) {
+    margin-bottom: 1rem;
+}
+
+.oculto {
+    overflow: hidden;
+    text-wrap: nowrap;
+}
+
+/*reservas hechas por el usuario*/
+/*contenido de la reservas y demas espacios*/
+.contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.reserva_hoy {
+    display: flex;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 10px;
+    padding: 10px 20px 20px 20px;
+    box-shadow: 0px 0px 7px 7px rgba(182, 179, 179, 0.3);
+}
+
+.reserva_mañana {
+    display: flex;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 10px;
+    padding: 10px 20px 20px 20px;
+    margin-top: 20px;
+    box-shadow: 0px 0px 7px 7px rgba(182, 179, 179, 0.3);
+
+}
+
+.info_reserva {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.fila {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mini_icono {
+    color: rgb(7, 8, 94);
+    padding: 5px;
+    background-color: rgb(226, 231, 231);
+    border-radius: 100px;
+
+}
+
+.color {
+    background-color: black;
+}
+
+.icono_derecha_reserva {
+    color: rgb(7, 8, 94);
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    background-color: rgb(223, 223, 226);
+    border-radius: 71px;
+    padding: 20px;
+}
+
+.derecha {
+    margin-left: 80px;
+    background-color: rgb(247, 244, 244);
+    padding: 30px;
+    border-radius: 20px;
+}
+
+.boton_aumentar {
+    width: max-content;
+    color: white;
+    text-decoration: none;
+    background-color: rgb(9, 9, 129);
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px
+}
+
+.icono_principal {
+    color: white;
+    background-color: rgb(7, 8, 94);
+    padding: 5px;
+    border-radius: 100px;
+}
+
+.contador {
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+    font-family: sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(54, 54, 138);
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+
+}
+
+/*form de reservar, registrar, loguearse, configurar espacios y conffigurar metas*/
+.reservar {
+    width: 100%;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#espaciosForm {
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+}
+
+#config {
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+}
+
+#reservacontainer {
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+
+}
+
+#registroForm {
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+}
+
+#LoginForm {
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+}
+
+#recuperar {
+    display: flex;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+}
+
+.registro {
+    displaY: flex;
+    width: 100%;
+    min-height: 100vh;
+    justify-content: center;
+
+}
+
+.campos {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    background-color: rgb(247, 247, 237);
+}
+
+.campos_sec {
+    width: 400px;
+
+}
+
+.campos div {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.imagen {
+    flex: 1;
+    height: 100vh;
+}
+
+.imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+
+.formulario input {
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.reserr {
+    padding: 10px;
+    color: white;
+    background-color: rgb(12, 12, 95);
+    border: none;
+    border-radius: 20px;
+}
+
+.reserrr {
+    padding: 10px;
+    color: white;
+    background-color: rgb(12, 12, 95);
+    border: none;
+    border-radius: 20px;
+}
+
+.aumento {
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+    padding: 10px;
+    border-radius: 20px;
+}
+
+/* perfil de usuario */
+
+.perfil {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 35px;
+    min-height: 100vh;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: #3113b6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    font-weight: 700;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+.info_usuario {
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 25px;
+    background: #f8f9fc;
+    border-radius: 15px;
+
+}
+
+.fila {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 18px;
+    background: white;
+    border-radius: 12px;
+    transition: .25s;
+
+}
+
+.fila svg {
+    width: 22px;
+    height: 22px;
+    color: #2c139b;
+    flex-shrink: 0;
+
+}
+
+.fila p {
+
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+    font-family:
+        Arial,
+        sans-serif;
+
+}
+
+.perfil button {
+    width: 100%;
+    max-width: 300px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+
+    background-color: #291194;
+    cursor: pointer;
+
+}
+
+.perfil button a {
+
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    display: block;
+
+}
+
+@media(max-width:640px) {
+
+    /*perfil de usuario responsive*/
+    .perfil {
+        margin: 0px;
+        padding: 20px;
+
+    }
+
+    .avatar {
+        width: 100px;
+        height: 100px;
+        font-size: 40px;
+
+    }
+
+    .fila {
+        padding: 10px;
+
+    }
+
+}
+
+/*panel de la actualización de datos del usuario*/
+.actualizar_datos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    max-width: 420px;
+    padding: 35px;
+    border-radius: 20px;
+
+}
+
+.actualizar_datos input {
+
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: 2px solid #e4e4e4;
+    outline: none;
+}
+
+.actualizar_datos button {
+
+    margin-top: 10px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background-color: #2f13ac;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.volver {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    text-decoration: none;
+    color: #4022c5;
+}
+
+/*panel admin de informcaion general*/
+.ultimas_reservas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    width: fit-content;
+}
+
+.dos_ultimas {
+    background-color: #faf9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.fil {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.grafica {
+    width: 280px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #161a73;
+    padding: 10px;
+    padding-bottom: 30px;
+
+}
+
+.admin_informacion {
+    display: flex;
+    gap: 10px;
+}
+
+.titulo-general {
+    margin-bottom: 20px;
+
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    color: #161a73;
+}
+
+.ultimas-container {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+
+
+}
+
+.grafica_container {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+}
+
+.info_general {
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    margin-bottom: 20px;
+    width: 200px;
+
+}
+.info_reservas{
+     font-family: Arial, Helvetica, sans-serif;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    margin-bottom: 20px;
+    width: 200px;
+
+}
+.info_usos{
+     font-family: Arial, Helvetica, sans-serif;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    margin-bottom: 20px;
+    width: 200px;
+
+}
+
+.usuarios {
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    margin-bottom: 20px;
+    width: 200px;
+
+}
+
+.general {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.usuarios_registrados {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.informacion_admin {
+    display: flex;
+    gap: 10px;
+}
+
+/*panel de graficas del dia con base a las reservas*/
+.contenido_sec {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.datos_grafica {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.dato {
+    display: flex;
+    width: 180px;
+}
+
+.dato_sec {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    width: 400px;
+}
+
+.datos_grafica_sec {
+    display: flex;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.dia {
+    padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.contenido_ter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 20px;
+}
+
+.contenido_ter input {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.contenido_ter button {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: #161a73;
+    color: white;
+    cursor: pointer;
+}
+
+/*panel de reservas para su administración*/
+.contenido_reservas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.datos_generales {
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 620px;
+}
+
+.reserrrr {
+    padding: 10px;
+    color: white;
+    background-color: rgb(12, 12, 95);
+    border: none;
+    border-radius: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.estado {
+    padding: 10px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 120px;
+
+
+}
+
+.estado.pendiente {
+    background: #fff4e5;
+    color: #c47c00;
+}
+
+.estado.activa {
+    background: #dff8e6;
+    color: #18863d;
+}
+.estado.activo {
+    background: #dff8e6;
+    color: #18863d;
+}
+
+.estado.finalizada {
+    background: #ffe4e4;
+    color: #bf1d1d;
+}
+.estado.finalizado {
+    background: #ffe4e4;
+    color: #bf1d1d;
+}
+
+.nombree {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#reservasUsuarios {
+    align-items: center;
+    justify-content: center;
+}
+#usosUsuarios {
+    align-items: center;
+    justify-content: center;
+}
+.reservas_admin_totales {
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.fill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #ececec;
+}
+
+.filll {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1px solid #ececec;
+    margin-left: 20px;
+}
+
+.buscador {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+#buscarReserva {
+    border: none;
+    outline: none;
+    width: 500px;
+}
+
+@media (max-width: 640px) {
+
+    /*menu desplegable responsive*/
+    .menu {
+        width: 100%;
+        bottom: 0;
+        top: auto;
+        left: 0;
+        border-radius: 0;
+        padding: .5rem 0;
+    }
+
+    .lista {
+        height: 6px;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .logo {
+        display: none;
+    }
+
+    .elemento {
+        grid-template-columns: 40px;
+        padding: .8rem;
+    }
+
+    .oculto {
+        display: none;
+    }
+
+    /*informacion de reservas responsive*/
+    .reserva_hoy {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .reserva_mañana {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    #reservasContainerMañana {
+        flex-direction: column;
+    }
+
+    .icono_derecha_reserva {
+        display: none;
+    }
+
+    .derecha {
+        margin-left: 0;
+    }
+
+    .info_reserva {
+        flex: none;
+    }
+
+    /*espacios de fomularios, login, registro, recuperar, configuracion - responsive*/
+    #recuperar {
+        flex-direction: column;
+    }
+
+    #espaciosForm {
+        width: 100%;
+    }
+
+    #reservacontainer {
+        width: 100%;
+    }
+
+    #reservacontainer {
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    #espaciosForm {
+        flex-direction: column;
+    }
+
+    #config {
+        flex-direction: column;
+    }
+
+    #registroForm {
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    #LoginForm {
+        flex-direction: column;
+
+    }
+
+    .registro {
+        max-height: 100vh;
+    }
+
+    .campos {
+        padding: 2rem;
+        display: flex;
+    }
+
+    .campos_sec {
+        width: 100%;
+    }
+
+    .imagen {
+        order: -1;
+        height: 96px;
+    }
+
+    .imagen img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /*panel de actaulización de datos responsive*/
+    .actualizar_datos {
+        padding: 20px;
+    }
+
+    .actualizar_datos input,
+    .actualizar_datos button {
+        width: 100%;
+    }
+
+    .volver {
+        left: 10px;
+    }
+
+    .informacion_admin {
+        flex-direction: column;
+    }
+
+    #buscarReserva {
+        width: 100%;
+    }
+
+
+    .contenido {
+        align-items: center;
+    }
+
+    .reserr {
+        margin-bottom: 30px;
+    }
+
+    .contenido {
+        padding: 15px;
+    }
+
+    /*panel admin de informacion general responsive*/
+    .info_general {
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .info_reservas{
+        width: 100%;
+        box-sizing: border-box;
+    }
+      .info_usos{
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .usuarios {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .admin_informacion {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .ultimas-container,
+    .grafica_container {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .ultimas_reservas {
+        grid-template-columns: 1fr;
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .grafica {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /*panel de graficas responsive*/
+    .datos_grafica {
+        flex-direction: column;
+        width: 100%;
+        padding: 0 15px;
+        box-sizing: border-box;
+    }
+
+    .dato {
+        display: flex;
+        width: 100%;
+        max-width: 180px;
+    }
+
+    .datos_grafica_ter {
+        width: 100%;
+    }
+
+    .dato_sec {
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+        box-sizing: border-box;
+    }
+
+    .contenido_ter {
+        flex-direction: column;
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+    .contenido_ter input,
+    .contenido_ter button {
+        width: 100%;
+    }
+    /*reservas para su administración, responsive*/
+    #reservasUsuarios {
+        grid-template-columns: 1fr;
+    }
+    #usosUsuarios {
+        grid-template-columns: 1fr;
+    }
+    .reservas_admin_totales {
+        flex-direction: column;
+        gap: 10px
+    }
+
+    .datos_generales {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .filll {
+        flex-direction: column;
+        margin-left: 0;
+        gap: 0;
+    }
+
+    .estado {
+        margin-left: 0;
+    }
+
+    .estado.finalizada {
+        margin-left: 0;
+    }
+
+    .estado.pendiente {
+        margin-left: 0;
+    }
+
+    .estado.activa {
+        margin-left: 0;
+    }
+}
+
+/*Alertas para errore y acciones exitosas*/
+.swal2-popup {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.swal2-confirm {
+    background-color: #161a73 !important;
+}
+
+.titu {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1c067c;
+}
+
+.swal2-success-ring {
+    border-color: #161a73 !important;
+}
+
+.swal2-success-line-tip,
+.swal2-success-line-long {
+    background-color: #161a73 !important;
+}
+
+.swal2-x-mark-line-left,
+.swal2-x-mark-line-right {
+    background-color: #1a0399 !important;
+}
+
+.swal2-error {
+    border-color: #1a0399 !important;
+}
