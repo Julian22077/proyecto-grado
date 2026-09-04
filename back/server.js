@@ -11,7 +11,7 @@ import { error } from "console";
 const app = express();
 const limite =rateLimit({
     windowMs:60*1000,
-    max:10,
+    max:60,
     keyGenerator:(req)=>{
         return req.uid
     },
@@ -778,6 +778,121 @@ app.post("/validarpago",verficarUsuario,limite,async(req,res)=>{
             return{message:"El pago se ha registrado con exito"}
         })
         return res.json(pagoo)
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/reserva",verficarUsuario,limite, async(req,res)=>{
+    try{
+        const uid=req.uid
+        const ahora=new Date();
+        const fechahoy=ahora.toLocaleDateString("sv-SE");
+        const mañana=new Date();
+        mañana.setDate(mañana.getDate()+1);
+        const fechamañana=mañana.toLocaleDateString("sv-SE");
+        const reservas= await db.collection("reservas").where("uid","==",uid).where("fecha",">=",fechahoy).where("fecha","<",fechamañana).get();
+        return res.json(reservas.docs.map((doc)=>doc.data()))
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/reservaaumento",verficarUsuario,limite, async(req,res)=>{
+    try{
+        const uid=req.uid
+        const ahora = new Date();
+        const fechahoy=ahora.toLocaleDateString("sv-SE");
+        const reservas= await db.collection("reservas").where("uid","==",uid).where("fecha","==",fechahoy).get();
+        return res.json(reservas.docs.map((doc)=>({id:doc.id, ...doc.data()})))
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/reservasadmin",verficarUsuario,limite, async(req,res)=>{
+    try{
+        const email=req.email
+        if(email!=="julian.lozanoh@uniagustiniana.edu.co"){
+            return res.status(403).json("No posee los permisos para hacer esta accion")
+        }
+        const ahora = new Date();
+        const fechahoy=ahora.toLocaleDateString("sv-SE");
+        const reservas= await db.collection("reservas").where("fecha","==",fechahoy).get();
+        return res.json(reservas.docs.map((doc)=>({id:doc.id, ...doc.data()})))
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/parqueaderos",verficarUsuario,limite, async(req,res)=>{
+    try{
+        const email=req.email
+        if(email!=="julian.lozanoh@uniagustiniana.edu.co"){
+            return res.status(403).json("No posee los permisos para hacer esta accion")
+        }
+        const parqueaderos= await db.collection("parqueaderos").get();
+        return res.json({total:parqueaderos.size})
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/ultimasreservas",verficarUsuario,limite, async(req,res)=>{
+    try{
+        const email=req.email
+        if(email!=="julian.lozanoh@uniagustiniana.edu.co"){
+            return res.status(403).json("No posee los permisos para hacer esta accion")
+        }
+        const ahora = new Date();
+        const fechahoy=ahora.toLocaleDateString("sv-SE");
+        const reservas= await db.collection("reservas").where("fecha","==",fechahoy).orderBy("creado","desc").limit(2).get();
+        return res.json(reservas.docs.map((doc)=>({id:doc.id, ...doc.data()})))
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/usuarios",verficarUsuario,limite, async(req,res)=>{
+    try{
+        const email=req.email
+        if(email!=="julian.lozanoh@uniagustiniana.edu.co"){
+            return res.status(403).json("No posee los permisos para hacer esta accion")
+        }
+        const usuarios= await db.collection("usuarios").get();
+        return res.json({total:usuarios.size})
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/usoscomunes",verficarUsuario,limite, async(req,res)=>{
+    try{
+        const email=req.email
+        if(email!=="julian.lozanoh@uniagustiniana.edu.co"){
+            return res.status(403).json("No posee los permisos para hacer esta accion")
+        }
+        const ahora = new Date();
+        const fechahoy=ahora.toLocaleDateString("sv-SE");
+        const usos= await db.collection("usocomun").where("fecha","==",fechahoy).get();
+        return res.json(usos.docs.map((doc)=>({id:doc.id, ...doc.data()})))
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/totalreservas",verficarUsuario,limite, async(req,res)=>{
+    try{
+        const email=req.email
+        if(email!=="julian.lozanoh@uniagustiniana.edu.co"){
+            return res.status(403).json("No posee los permisos para hacer esta accion")
+        }
+        const reservas= await db.collection("reservas").get();
+        return res.json(reservas.docs.map((doc)=>({id:doc.id, ...doc.data()})))
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/totalusos",verficarUsuario,limite, async(req,res)=>{
+    try{
+        const email=req.email
+        if(email!=="julian.lozanoh@uniagustiniana.edu.co"){
+            return res.status(403).json("No posee los permisos para hacer esta accion")
+        }
+        const usos= await db.collection("usocomun").get();
+        return res.json(usos.docs.map((doc)=>({id:doc.id, ...doc.data()})))
     }catch(error){
         return res.status(500).json({error:error.message})
     }

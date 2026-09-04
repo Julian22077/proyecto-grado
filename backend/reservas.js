@@ -17,13 +17,26 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
   }
    const token=await usuarioAuth.getIdToken()
 
-  const re = await obtenerReservasAdmin();
-  const reservas = re.docs;
+  const reservasadmin=await fetch("http://localhost:3000/reservasadmin",{
+        method:"GET",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const reservas = await reservasadmin.json();
+    if (!reservasadmin.ok) {
+        Swal.fire({
+            title: "Error",
+            text: reservas.error,
+            icon: "error"
+        });
+        return;
+    }
 
   function MostrarReserva(lista) {
     let html = "";
-    lista.forEach((doc) => {
-      const data = doc.data();
+    lista.forEach((data) => {
       const estado = obtenerEstado(
         data.fecha,
         data.horaEntrada,
@@ -40,7 +53,7 @@ fill="currentColor" viewBox="0 0 24 24" >
 </svg>
                     <p class="nombree">${data.nombre}</p>
                     <p class="estado ${estado}">${estado}</p>
-                    <form id=penalizar-${doc.id}>
+                    <form id=penalizar-${data.id}>
                     <button type="submit" class="reserrrr">Salió</button>
                     </form>
                       </div>
@@ -91,9 +104,8 @@ fill="currentColor" viewBox="0 0 24 24" >
             `;
     });
     reservasUsuariosContainer.innerHTML = html;
-    lista.forEach((doc) => {
-      const data = doc.data();
-      const penalizacion = document.getElementById(`penalizar-${doc.id}`);
+    lista.forEach((data) => {
+      const penalizacion = document.getElementById(`penalizar-${data.id}`);
       penalizacion.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {
@@ -103,7 +115,7 @@ fill="currentColor" viewBox="0 0 24 24" >
                 "Content-Type":"application/json",
                 "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify({reservaID:doc.id})
+            body: JSON.stringify({reservaID:data.id})
             
          })
          const datos= await penal.json();
@@ -155,8 +167,7 @@ fill="currentColor" viewBox="0 0 24 24" >
 
   buscador.addEventListener("input", () => {
     const texto = buscador.value.toLowerCase();
-    const filtradas = reservas.filter((doc) => {
-      const data = doc.data();
+    const filtradas = reservas.filter((data) => {
       return (
         data.uid.toLowerCase().includes(texto) ||
         String(data.nombre).includes(texto)

@@ -16,13 +16,27 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         window.location.href = "admin.html";
     }
     const token=await usuarioAuth.getIdToken();
-    const reservas = await obtenerReservaAumentar(usuarioAuth.uid)
+    try{
+    const aumentar=await fetch("http://localhost:3000/reservaaumento", {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    });
+    const reservas = await aumentar.json();
+    if (!aumentar.ok) { 
+        Swal.fire({
+            title: "Error",
+            text: reservas.error,
+            icon: "error"
+        })
+        return;
+    }
+    
     let datosContador = null;
     let html = "";
 
-    reservas.forEach((doc) => {
+    reservas.forEach((data) => {
 
-        const data = doc.data();
         datosContador = {
             fecha: data.fecha,
             horaEntrada: data.horaEntrada,
@@ -76,8 +90,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             <center><h3>Tiempo Restante</h3></center>
                 <center><div id="contadoor" class="contador"></div></center>
                 <p>Aumentar Tiempo</p>
-                 <form id="aumento-${doc.id}" >
-                <input type="number"id="minutosExtra-${doc.id}" class="aumento">
+                 <form id="aumento-${data.id}" >
+                <input type="number"id="minutosExtra-${data.id}" class="aumento">
                 <p>Tiempo extra :<span id="extra"> 0 </span> minutos</p>
                 <p>Costo: $<span id="dextra">0</span></p>
                 <center><button type="submit" class="reserr"> Aumentar </button></center>
@@ -96,8 +110,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
 
     }
     reservasContainer.innerHTML = html;
-    reservas.forEach((doc) => {
-        const minutis = document.getElementById(`minutosExtra-${doc.id}`)
+    reservas.forEach((data) => {
+        const minutis = document.getElementById(`minutosExtra-${data.id}`)
         const span1 = document.getElementById("extra");
         const span2 = document.getElementById("dextra");
         function numeris() {
@@ -129,9 +143,9 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
 
     }
 
-    reservas.forEach((doc) => {
-        const form = document.getElementById(`aumento-${doc.id}`);
-        const input = document.getElementById(`minutosExtra-${doc.id}`);
+    reservas.forEach((data) => {
+        const form = document.getElementById(`aumento-${data.id}`);
+        const input = document.getElementById(`minutosExtra-${data.id}`);
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -145,7 +159,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                 "Content-Type":"application/json",
                 "Authorization": `Bearer ${token}`
             },
-            body:JSON.stringify({reservaID:doc.id, minutosExtra:minutosExtra})
+            body:JSON.stringify({reservaID:data.id, minutosExtra:minutosExtra})
             })
             const datos = await validacion.json();
             if(!validacion.ok){
@@ -245,5 +259,12 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         
 
     });
-
+    }catch(error){
+        console.error(error);
+        Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+        });
+    }
 });

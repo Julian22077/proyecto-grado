@@ -17,7 +17,6 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         window.location.href = "admin.html";
     }
     const token=await usuarioAuth.getIdToken()
-    console.log(auth.currentUser);
 
     const mañana = new Date();
     mañana.setDate(mañana.getDate() + 1);
@@ -54,13 +53,29 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             }
         }
     });
-    const reservas = await obtenerReserva(usuarioAuth.uid)
+    try{
+    const respuestareserva=await fetch("http://localhost:3000/reserva",{
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    const reservas = await respuestareserva.json();
+    if(!respuestareserva.ok){
+        Swal.fire({
+        title: "Error",
+        text: reservas.error,
+        icon: "error"
+    });
+    return;
+    }
+
     let html = "";
     let html2 = "";
     let datosContador = null;
-    reservas.forEach((doc) => {
+    reservas.forEach((data) => {
 
-        const data = doc.data();
         const estado = obtenerEstado(
             data.fecha,
             data.horaEntrada,
@@ -234,5 +249,13 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         }
 
     }
+    }catch(error){
+    console.error(error);
+    Swal.fire({
+        title: "Error",
+        text: error.message,
+        icon: "error"
+    });
+}
 
 });

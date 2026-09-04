@@ -6,7 +6,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         adminContainer.innerHTML = "<p>No hay sesión iniciada</p>";
         window.location.href = "index.html";
     }
-});
+    const token = await usuarioAuth.getIdToken();
+
 let dataconfig;
 
 const config = await obetenerconfig();
@@ -14,8 +15,36 @@ if (config.exists()) {
     dataconfig = config.data();
 
 }
-const usos = await ObtenerUsosA();
-const reservas = await ObtenerReservasA();
+const usosadmin=await fetch("http://localhost:3000/totalusos",{
+        method:"GET",
+        headers:{
+            "Authorization": `Bearer ${token}`
+        },
+})
+const usos = await usosadmin.json();
+if(!usosadmin.ok){
+    Swal.fire({
+        title: "Error",
+        text: usos.error,
+        icon: "error"
+    });
+    return;
+}
+const reservasadmin=await fetch("http://localhost:3000/totalreservas",{
+     method:"GET",
+    headers:{
+         "Authorization": `Bearer ${token}`
+    },
+})
+const reservas = await reservasadmin.json();
+if(!reservasadmin.ok){
+    Swal.fire({
+        title: "Error",
+        text: reservas.error,
+        icon: "error"
+    });
+    return;
+}
 const boton = document.getElementById("verGrafico");
 const inputt = document.getElementById("fechaInicio1");
 
@@ -50,8 +79,7 @@ const conteodiaingre = {};
 const conteousoingre = {};
 const conteouso = {};
 const conteodia = {};
-usos.forEach((doc) => {
-    const data = doc.data();
+usos.forEach((data) => {
     if (fechahoy === data.fecha) {
         if (data.estado === "finalizado") {
 
@@ -100,8 +128,7 @@ const graficaComparacion1 = document.getElementById("graficaComparacion1")
 const graficaUsos = document.getElementById("graficadiausos");
 const contedoextension = {};
 const conteoMulta = {};
-reservas.forEach((doc) => {
-    const data = doc.data();
+reservas.forEach((data) => {
     const estado = obtenerEstado(
         data.fecha,
         data.horaEntrada,
@@ -416,8 +443,7 @@ inputt.addEventListener("change", () => {
     const conteousoperingre = {};
     const conteoExtensionper = {};
     const conteoMultaper = {};
-    usos.forEach((doc) => {
-        const data = doc.data();
+    usos.forEach((data) => {
         if (data.fecha === valor) {
             if (data.estado === "finalizado") {
                 const inicio = Math.floor(convertirHoracomun(data.horaEntrada) / 3600);
@@ -436,8 +462,7 @@ inputt.addEventListener("change", () => {
             }
         }
     })
-    reservas.forEach((doc) => {
-        const data = doc.data();
+    reservas.forEach((data) => {
         const estado = obtenerEstado(
             data.fecha,
             data.horaEntrada,
@@ -766,8 +791,7 @@ boton.addEventListener("click", () => {
     const conteo1 = {}
     const conteo2 = {}
     const conteo3 = {}
-    usos.forEach((doc) => {
-        const data = doc.data();
+    usos.forEach((data) => {
         if (data.fecha >= inicio && data.fecha <= fin) {
             if (data.estado === "finalizado") {
                 if (!conteo2[data.fecha]) {
@@ -781,8 +805,7 @@ boton.addEventListener("click", () => {
             conteo3[data.fecha] += data.precio;
         }
     })
-    reservas.forEach((doc) => {
-        const data = doc.data();
+    reservas.forEach((data) => {
         if (data.fecha >= inicio && data.fecha <= fin) {
             if (!conteo[data.fecha]) {
                 conteo[data.fecha] = 0;
@@ -869,8 +892,7 @@ botonexport.addEventListener("click", () => {
         });
         return;
     }
-    reservas.forEach((doc) => {
-        const data = doc.data();    
+    reservas.forEach((data) => {
         if (data.fecha >= inicio && data.fecha <= fin) {
             datosexcel.push({
                 Tipo: "Reserva",
@@ -884,8 +906,7 @@ botonexport.addEventListener("click", () => {
         };
         
     });
-    usos.forEach((doc) => {
-        const data = doc.data();
+    usos.forEach((data) => {
         if (data.fecha >= inicio && data.fecha <= fin) {
             if(data.estado==="finalizado"){
                 datosexcel.push({
@@ -903,7 +924,7 @@ const libro = XLSX.utils.book_new();
 XLSX.utils.book_append_sheet(libro, hojita, "Estadisticas");
 XLSX.writeFile(libro, `estadisticas_${inicio}_a_${fin}.xlsx`);
 });
-
+});
 
 
 

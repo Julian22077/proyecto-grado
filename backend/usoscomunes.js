@@ -18,13 +18,25 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     return;
   }
 
-  const re = await obtenerUsosAdmin();
-  const comunes = re.docs;
-
+  const usosadmin=await fetch("http://localhost:3000/usoscomunes",{
+        method:"GET",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const comunes = await usosadmin.json();
+    if (!usosadmin.ok) {
+        Swal.fire({
+            title: "Error",
+            text: comunes.error,
+            icon: "error"
+        });
+        return;
+    }
   function MostrarReserva(lista) {
     let html = "";
-    lista.forEach((doc) => {
-      const data = doc.data();
+    lista.forEach((data) => {
       html += `
       <div class="datos_generales">
                    <div class="filll">
@@ -34,11 +46,11 @@ fill="currentColor" viewBox="0 0 24 24" >
 <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5m0-8c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3M4 22h16c.55 0 1-.45 1-1v-1c0-3.86-3.14-7-7-7h-4c-3.86 0-7 3.14-7 7v1c0 .55.45 1 1 1m6-7h4c2.76 0 5 2.24 5 5H5c0-2.76 2.24-5 5-5"></path>
 </svg>
                     <p class="nombree">${data.placa}</p>
-                    <p id="contadorr-${doc.id}" class="estado ${data.estado}"></p>
-                    <form id=salio-${doc.id}>
+                    <p id="contadorr-${data.id}" class="estado ${data.estado}"></p>
+                    <form id=salio-${data.id}>
                     <button type="submit" class="reserrrr">Salió</button>
                     </form>
-                    <form id=pago-${doc.id}>
+                    <form id=pago-${data.id}>
                     <button type="submit" class="reserrrr">Pagar</button>
                     </form>
                       </div>
@@ -83,11 +95,9 @@ fill="currentColor" viewBox="0 0 24 24" >
     });
     reservasUsuariosContainer.innerHTML = html;
     
-       lista.forEach((doc) => {
+       lista.forEach((data) => {
 
-    const data = doc.data();
-
-    const contador = document.getElementById(`contadorr-${doc.id}`);
+    const contador = document.getElementById(`contadorr-${data.id}`);
 
     if (contador) {
       iniciarContadorUsoComun(
@@ -98,8 +108,8 @@ fill="currentColor" viewBox="0 0 24 24" >
     }
 
   });
-    lista.forEach((doc) => {
-      const salio = document.getElementById(`salio-${doc.id}`);
+    lista.forEach((data) => {
+      const salio = document.getElementById(`salio-${data.id}`);
       salio.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {
@@ -109,13 +119,13 @@ fill="currentColor" viewBox="0 0 24 24" >
                     "Content-Type": "application/json",
                      "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ comunId: doc.id})
+                body: JSON.stringify({ comunId: data.id})
         })
-        const data=await saliocomun.json();
+        const datacomun=await saliocomun.json();
         if(!saliocomun.ok){
           await Swal.fire({
             title: "Error",
-            text: data.error,
+            text: datacomun.error,
             icon: "error"
           });
           return;
@@ -134,7 +144,7 @@ fill="currentColor" viewBox="0 0 24 24" >
           });
         }
       });
-      const pago = document.getElementById(`pago-${doc.id}`);
+      const pago = document.getElementById(`pago-${data.id}`);
       pago.addEventListener("submit", async (e) => {
         e.preventDefault();
         Swal.fire({
@@ -170,7 +180,7 @@ fill="currentColor" viewBox="0 0 24 24" >
                     "Content-Type": "application/json",
                      "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ comunId: doc.id, metodoPago: metodoPago})
+                body: JSON.stringify({ comunId: data.id, metodoPago: metodoPago})
              } )
              const datos=await pagar.json();
              if(!pagar.ok){
@@ -204,8 +214,7 @@ fill="currentColor" viewBox="0 0 24 24" >
 
   buscador.addEventListener("input", () => {
     const texto = buscador.value.toLowerCase();
-    const filtradas = comunes.filter((doc) => {
-      const data = doc.data();
+    const filtradas = comunes.filter((data) => {
       return data.placa.toLowerCase().includes(texto)
     });
     MostrarReserva(filtradas);
