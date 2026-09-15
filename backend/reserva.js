@@ -15,11 +15,6 @@ const fechamañana=mañana.toLocaleDateString("sv-SE");
 fechaInput.min = fechaahora;
 fechaInput.max = fechamañana;
 let precio_minuto
-const config = await obetenerconfig();
-    if (config.exists()) {
-        precio_minuto= config.data();
-
-    }
 function calcularTiempoYPrecio() {
     const hEntrada = entrada.value;
     const hSalida = salida.value;
@@ -53,6 +48,22 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     const reservaForm = document.getElementById("reservacontainer");
     const token=await usuarioAuth.getIdToken()
+    const configg=await fetch("http://localhost:3000/configuracion",{
+          method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const config=await configg.json();
+    if(!configg.ok){
+        await Swal.fire({
+            title:"error",
+            text:config.error,
+            icon:"error"
+        })
+        return;
+    }
+    precio_minuto=config;
     reservaForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 

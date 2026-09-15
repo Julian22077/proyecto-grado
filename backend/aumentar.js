@@ -104,11 +104,22 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
 
     });
     let precio_minuto
-    const config = await obetenerconfig();
-    if (config.exists()) {
-        precio_minuto = config.data();
-
+    const configg=await fetch("http://localhost:3000/configuracion",{
+          method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const config=await configg.json();
+    if(!configg.ok){
+        await Swal.fire({
+            title:"error",
+            text:config.error,
+            icon:"error"
+        })
+        return 
     }
+    precio_minuto=config;
     reservasContainer.innerHTML = html;
     reservas.forEach((data) => {
         const minutis = document.getElementById(`minutosExtra-${data.id}`)

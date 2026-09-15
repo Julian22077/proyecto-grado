@@ -1,6 +1,7 @@
 import { obtenerUsosAdmin, auth , SalioCarro} from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { iniciarContadorUsoComun } from "./contador.js";
+const { jsPDF } = window.jspdf;
 
 const ADMIN_EMAIL = "julian.lozanoh@uniagustiniana.edu.co";
 const reservasUsuariosContainer = document.getElementById("usosUsuarios");
@@ -52,6 +53,10 @@ fill="currentColor" viewBox="0 0 24 24" >
                     </form>
                     <form id=pago-${data.id}>
                     <button type="submit" class="reserrrr">Pagar</button>
+                    </form>
+                    </form>
+                    <form id=imprimir-${data.id}>
+                    <button type="submit" class="reserrrr">Imprimir</button>
                     </form>
                       </div>
                 <div class="reservas_admin_totales">
@@ -207,6 +212,51 @@ fill="currentColor" viewBox="0 0 24 24" >
           }
         })
       })
+      const imprimir= document.getElementById(`imprimir-${data.id}`)
+      imprimir.addEventListener("submit",(e)=>{
+        e.preventDefault()
+        if(data.estado==="activo"){
+          Swal.fire({
+            title:"Error",
+            text:"El usuario aun no ha salido",
+            icon:"error"
+          })
+          return; 
+        }
+        const pdf=new jsPDF({
+          orientation:"portrait",
+          unit:"mm",
+          format:[80,150]
+
+        })
+        pdf.setFont("helvetica","bold")
+        pdf.setFontSize(16)
+        pdf.text("Parqueadero",40,12,{align:"center"})
+        pdf.text("Calatrava",40,19,{align:"center"})
+        pdf.setFont("helvetica","normal")
+        pdf.setFontSize(10)
+        pdf.line(5,24,75,24)
+        pdf.text(`Placa:${data.placa}`,5,32)
+        pdf.text(`Parqueadero:${data.parqueaderoId}`,5,40)
+        pdf.text(`Fecha: ${data.fecha}`,5,48)
+        pdf.text(`Hora entrada: ${data.horaEntrada}`,5,56)
+        pdf.text(`Hora salida: ${data.horaSalida}`,5,64)
+        pdf.text(`Precio: ${data.precio}`,5,72)
+        pdf.text(`Metodo Pago: ${data.metodoPago}`,5,80)
+        pdf.line(5,88,75,88)
+        pdf.setFont("helvetica","bold");
+        pdf.text("Gracias por su vista",40,96,{align:"center"})
+        const pdfurl=pdf.output("bloburl")
+        const ventana=window.open(pdfurl,"_blank")
+         if (!ventana) {
+        Swal.fire({
+            title: "Ventana bloqueada",
+            text: "Permita las ventanas emergentes para imprimir el comprobante.",
+            icon: "warning"
+        });
+       }
+      })
+
     });
   }
 

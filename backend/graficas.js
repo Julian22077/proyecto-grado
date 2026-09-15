@@ -10,11 +10,22 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
 
 let dataconfig;
 
-const config = await obetenerconfig();
-if (config.exists()) {
-    dataconfig = config.data();
-
-}
+ const configg=await fetch("http://localhost:3000/configuracion",{
+          method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const config=await configg.json();
+    if(!configg.ok){
+        await Swal.fire({
+            title:"error",
+            text:config.error,
+            icon:"error"
+        })
+        return 
+    }
+    dataconfig=config;
 const usosadmin=await fetch("http://localhost:3000/totalusos",{
         method:"GET",
         headers:{
@@ -333,7 +344,7 @@ graficausocomun = new Chart(graficaUsos, {
     }
 })
 if (graficareservas) {
-    graficausocomun.destroy();
+    graficareservas.destroy();
 }
 graficareservas = new Chart(graficaReservas, {
     type: "doughnut",
@@ -893,8 +904,15 @@ botonexport.addEventListener("click", () => {
         return;
     }
     reservas.forEach((data) => {
+        const estado = obtenerEstado(
+            data.fecha,
+            data.horaEntrada,
+            data.horaSalida,
+            data.finalizadaAntes
+        )
         if (data.fecha >= inicio && data.fecha <= fin) {
-            datosexcel.push({
+            if(estado=="finalizada"){
+                datosexcel.push({
                 Tipo: "Reserva",
                 Fecha: data.fecha,
                 HoraEntrada: data.horaEntrada,
@@ -903,6 +921,8 @@ botonexport.addEventListener("click", () => {
                 PrecioExtension: data.PrecioExtension || 0,
                 CostoAdicional: data.costoAdicional || 0,
             });
+            }
+            
         };
         
     });

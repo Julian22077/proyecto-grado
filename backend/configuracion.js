@@ -1,4 +1,7 @@
-import { crearconfig, obetenerconfig, reservasVigentes } from "./firebase.js";
+import { crearconfig, obetenerconfig, reservasVigentes, auth } from "./firebase.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+onAuthStateChanged(auth, async (usuarioAuth) => {
+ const token=await usuarioAuth.getIdToken()
 const form = document.getElementById("config")
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -9,14 +12,40 @@ form.addEventListener("submit", async (e) => {
     const metaUsos = Number(document.getElementById("metausos").value)
     const ahora = new Date();
     const fehahoy = ahora.toLocaleDateString("sv-SE")
-    const hay= await reservasVigentes();
+    const vigencia = await fetch("http://localhost:3000/reservasvigentes",{
+            method:"GET",
+             headers:{
+            "Authorization": `Bearer ${token}`
+        },
+        })
+        const hay=await vigencia.json();
+        if(!vigencia.ok){
+            await Swal.fire({
+                title:"Error",
+                text:hay.error,
+                icon:"error"
+            })
+            return;
+        }
     let dataconfig;
 
-    const config = await obetenerconfig();
-    if (config.exists()) {
-        dataconfig = config.data();
-
+    const configg=await fetch("http://localhost:3000/configuracion",{
+          method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const config=await configg.json();
+    if(!configg.ok){
+        await Swal.fire({
+            title:"error",
+            text:config.error,
+            icon:"error"
+        })
+        return 
     }
+    dataconfig=config;
+    
     if(hay){
          await Swal.fire({
             title: "Error",
@@ -49,7 +78,23 @@ form.addEventListener("submit", async (e) => {
                 icon: "error",
             });
         } else {
-            await crearconfig(metaingresos, metageneral, metaReservas,metaUsos, minutoCobro,);
+            const crearconfig=await fetch("http://localhost:3000/crearconfiguracion",{
+                method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body:JSON.stringify({metaIngreso:metaingresos, metaGeneral:metageneral, metaReservas:metaReservas, metaUsos:metaUsos, minutosCobro:minutoCobro})
+            })
+            const configuracioncreada=await crearconfig.json()
+            if(!crearconfig.ok){
+                await Swal.fire({
+                    title:"error",
+                    text: configuracioncreada.error,
+                    icon:"error"
+                })
+                return;
+            }
             await Swal.fire({
                 title: "Configuracion Guardada",
                 text: "Se ha configurado las metas diarias",
@@ -67,3 +112,4 @@ form.addEventListener("submit", async (e) => {
         });
     }
 })
+});

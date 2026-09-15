@@ -658,7 +658,7 @@ a {
     box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
     padding: 10px;
     border-radius: 10px;
-    max-width: 620px;
+    max-width: 650px;
 }
 
 .reserrrr {
@@ -1060,3 +1060,421 @@ a {
 .swal2-error {
     border-color: #1a0399 !important;
 }
+/* =============================== */
+/* PAGINA DE USUARIOS              */
+/* =============================== */
+
+.contenido_usuarios {
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+
+    padding: 40px 30px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* =============================== */
+/* BUSCADOR                        */
+/* =============================== */
+
+.contenido_usuarios .buscador {
+    width: 100%;
+    max-width: 800px;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    box-sizing: border-box;
+
+    padding: 12px 18px;
+    margin-bottom: 30px;
+
+    background-color: white;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+.contenido_usuarios .buscador svg {
+    width: 22px;
+    height: 22px;
+
+    color: #161a73;
+
+    flex-shrink: 0;
+}
+
+.contenido_usuarios .buscador label {
+    color: #161a73;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+#buscarUsuario {
+    flex: 1;
+
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+
+    color: #333;
+}
+
+#buscarUsuario::placeholder {
+    color: #999;
+}
+
+
+/* =============================== */
+/* LISTA DE USUARIOS               */
+/* =============================== */
+
+#listausuarios {
+    width: 100%;
+    max-width: 800px;
+
+    display: grid;
+
+    gap: 18px;
+}
+
+
+/* =============================== */
+/* TARJETA DEL USUARIO             */
+/* =============================== */
+
+.tarjeta_usuario {
+    min-height: 80px;
+
+    padding: 15px 20px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    background-color: white;
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+
+    cursor: pointer;
+
+    transition: .25s;
+}
+
+.tarjeta_usuario:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 12px 30px rgba(22,26,115,.15);
+}
+
+.tarjeta_usuario p {
+    margin: 0;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    color: #333;
+
+    transition: .25s;
+}
+
+.tarjeta_usuario:hover p {
+    color: #161a73;
+}
+
+
+/* =============================== */
+/* INICIAL DEL USUARIO             */
+/* =============================== */
+
+.inicial_usuario {
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background-color: #3113b6;
+
+    color: white;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    font-size: 22px;
+    font-weight: 700;
+}
+
+
+/* =============================== */
+/* RESPONSIVE                      */
+/* =============================== */
+
+@media (max-width: 640px) {
+
+    .contenido_usuarios {
+        padding: 25px 15px;
+    }
+
+
+    /* Buscador */
+
+    .contenido_usuarios .buscador {
+        padding: 12px 15px;
+
+        flex-wrap: wrap;
+
+        gap: 8px;
+
+        margin-bottom: 20px;
+    }
+
+    .contenido_usuarios .buscador label {
+        font-size: 14px;
+    }
+
+    #buscarUsuario {
+        flex-basis: 100%;
+
+        padding: 5px 0;
+    }
+
+
+    /* Lista */
+
+    #listausuarios {
+        grid-template-columns: 1fr;
+
+        gap: 14px;
+    }
+
+
+    /* Tarjetas */
+
+    .tarjeta_usuario {
+        min-height: 70px;
+
+        padding: 12px 15px;
+
+        gap: 15px;
+    }
+
+
+    /* Inicial */
+
+    .inicial_usuario {
+        width: 45px;
+        height: 45px;
+
+        font-size: 20px;
+    }
+
+
+    .tarjeta_usuario p {
+        font-size: 16px;
+    }
+}
+/* ================================= */
+/* INFORMACIÓN DEL USUARIO           */
+/* ================================= */
+
+.contenido_usuario {
+    width: 100%;
+    min-height: 100vh;
+
+    box-sizing: border-box;
+
+    padding: 40px 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    background-color: #f8f9fc;
+
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* ================================= */
+/* TARJETA INFORMACIÓN               */
+/* ================================= */
+
+#contenidousuario {
+    width: 100%;
+    max-width: 700px;
+
+    padding: 35px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    background-color: white;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+
+/* ================================= */
+/* TÍTULO / ENCABEZADO               */
+/* ================================= */
+
+#contenidousuario::before {
+    content: "Información del usuario";
+
+    margin-bottom: 10px;
+
+    color: #161a73;
+
+    font-size: 25px;
+    font-weight: 700;
+
+    text-align: center;
+}
+
+
+/* ================================= */
+/* DATOS DEL USUARIO                 */
+/* ================================= */
+
+#contenidousuario p {
+    margin: 0;
+
+    padding: 16px 20px;
+
+    display: flex;
+    align-items: center;
+
+    background-color: #f8f9fc;
+
+    border-radius: 12px;
+
+    font-size: 16px;
+
+    color: #333;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+
+/* ================================= */
+/* ETIQUETA DE CADA DATO             */
+/* ================================= */
+
+#contenidousuario p::first-letter {
+    color: #161a73;
+}
+
+
+/* ================================= */
+/* BOTÓN VOLVER                      */
+/* ================================= */
+
+.volver {
+    position: absolute;
+
+    top: 25px;
+    left: 25px;
+
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    border-radius: 50%;
+
+    text-decoration: none;
+
+    color: #4022c5;
+
+    background-color: white;
+
+    box-shadow: 0 5px 15px rgba(0,0,0,.08);
+
+    transition: .25s;
+}
+
+.volver:hover {
+    background-color: #161a73;
+
+    color: white;
+
+    transform: translateX(-3px);
+}
+
+
+/* ================================= */
+/* RESPONSIVE                        */
+/* ================================= */
+
+@media (max-width: 640px) {
+
+    .contenido_usuario {
+        padding: 80px 15px 25px;
+    }
+
+    #contenidousuario {
+        padding: 20px;
+
+        border-radius: 15px;
+
+        gap: 12px;
+    }
+
+    #contenidousuario::before {
+        font-size: 21px;
+    }
+
+    #contenidousuario p {
+        padding: 14px 15px;
+
+        font-size: 15px;
+    }
+
+    .volver {
+        top: 15px;
+        left: 10px;
+
+        width: 45px;
+        height: 45px;
+    }
+}
+

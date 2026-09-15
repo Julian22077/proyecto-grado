@@ -1,4 +1,4 @@
-import { auth, getUsuario, obtenerReservasAdmin,obtenerTotalParqueaderos,ultimasreservas, obtenerEstado, obtenerUsuarios, obetenerconfig, obtenerUsosAdmin } from "./firebase.js";
+import { auth, getUsuario, obtenerReservasAdmin, obtenerTotalParqueaderos, ultimasreservas, obtenerEstado, obtenerUsuarios, obetenerconfig, obtenerUsosAdmin } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 const adminContainer = document.getElementById("adminContainer");
 const cuentasContainer = document.getElementById("cuentas");
@@ -25,16 +25,27 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     let dataconfig;
 
-    const config = await obetenerconfig();
-    if (config.exists()) {
-        dataconfig = config.data();
-
+    const configg=await fetch("http://localhost:3000/configuracion",{
+          method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const config=await configg.json();
+    if(!configg.ok){
+        await Swal.fire({
+            title:"error",
+            text:config.error,
+            icon:"error"
+        })
+        return 
     }
+    dataconfig=config;
     console.log(dataconfig.metaIngreso);
-    const reservasadmin=await fetch("http://localhost:3000/reservasadmin",{
-        method:"GET",
-        headers:{
-            "Content-Type":"application/json",
+    const reservasadmin = await fetch("http://localhost:3000/reservasadmin", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
     })
@@ -47,10 +58,10 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         });
         return;
     }
-    const usosadmin=await fetch("http://localhost:3000/usoscomunes",{
-        method:"GET",
-        headers:{
-            "Content-Type":"application/json",
+    const usosadmin = await fetch("http://localhost:3000/usoscomunes", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
     })
@@ -63,10 +74,10 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         });
         return;
     }
-    const totaladmin=await fetch("http://localhost:3000/parqueaderos",{
-        method:"GET",
-        headers:{
-            "Content-Type":"application/json",
+    const totaladmin = await fetch("http://localhost:3000/parqueaderos", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
     })
@@ -79,10 +90,10 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         });
         return;
     }
-    const usuariosadmin=await fetch("http://localhost:3000/usuarios",{
-        method:"GET",
-        headers:{
-            "Content-Type":"application/json",
+    const usuariosadmin = await fetch("http://localhost:3000/usuarios", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
     })
@@ -108,43 +119,43 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const conteouso = {};
     const contedoextension = {};
     const conteoMulta = {};
-    htmlusu = ` <div class="fil">
+    htmlusu = ` <a href="usuarios.html"><div class="fil">
     <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
 fill="currentColor" viewBox="0 0 24 24" >
 <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
 <path d="M12 11c1.71 0 3-1.29 3-3s-1.29-3-3-3-3 1.29-3 3 1.29 3 3 3m0-4c.6 0 1 .4 1 1s-.4 1-1 1-1-.4-1-1 .4-1 1-1m1 5h-2c-2.76 0-5 2.24-5 5v.5c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5V17c0-2.76-2.24-5-5-5m-5 5c0-1.65 1.35-3 3-3h2c1.65 0 3 1.35 3 3zm-1.5-6c.47 0 .9-.12 1.27-.33a5.03 5.03 0 0 1-.42-4.52C7.09 6.06 6.8 6 6.5 6 5.06 6 4 7.06 4 8.5S5.06 11 6.5 11m-.39 1H5.5C3.57 12 2 13.57 2 15.5v1c0 .28.22.5.5.5H4c0-1.96.81-3.73 2.11-5m11.39-1c1.44 0 2.5-1.06 2.5-2.5S18.94 6 17.5 6c-.31 0-.59.06-.85.15a5.03 5.03 0 0 1-.42 4.52c.37.21.79.33 1.27.33m1 1h-.61A6.97 6.97 0 0 1 20 17h1.5c.28 0 .5-.22.5-.5v-1c0-1.93-1.57-3.5-3.5-3.5"></path>
 </svg>
     ${usuarios.total} Ususarios Totales
-    </div>`
+    </div></a>`
     usu.innerHTML = htmlusu;
     usos.forEach((data) => {
-        
-            if (!conteouso[data.fecha]) {
-                conteouso[data.fecha] = 0;
-            }
-            conteouso[data.fecha] += data.precio;
-        
-    })
-    reservas.forEach((data ) => {
 
-            if (!conteo[data.fecha]) {
-                conteo[data.fecha] = 0;
+        if (!conteouso[data.fecha]) {
+            conteouso[data.fecha] = 0;
+        }
+        conteouso[data.fecha] += data.precio;
+
+    })
+    reservas.forEach((data) => {
+
+        if (!conteo[data.fecha]) {
+            conteo[data.fecha] = 0;
+        }
+        if (data.extensionMinutos) {
+            if (!contedoextension[data.fecha]) {
+                contedoextension[data.fecha] = 0;
             }
-            if (data.extensionMinutos) {
-                if (!contedoextension[data.fecha]) {
-                    contedoextension[data.fecha] = 0;
+            contedoextension[data.fecha] += data.PrecioExtension;
+        }
+        if (data.penalizado) {
+            if (data.finalizadaAntes === false) {
+                if (!conteoMulta[data.fecha]) {
+                    conteoMulta[data.fecha] = 0;
                 }
-                contedoextension[data.fecha] += data.PrecioExtension;
+                conteoMulta[data.fecha] += data.costoAdicional;
             }
-            if (data.penalizado) {
-                if (data.finalizadaAntes === false) {
-                    if (!conteoMulta[data.fecha]) {
-                        conteoMulta[data.fecha] = 0;
-                    }
-                    conteoMulta[data.fecha] += data.costoAdicional;
-                }
-            }
-            conteo[data.fecha] += data.precio;
+        }
+        conteo[data.fecha] += data.precio;
 
     });
     const ctx = document.getElementById("grafica");
@@ -191,10 +202,10 @@ fill="currentColor" viewBox="0 0 24 24" >
             }
         }
     })
-    const ultimasadmin=await fetch("http://localhost:3000/ultimasreservas",{
-        method:"GET",
-        headers:{
-            "Content-Type":"application/json",
+    const ultimasadmin = await fetch("http://localhost:3000/ultimasreservas", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
     })
@@ -266,15 +277,15 @@ fill="currentColor" viewBox="0 0 24 24" >
     let html3 = "";
     let html_reservas = "";
     let html_usos = "";
-    usos.forEach((doc) => {
-        const data = doc.data();
+    usos.forEach((data) => {
         if (data.fecha === fechahoy) {
             if (data.estado === "activo") {
                 usoss++;
             }
             us++
         }
-        html_usos = `   <a href="usoscomunes.html"><div class="fil">
+    })
+    html_usos = `   <a href="usoscomunes.html"><div class="fil">
       <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
 fill="currentColor" viewBox="0 0 24 24" >
 <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
@@ -282,7 +293,6 @@ fill="currentColor" viewBox="0 0 24 24" >
 </svg>
         <p>Usos del dia: ${us}</p>
       </div></a>`
-    })
     general_usos.innerHTML = html_usos
     reservas.forEach((data) => {
         const estado = obtenerEstado(
@@ -291,13 +301,14 @@ fill="currentColor" viewBox="0 0 24 24" >
             data.horaSalida,
             data.finalizadaAntes
         );
-            if (estado === "pendiente" || estado === "activa") {
-                reservass++;
-            }
-            reser++;
-        
-        const disponibles = total.total - (reservass + usoss);
-        html3 = `
+        if (estado === "pendiente" || estado === "activa") {
+            reservass++;
+        }
+        reser++;
+
+    })
+    const disponibles = total.total - (reservass + usoss);
+    html3 = `
        <center><div class="fil">
      <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
 fill="currentColor" viewBox="0 0 24 24" >
@@ -306,7 +317,7 @@ fill="currentColor" viewBox="0 0 24 24" >
 </svg>
       <p>Espacios Disponibles: ${disponibles}</p>
       </div></center>`
-        html_reservas = `   <a href="reservas.html"><div class="fil">
+    html_reservas = `   <a href="reservas.html"><div class="fil">
       <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
 fill="currentColor" viewBox="0 0 24 24" >
 <!--Boxicons v3.0.8 https://boxicons.com | License  https://docs.boxicons.com/free-->
@@ -314,8 +325,6 @@ fill="currentColor" viewBox="0 0 24 24" >
 </svg>
         <p>Reservas del dia: ${reser}</p>
       </div></a>`
-
-    })
     general.innerHTML = html3;
     general_reservas.innerHTML = html_reservas;
 });

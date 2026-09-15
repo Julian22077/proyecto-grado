@@ -1,4 +1,4 @@
-import { auth, obtenerReserva,obtenerEstado, NotificarUsuario, cancelarNotificacion } from "./firebase.js";
+import { auth, obtenerReserva,obtenerEstado, NotificarUsuario, cancelarNotificacion, obtenertokenFCM } from "./firebase.js";
 import { iniciarContador } from "./contador.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 
@@ -19,6 +19,26 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const token=await usuarioAuth.getIdToken()
 
     const mañana = new Date();
+    const tokenfcm=await obtenertokenFCM();
+    if(tokenfcm){
+        const tokenn=await fetch("http://localhost:3000/guardartoken",{
+             method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                     "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({tokenN:tokenfcm})
+        })
+        const datostoken=tokenn.json()
+        if(!tokenn.ok){
+            await Swal.fire({
+                tiitle:"Error",
+                text: datostoken.error,
+                icon:"error"
+            })
+            return;
+        }
+    }   
     mañana.setDate(mañana.getDate() + 1);
     const fechaMañana = mañana.toLocaleDateString("sv-SE");
     const hoy = new Date();

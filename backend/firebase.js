@@ -10,6 +10,10 @@ import {
     sendPasswordResetEmail,
     updateProfile
 } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+import {
+    getMessaging,
+    getToken
+} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-messaging.js";
 
 import { convertirHora, hayConflicto, minutosAHora, generarPlaca, convertirHoracomun } from "./utils.js";
 import { getFirestore, collection, addDoc, getDoc, getDocs, deleteDoc, doc, updateDoc, setDoc, onSnapshot, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
@@ -503,3 +507,21 @@ export const reservacola = async (uid, fecha)=>{
         }
     }
 }   
+export const obtenertokenFCM=async()=>{
+    const messagin= getMessaging();
+    const permiso = await Notification.requestPermission();
+        console.log("Permiso obtenido:", permiso);
+     if (permiso !== "granted") {
+        console.log("No se concedieron permisos");
+        return null;
+    }
+    if(permiso==="granted"){
+     
+        const token= await getToken(messagin, { vapidKey: "BG8q0p1LPECiE-QNbCZMKOQNOY_1RZw5NShNsNnsRKJkBw_k5sDAlU6liuzh1_j-em6mU0DHanZOkQ62HQNmdXI"
+        })
+        console.log(token)
+        return token;
+
+    }
+}
+
