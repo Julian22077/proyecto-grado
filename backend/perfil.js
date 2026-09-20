@@ -9,10 +9,22 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     if (usuarioAuth.email === "julian.lozanoh@uniagustiniana.edu.co") {
         window.location.href = "admin.html";
     }
-    const usuarios = await ongetUsuario(usuarioAuth.uid)
-    if (!usuarios.exists()) return;
-
-    const userData = usuarios.data();
+    const token=await usuarioAuth.getIdToken()
+    const usuarios = await fetch("http://localhost:3000/detalleusuario",{
+          method: "GET",
+                headers: {
+                     "Authorization": `Bearer ${token}`
+                },
+    })
+    const userData=await usuarios.json()
+    if(!usuarios.ok){
+        await Swal.fire({
+            title:"Error",
+            text:userData.error,
+            icon:"error"
+        })
+        return;
+    }
     const inicial = userData.nombre.charAt(0).toUpperCase();
 
     usuarioContainer.innerHTML = `

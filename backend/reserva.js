@@ -1,7 +1,7 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
-import { auth, reservarParqueadero, hacerReserva, obetenerconfig, colaEspera, reservacola } from "./firebase.js";
+import { auth, reservarParqueadero, hacerReserva, obetenerconfig, colaEspera, reservacola, obtenerEstado } from "./firebase.js";
 import { convertirHora } from "./utils.js";
-
+const containerreser=document.getElementById("espa_reser")
 const entrada = document.getElementById("horaEntrada");
 const salida = document.getElementById("horaSalida");
 const minutosSpan = document.getElementById("horas");
@@ -15,6 +15,7 @@ const fechamañana=mañana.toLocaleDateString("sv-SE");
 fechaInput.min = fechaahora;
 fechaInput.max = fechamañana;
 let precio_minuto
+let htmlreservas="";
 function calcularTiempoYPrecio() {
     const hEntrada = entrada.value;
     const hSalida = salida.value;
@@ -64,6 +65,57 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         return;
     }
     precio_minuto=config;
+    const reservasusuarios = await fetch("http://localhost:3000/reservausuarios", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const reservas = await reservasusuarios.json();
+    if (!reservasusuarios.ok) {
+        Swal.fire({
+            title: "Error",
+            text: reservas.error,
+            icon: "error"
+        });
+        return;
+    }
+    const totalusuario = await fetch("http://localhost:3000/parqueaderoreservas", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const total = await totalusuario.json();
+    if (!totalusuario.ok) {
+        Swal.fire({
+            title: "Error",
+            text: total.error,
+            icon: "error"
+        });
+        return;
+    }
+    let reservass=0;
+    reservas.forEach((data) => {
+            const estado = obtenerEstado(
+                data.fecha,
+                data.horaEntrada,
+                data.horaSalida,
+                data.finalizadaAntes
+            );
+            if (estado === "pendiente" || estado === "activa") {
+                reservass++;
+            }
+    
+        })
+        const disponibles = total.total - reservass;
+         htmlreservas = `
+       <div>
+      <p>Espacios Disponibles: ${disponibles}</p>
+      </div>`
+      containerreser.innerHTML=htmlreservas;
     reservaForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -99,6 +151,14 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         })
         const disponibilidad=await reserva.json();
          if(reserva.status===409){
+            if(fecha!==fechaahora){
+                await Swal.fire({
+                    title:"No hay espacios disponibles",
+                    text:"No hay espacios disponibles para los horas que necesitas, intentalo de nuevo",
+                    icon:"warning"
+                })
+                return;
+            }
                  const perticion = await Swal.fire({
                     title: "No hay espacios disponibles",
                     text: "¿Desea unirse a la cola de espera?",

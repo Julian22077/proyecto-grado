@@ -800,7 +800,7 @@ app.get("/reserva", verficarUsuario, limite, async (req, res) => {
         const mañana = new Date();
         mañana.setDate(mañana.getDate() + 1);
         const fechamañana = mañana.toLocaleDateString("sv-SE");
-        const reservas = await db.collection("reservas").where("uid", "==", uid).where("fecha", ">=", fechahoy).where("fecha", "<", fechamañana).get();
+        const reservas = await db.collection("reservas").where("uid", "==", uid).where("fecha", ">=", fechahoy).where("fecha", "<=", fechamañana).get();
         return res.json(reservas.docs.map((doc) => doc.data()))
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -1085,6 +1085,36 @@ app.get("/usuarios/:id", verficarUsuario,limite, async(req,res)=>{
         return res.json({id:usuario.id,...usuario.data()})
     }catch(error){
         return res.status(500).json({error:error.message})
+    }
+})
+app.get("/detalleusuario",verficarUsuario,limite,async(req,res)=>{
+    try{
+        const uid=req.uid;
+        const usuario=await db.collection("usuarios").doc(uid).get()
+        if(!usuario.exists){
+            return res.status(400).json({error:"no se encontro el usuario"})
+        }
+        return res.json({id:usuario.id, ...usuario.data()})
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/parqueaderoreservas",verficarUsuario,limite,async(req,res)=>{
+    try{
+        const parqueaderos = await db.collection("parqueaderos").where("tipo","==","reserva").get();
+        return res.json({ total: parqueaderos.size })
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
+app.get("/reservausuarios", verficarUsuario, limite, async (req, res) => {
+    try {
+        const ahora = new Date();
+        const fechahoy = ahora.toLocaleDateString("sv-SE");
+        const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).get();
+        return res.json(reservas.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
     }
 })
 app.listen(3000, () => {
