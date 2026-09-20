@@ -1,57 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión — Parqueadero CJ</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
-<body>
-    <div class="registro">
+<body class="auth">
+  <div class="registro">
+    <aside class="auth-brand imagen">
+      <div class="auth-brand-copy auth-copy">
+        <div class="auth-mark"><span>P</span> Parqueadero CJ</div>
+        <h2>Acceso al sistema de control</h2>
+        <p>Gestión de reservas, cupos y operación diaria del parqueadero en un solo panel.</p>
+      </div>
+    </aside>
+    <div class="campos">
+      <div class="campos_sec">
+        <h1 class="titu">Iniciar sesión</h1>
+        <p class="auth-lead">Ingrese con su correo institucional o de usuario registrado.</p>
         <form id="LoginForm">
-            <div class="campos">
-                <div class="campos_sec">
-                    <center>
-                        <h1 class="titu">Login</h1>
-                    </center>
-                    <div class="formulario">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"
-                            fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 2v.51l-8 6.22-8-6.22V6zM4 18V9.04l7.39 5.74c.18.14.4.21.61.21s.43-.07.61-.21L20 9.03v8.96H4Z">
-                            </path>
-                        </svg>
-                        <label for="correo">Correo</label>
-                        <input type="email" id="correo" placeholder="Correo" required>
-                    </div>
-                    <div class="formulario">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"
-                            fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 2v.51l-8 6.22-8-6.22V6zM4 18V9.04l7.39 5.74c.18.14.4.21.61.21s.43-.07.61-.21L20 9.03v8.96H4Z">
-                            </path>
-                        </svg>
-                        <label for="contraseña">Contraseña</label>
-                        <input type="password" id="contraseña" placeholder="Contraseña" required>
-                    </div>
-                    <button type="submit" class="reserrr">Iniciar Sesión</button>
-                    <div>
-                        <p>Se te olvido la contraseña? <a href="recuperar.html">Recuperar</a></p>
-                    </div>
-                    <div>
-                        <p>¿No tienes cuenta? <a href="index.html">Regístrate</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="imagen">
-                <img src="./asstes/parkjc.png" alt="Ilustración de parqueadero">
-            </div>
+          <div class="formulario">
+            <label for="correo">Correo</label>
+            <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com" required>
+          </div>
+          <div class="formulario">
+            <label for="contraseña">Contraseña</label>
+            <input type="password" id="contraseña" name="contraseña" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="reserrr">Entrar al sistema</button>
         </form>
+        <div class="auth-links">
+          <p><a href="recuperar.html">Recuperar contraseña</a></p>
+          <p>¿No tiene cuenta? <a href="index.html">Crear registro</a></p>
+        </div>
+      </div>
     </div>
-    <script type="module" src="./backend/login.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </div>
+  <!-- Requerido por login.js (mismo módulo en login y recuperar) -->
+  <form id="recuperar" class="form-hidden" aria-hidden="true">
+    <input type="email" name="correo">
+  </form>
+  <script type="module" src="./backend/login.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <div id="pantallaCarga" class="pantalla_carga" aria-hidden="true" role="status">
+    <div class="pantalla_carga_caja">
+      <div class="pantalla_carga_anillo" aria-hidden="true"><span class="pantalla_carga_p">CJ</span></div>
+      <p class="pantalla_carga_texto">Procesando…</p>
+      <p class="pantalla_carga_sub">Parqueadero CJ</p>
+    </div>
+  </div>
+  <script src="loader.js"></script>
 </body>
-
 </html>

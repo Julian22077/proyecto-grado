@@ -68,6 +68,47 @@ let graficausocomun = null;
 let graficareservas = null;
 let graficaComparacionuso = null;
 let graficaComparacionIngre = null;
+/* Paleta visual (solo diseño) */
+const C = {
+    ink: "#0c1117",
+    steel: "#5b8fa8",
+    steelDeep: "#3d6f86",
+    track: "#d8e0e8",
+    grid: "#e8edf2",
+    muted: "#5f6b7a",
+    white: "#ffffff",
+};
+const doughnutLook = {
+    cutout: "68%",
+    responsive: true,
+    maintainAspectRatio: true,
+    layout: { padding: 4 },
+};
+const barScaleLook = {
+    x: {
+        ticks: {
+            color: C.muted,
+            maxRotation: 45,
+            minRotation: 0,
+            autoSkip: true,
+            maxTicksLimit: 12,
+            font: { family: "IBM Plex Mono, monospace", size: 10, weight: "500" },
+        },
+        grid: { display: false, drawBorder: false },
+        border: { display: false },
+    },
+    y: {
+        beginAtZero: true,
+        ticks: {
+            precision: 0,
+            stepSize: 1,
+            color: C.muted,
+            font: { family: "IBM Plex Mono, monospace", size: 10, weight: "500" },
+        },
+        grid: { color: C.grid, drawBorder: false },
+        border: { display: false },
+    },
+};
 let htmlComparacionuso = "";
 let htmlComparacionIngre = "";
 let htmlusos = "";
@@ -113,24 +154,9 @@ usos.forEach((data) => {
     }
 
 });
-htmlusos = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Usos Comunes</h4> 
-                 <h2> ${conteouso[fechahoy] || 0}</h2></center>`
-htmlComparacionuso = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Comparacion Uso </h4> 
-                 `
-htmlComparacionIngre = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Comparacion Ingresos </h4> 
-                 `
+htmlusos = `<span class="kpi-num">${conteouso[fechahoy] || 0}</span>`
+htmlComparacionuso = ``
+htmlComparacionIngre = ``
 diausos.innerHTML = htmlusos;
 diaComparacion.innerHTML = htmlComparacionuso
 diaComparacion1.innerHTML = htmlComparacionIngre;
@@ -178,12 +204,7 @@ reservas.forEach((data) => {
         conteodiaingre[data.fecha] += data.precio;
     }
 })
-htmlreservas = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Reservas</h4> 
-                 <h2>${conteodia[fechahoy] || 0}</h2></center>`
+htmlreservas = `<span class="kpi-num">${conteodia[fechahoy] || 0}</span>`
 diareservas.innerHTML = htmlreservas
 const graficaReservas = document.getElementById("graficadiareservas")
 const totalReserva = Object.values(conteodiaingre).reduce((a, b) => a + b, 0);
@@ -195,18 +216,8 @@ const totalMulta = Object.values(conteoMulta).reduce((a, b) => a + b, 0);
 const ingresosTotales = totalReserva + totalUso + totalExtension + totalMulta;
 const Usostotales = totalReservas + totalUsos;
 const reservacontodo=totalReserva+totalExtension+totalMulta;
-htmldia = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Ingresos</h4> 
-                 <h2> $${ingresosTotales}</h2></center>`
-htmldi = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                    fill="currentColor" viewBox="0 0 24 24" >
-                    <path d="M21 11h-3V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v13c0 1.65 1.35 3 3 3h14c1.65 0 3-1.35 3-3v-6c0-.55-.45-1-1-1M5 19c-.55 0-1-.45-1-1V5h12v13a3 3 0 0 0 .17 1zm15-1c0 .55-.45 1-1 1s-1-.45-1-1v-5h2z"></path><path d="M6 7h8v2H6zm0 4h8v2H6zm5 4h3v2h-3z"></path>
-                    </svg>
-                 <center><h4>Uso General</h4> 
-                 <h2> ${Usostotales}</h2></center>`
+htmldia = `<span class="kpi-num">$${ingresosTotales}</span>`
+htmldi = `<span class="kpi-num">${Usostotales}</span>`
 const horas = [];
 for (let i = 0; i < 24; i++) {
     horas.push(i.toString().padStart(2, "0") + ":00");
@@ -227,12 +238,15 @@ graficaa = new Chart(graficaingresos, {
         labels: ["ingresos", "meta"],
         datasets: [{
             data: [ingresosTotales, Math.max(dataconfig.metaIngreso - ingresosTotales, 0)],
-            backgroundColor: ["#120992", "#ffffff"]
+            backgroundColor: [C.steel, C.track],
+            borderWidth: 0,
+            hoverOffset: 4,
         }]
     },
     plugins: [ChartDataLabels],
 
     options: {
+        ...doughnutLook,
         plugins: {
             legend: {
                 display: false
@@ -244,10 +258,11 @@ graficaa = new Chart(graficaingresos, {
                     }
                     return "";
                 },
-                color: "white",
+                color: C.white,
                 font: {
-                    size: 11,
-                    weight: "bold"
+                    size: 14,
+                    weight: "700",
+                    family: "Manrope, sans-serif"
                 }
             }
         }
@@ -262,12 +277,15 @@ grafica3 = new Chart(graficadiauso, {
         labels: ["ingresos", "meta"],
         datasets: [{
             data: [Usostotales, Math.max(dataconfig.metaGeneral - Usostotales, 0)],
-            backgroundColor: ["#120992", "#ffffff"]
+            backgroundColor: [C.steel, C.track],
+            borderWidth: 0,
+            hoverOffset: 4,
         }]
     },
     plugins: [ChartDataLabels],
 
     options: {
+        ...doughnutLook,
         plugins: {
             legend: {
                 display: false
@@ -281,10 +299,11 @@ grafica3 = new Chart(graficadiauso, {
                     }
                     return "";
                 },
-                color: "white",
+                color: C.white,
                 font: {
-                    size: 11,
-                    weight: "bold"
+                    size: 14,
+                    weight: "700",
+                    family: "Manrope, sans-serif"
                 }
             }
         }
@@ -298,14 +317,51 @@ graficahoras = new Chart(horass, {
     data: {
         labels: horas,
         datasets: [{
-            label: "reservas",
-            data: ocupacion
+            label: "Reservas",
+            data: ocupacion,
+            backgroundColor: C.steel,
+            borderColor: C.steelDeep,
+            borderWidth: 1,
+            borderRadius: 4,
+            maxBarThickness: 16,
+            categoryPercentage: 0.7,
+            barPercentage: 0.85,
         },
         {
             label: "Uso común",
-            data: uso
+            data: uso,
+            backgroundColor: C.ink,
+            borderColor: "#243041",
+            borderWidth: 1,
+            borderRadius: 4,
+            maxBarThickness: 16,
+            categoryPercentage: 0.7,
+            barPercentage: 0.85,
         }
         ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+            legend: {
+                display: true,
+                position: "top",
+                align: "end",
+                labels: {
+                    color: C.ink,
+                    boxWidth: 12,
+                    boxHeight: 12,
+                    padding: 16,
+                    font: { family: "Manrope, sans-serif", size: 12, weight: "600" },
+                    usePointStyle: true,
+                    pointStyle: "rectRounded",
+                }
+            },
+            datalabels: { display: false }
+        },
+        scales: barScaleLook
     }
 })
 if (graficausocomun) {
@@ -317,12 +373,15 @@ graficausocomun = new Chart(graficaUsos, {
         labels: ["ingresos", "meta"],
         datasets: [{
             data: [totalUsos, Math.max(dataconfig.metaUsos - totalUsos, 0)],
-            backgroundColor: ["#120992", "#ffffff"]
+            backgroundColor: [C.steel, C.track],
+            borderWidth: 0,
+            hoverOffset: 4,
         }]
     },
     plugins: [ChartDataLabels],
 
     options: {
+        ...doughnutLook,
         plugins: {
             legend: {
                 display: false
@@ -334,10 +393,11 @@ graficausocomun = new Chart(graficaUsos, {
                     }
                     return "";
                 },
-                color: "white",
+                color: C.white,
                 font: {
-                    size: 11,
-                    weight: "bold"
+                    size: 14,
+                    weight: "700",
+                    family: "Manrope, sans-serif"
                 }
             }
         }
@@ -352,12 +412,15 @@ graficareservas = new Chart(graficaReservas, {
         labels: ["ingresos", "meta"],
         datasets: [{
             data: [totalReservas, Math.max(dataconfig.metaReservas - totalReservas, 0)],
-            backgroundColor: ["#120992", "#ffffff"]
+            backgroundColor: [C.steel, C.track],
+            borderWidth: 0,
+            hoverOffset: 4,
         }]
     },
     plugins: [ChartDataLabels],
 
     options: {
+        ...doughnutLook,
         plugins: {
             legend: {
                 display: false
@@ -369,10 +432,11 @@ graficareservas = new Chart(graficaReservas, {
                     }
                     return "";
                 },
-                color: "white",
+                color: C.white,
                 font: {
-                    size: 11,
-                    weight: "bold"
+                    size: 14,
+                    weight: "700",
+                    family: "Manrope, sans-serif"
                 }
             }
         }
@@ -384,28 +448,41 @@ if (graficaComparacionuso) {
 graficaComparacionuso = new Chart(graficaComparacion, {
     type: "doughnut",
     data: {
-        labels: ["Reserva", "Uso comun"],
+        labels: ["Reserva", "Uso común"],
         datasets: [{
             data: [totalReservas, totalUsos],
-            backgroundColor: ["#120992", "#278fd4"]
+            backgroundColor: [C.ink, C.steel],
+            borderWidth: 0,
+            hoverOffset: 4,
         }]
     },
     plugins: [ChartDataLabels],
 
     options: {
+        ...doughnutLook,
         plugins: {
             legend: {
-                display: false
+                display: true,
+                position: "bottom",
+                labels: {
+                    color: C.ink,
+                    boxWidth: 10,
+                    padding: 12,
+                    font: { family: "Manrope, sans-serif", size: 11, weight: "600" },
+                    usePointStyle: true,
+                    pointStyle: "circle",
+                }
             },
             datalabels: {
                 formatter: (value) => {
                     const porcentaje = Usostotales === 0 ? 0 : (value / Usostotales) * 100;
-                    return porcentaje.toFixed(1) + "%";
+                    return porcentaje.toFixed(0) + "%";
                 },
-                color: "white",
+                color: C.white,
                 font: {
-                    weight: "bold",
-                    size: 11
+                    weight: "700",
+                    size: 12,
+                    family: "Manrope, sans-serif"
                 }
             }
         }
@@ -417,28 +494,41 @@ if (graficaComparacionIngre) {
 graficaComparacionIngre = new Chart(graficaComparacion1, {
     type: "doughnut",
     data: {
-        labels: ["Reserva", "Uso comun"],
+        labels: ["Reserva", "Uso común"],
         datasets: [{
             data: [reservacontodo, totalUso],
-            backgroundColor: ["#120992", "#278fd4"]
+            backgroundColor: [C.ink, C.steel],
+            borderWidth: 0,
+            hoverOffset: 4,
         }]
     },
     plugins: [ChartDataLabels],
 
     options: {
+        ...doughnutLook,
         plugins: {
             legend: {
-                display: false
+                display: true,
+                position: "bottom",
+                labels: {
+                    color: C.ink,
+                    boxWidth: 10,
+                    padding: 12,
+                    font: { family: "Manrope, sans-serif", size: 11, weight: "600" },
+                    usePointStyle: true,
+                    pointStyle: "circle",
+                }
             },
             datalabels: {
                 formatter: (value) => {
                     const porcentaje = ingresosTotales === 0 ? 0 : (value / ingresosTotales) * 100;
-                    return porcentaje.toFixed(1) + "%";
+                    return porcentaje.toFixed(0) + "%";
                 },
-                color: "white",
+                color: C.white,
                 font: {
-                    weight: "bold",
-                    size: 12
+                    weight: "700",
+                    size: 12,
+                    family: "Manrope, sans-serif"
                 }
             }
         }
@@ -514,30 +604,10 @@ inputt.addEventListener("change", () => {
         }
 
     });
-    htmlusos = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Usos Comunes</h4> 
-                 <h2>${conteousoper[valor] || 0}</h2></center>`
-    htmlreservas = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Reservas</h4> 
-                 <h2>${conteodiaper[valor] || 0}</h2></center>`
-    htmlComparacionuso = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Comparacion Uso </h4> 
-                 `
-    htmlComparacionIngre = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Comparacion Ingresos </h4> 
-                 `
+    htmlusos = `<span class="kpi-num">${conteousoper[valor] || 0}</span>`
+    htmlreservas = `<span class="kpi-num">${conteodiaper[valor] || 0}</span>`
+    htmlComparacionuso = ``
+    htmlComparacionIngre = ``
     const totalReservasPer = Object.values(conteodiaper).reduce((a, b) => a + b, 0);
     const totalIngresosReservasPer = Object.values(conteodiaperingre).reduce((a, b) => a + b, 0);
     const totalUsoper = Object.values(conteousoper).reduce((a, b) => a + b, 0);
@@ -547,18 +617,8 @@ inputt.addEventListener("change", () => {
     const totalUsosper = totalUsoper + totalReservasPer;
     const totalReservaContodo=totalIngresosReservasPer+totalExtensionIngresoper+totalPenalIngresoper;
     const totalIngresosPer = totalIngresosReservasPer + totalUsoIngresoper + totalExtensionIngresoper + totalPenalIngresoper;
-    htmldia = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M20 7h-3V3c0-.33-.16-.64-.43-.82a.98.98 0 0 0-.92-.11L3.28 6.82C2.51 7.11 2 7.87 2 8.69V20c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2m-5-2.54V7H8.39zM4 20V9h16v2h-5c-1.1 0-2 .9-2 2v3c0 1.1.9 2 2 2h5v2zm16-4h-5v-3h5z"></path>
-                </svg>
-                 <center><h4>Ingresos</h4> 
-                 <h2> $${totalIngresosPer}</h2></center>`
-    htmldi = `<svg  xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"  
-                    fill="currentColor" viewBox="0 0 24 24" >
-                    <path d="M21 11h-3V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v13c0 1.65 1.35 3 3 3h14c1.65 0 3-1.35 3-3v-6c0-.55-.45-1-1-1M5 19c-.55 0-1-.45-1-1V5h12v13a3 3 0 0 0 .17 1zm15-1c0 .55-.45 1-1 1s-1-.45-1-1v-5h2z"></path><path d="M6 7h8v2H6zm0 4h8v2H6zm5 4h3v2h-3z"></path>
-                    </svg>
-                 <center><h4>Uso</h4> 
-                 <h2> ${totalUsosper}</h2></center>`
+    htmldia = `<span class="kpi-num">$${totalIngresosPer}</span>`
+    htmldi = `<span class="kpi-num">${totalUsosper}</span>`
 
     if (graficaa) {
         graficaa.destroy();
@@ -569,12 +629,15 @@ inputt.addEventListener("change", () => {
             labels: ["ingresos", "meta"],
             datasets: [{
                 data: [totalIngresosPer, Math.max(dataconfig.metaIngreso - totalIngresosPer, 0)],
-                backgroundColor: ["#120992", "#ffffff"]
+                backgroundColor: [C.steel, C.track],
+            borderWidth: 0,
+            hoverOffset: 4,
             }]
         },
         plugins: [ChartDataLabels],
 
         options: {
+            ...doughnutLook,
             plugins: {
                 legend: {
                     display: false
@@ -586,10 +649,11 @@ inputt.addEventListener("change", () => {
                         }
                         return "";
                     },
-                    color: "white",
+                    color: C.white,
                     font: {
-                        size: 11,
-                        weight: "bold"
+                        size: 14,
+                        weight: "700",
+                        family: "Manrope, sans-serif"
                     }
                 }
             }
@@ -604,12 +668,15 @@ inputt.addEventListener("change", () => {
             labels: ["ingresos", "meta"],
             datasets: [{
                 data: [totalUsosper, Math.max(dataconfig.metaGeneral - totalUsosper, 0)],
-                backgroundColor: ["#120992", "#ffffff"]
+                backgroundColor: [C.steel, C.track],
+            borderWidth: 0,
+            hoverOffset: 4,
             }]
         },
         plugins: [ChartDataLabels],
 
         options: {
+            ...doughnutLook,
             plugins: {
                 legend: {
                     display: false
@@ -623,10 +690,11 @@ inputt.addEventListener("change", () => {
                         }
                         return "";
                     },
-                    color: "white",
+                    color: C.white,
                     font: {
-                        size: 11,
-                        weight: "bold"
+                        size: 14,
+                        weight: "700",
+                        family: "Manrope, sans-serif"
                     }
                 }
             }
@@ -640,14 +708,51 @@ inputt.addEventListener("change", () => {
         data: {
             labels: horas,
             datasets: [{
-                label: "Ocupaciones del dia ",
-                data: ocupacion1
+                label: "Reservas",
+                data: ocupacion1,
+                backgroundColor: C.steel,
+                borderColor: C.steelDeep,
+                borderWidth: 1,
+                borderRadius: 4,
+                maxBarThickness: 16,
+                categoryPercentage: 0.7,
+                barPercentage: 0.85,
             },
             {
                 label: "Uso común",
-                data: uso1
+                data: uso1,
+                backgroundColor: C.ink,
+                borderColor: "#243041",
+                borderWidth: 1,
+                borderRadius: 4,
+                maxBarThickness: 16,
+                categoryPercentage: 0.7,
+                barPercentage: 0.85,
             }
             ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: "index", intersect: false },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: "top",
+                    align: "end",
+                    labels: {
+                        color: C.ink,
+                        boxWidth: 12,
+                        boxHeight: 12,
+                        padding: 16,
+                        font: { family: "Manrope, sans-serif", size: 12, weight: "600" },
+                        usePointStyle: true,
+                        pointStyle: "rectRounded",
+                    }
+                },
+                datalabels: { display: false }
+            },
+            scales: barScaleLook
         }
     })
     if (graficausocomun) {
@@ -659,12 +764,15 @@ inputt.addEventListener("change", () => {
             labels: ["ingresos", "meta"],
             datasets: [{
                 data: [totalUsoper, Math.max(dataconfig.metaUsos - totalUsoper, 0)],
-                backgroundColor: ["#120992", "#ffffff"]
+                backgroundColor: [C.steel, C.track],
+            borderWidth: 0,
+            hoverOffset: 4,
             }]
         },
         plugins: [ChartDataLabels],
 
         options: {
+            ...doughnutLook,
             plugins: {
                 legend: {
                     display: false
@@ -676,10 +784,11 @@ inputt.addEventListener("change", () => {
                         }
                         return "";
                     },
-                    color: "white",
+                    color: C.white,
                     font: {
-                        size: 11,
-                        weight: "bold"
+                        size: 14,
+                        weight: "700",
+                        family: "Manrope, sans-serif"
                     }
                 }
             }
@@ -694,12 +803,15 @@ inputt.addEventListener("change", () => {
             labels: ["ingresos", "meta"],
             datasets: [{
                 data: [totalReservasPer, Math.max(dataconfig.metaReservas - totalReservasPer, 0)],
-                backgroundColor: ["#120992", "#ffffff"]
+                backgroundColor: [C.steel, C.track],
+            borderWidth: 0,
+            hoverOffset: 4,
             }]
         },
         plugins: [ChartDataLabels],
 
         options: {
+            ...doughnutLook,
             plugins: {
                 legend: {
                     display: false
@@ -711,10 +823,11 @@ inputt.addEventListener("change", () => {
                         }
                         return "";
                     },
-                    color: "white",
+                    color: C.white,
                     font: {
-                        size: 11,
-                        weight: "bold"
+                        size: 14,
+                        weight: "700",
+                        family: "Manrope, sans-serif"
                     }
                 }
             }
@@ -729,25 +842,38 @@ inputt.addEventListener("change", () => {
             labels: ["Reserva", "Uso Comun"],
             datasets: [{
                 data: [totalReservasPer, totalUsoper],
-                backgroundColor: ["#120992", "#77bbe9"]
+                backgroundColor: [C.ink, C.steel],
+            borderWidth: 0,
+            hoverOffset: 4,
             }]
         },
         plugins: [ChartDataLabels],
 
         options: {
+            ...doughnutLook,
             plugins: {
                 legend: {
-                    display: false
+                    display: true,
+                    position: "bottom",
+                    labels: {
+                        color: C.ink,
+                        boxWidth: 10,
+                        padding: 12,
+                        font: { family: "Manrope, sans-serif", size: 11, weight: "600" },
+                        usePointStyle: true,
+                        pointStyle: "circle",
+                    }
                 },
                 datalabels: {
                     formatter: (value) => {
                         const porcentaje = totalUsosper === 0 ? 0 : (value / totalUsosper) * 100;
-                        return porcentaje.toFixed(1) + "%";
+                        return porcentaje.toFixed(0) + "%";
                     },
-                    color: "white",
+                    color: C.white,
                     font: {
-                        weight: "bold",
-                        size: 11
+                        weight: "700",
+                        size: 12,
+                        family: "Manrope, sans-serif"
                     }
                 }
             }
@@ -759,28 +885,41 @@ inputt.addEventListener("change", () => {
     graficaComparacionIngre = new Chart(graficaComparacion1, {
         type: "doughnut",
         data: {
-            labels: ["Reserva", "Uso comun"],
+            labels: ["Reserva", "Uso común"],
             datasets: [{
                 data: [totalReservaContodo, totalUsoIngresoper],
-                backgroundColor: ["#120992", "#278fd4"]
+                backgroundColor: [C.ink, C.steel],
+            borderWidth: 0,
+            hoverOffset: 4,
             }]
         },
         plugins: [ChartDataLabels],
 
         options: {
+            ...doughnutLook,
             plugins: {
                 legend: {
-                    display: false
+                    display: true,
+                    position: "bottom",
+                    labels: {
+                        color: C.ink,
+                        boxWidth: 10,
+                        padding: 12,
+                        font: { family: "Manrope, sans-serif", size: 11, weight: "600" },
+                        usePointStyle: true,
+                        pointStyle: "circle",
+                    }
                 },
                 datalabels: {
                     formatter: (value) => {
                         const porcentaje = totalIngresosPer === 0 ? 0 : (value / totalIngresosPer) * 100;
-                        return porcentaje.toFixed(1) + "%";
+                        return porcentaje.toFixed(0) + "%";
                     },
-                    color: "white",
+                    color: C.white,
                     font: {
-                        weight: "bold",
-                        size: 11
+                        weight: "700",
+                        size: 12,
+                        family: "Manrope, sans-serif"
                     }
                 }
             }
@@ -857,13 +996,45 @@ boton.addEventListener("click", () => {
             labels: labels,
             datasets: [{
                 label: "Reservas",
-                data: datos
+                data: datos,
+                borderColor: C.steel,
+                backgroundColor: "rgba(91, 143, 168, 0.15)",
+                borderWidth: 2.5,
+                pointBackgroundColor: C.steel,
+                pointBorderColor: C.white,
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                tension: 0.25,
+                fill: true,
             },
             {
-                label: "Uso comun",
-                data: datos2
+                label: "Uso común",
+                data: datos2,
+                borderColor: C.ink,
+                backgroundColor: "rgba(12, 17, 23, 0.08)",
+                borderWidth: 2.5,
+                pointBackgroundColor: C.ink,
+                pointBorderColor: C.white,
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                tension: 0.25,
+                fill: true,
             }
             ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: C.ink,
+                        font: { family: "Manrope, sans-serif", size: 12, weight: "600" },
+                        usePointStyle: true,
+                    }
+                },
+                datalabels: { display: false }
+            },
+            scales: barScaleLook
         }
     })
     grafica2 = new Chart(ctx1, {
@@ -871,14 +1042,37 @@ boton.addEventListener("click", () => {
         data: {
             labels: labels1,
             datasets: [{
-                label: "Ingresos Reservas",
-                data: datos1
+                label: "Ingresos reservas",
+                data: datos1,
+                backgroundColor: C.steel,
+                borderColor: C.steelDeep,
+                borderWidth: 1,
+                borderRadius: 4,
+                maxBarThickness: 28,
             },
             {
-                label: "Ingresos Uso Comun",
-                data: datos3
+                label: "Ingresos uso común",
+                data: datos3,
+                backgroundColor: C.ink,
+                borderRadius: 4,
+                maxBarThickness: 28,
             }
             ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: C.ink,
+                        font: { family: "Manrope, sans-serif", size: 12, weight: "600" },
+                        usePointStyle: true,
+                        pointStyle: "rectRounded",
+                    }
+                },
+                datalabels: { display: false }
+            },
+            scales: barScaleLook
         }
     })
 })

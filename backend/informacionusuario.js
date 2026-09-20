@@ -30,12 +30,43 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     })
     return;
   }
+  const inicial = String(usuario.nombre || "?").charAt(0).toUpperCase();
   containerusuario.innerHTML=`
-  <p>Nombre:${usuario.nombre}</p>
-  <p>Placa:${usuario.placa}</p>
-  <p>Correo:${usuario.correo}</p>
-  <p>Cedula:${usuario.cedula}</p>
+  <section class="cuenta ficha-usuario">
+    <header class="cuenta-hero">
+      <div class="avatar">${inicial}</div>
+      <div class="cuenta-hero-text">
+        <p class="cuenta-kicker">Administración</p>
+        <h2 class="cuenta-nombre">${usuario.nombre}</h2>
+        <p class="cuenta-correo">${usuario.correo}</p>
+      </div>
+    </header>
 
+    <div class="perfil ficha-usuario-body">
+      <header class="cuenta-form-head">
+        <p class="cuenta-kicker">Detalle</p>
+        <h1 class="titu mi-reserva-title">Ficha de usuario</h1>
+      </header>
+      <div class="info_usuario cuenta-grid">
+        <div class="fila cuenta-meta">
+          <span class="reserva-meta-label">Nombre</span>
+          <p class="reserva-meta-value">${usuario.nombre}</p>
+        </div>
+        <div class="fila cuenta-meta">
+          <span class="reserva-meta-label">Placa</span>
+          <p class="reserva-meta-value reserva-code">${usuario.placa}</p>
+        </div>
+        <div class="fila cuenta-meta">
+          <span class="reserva-meta-label">Correo</span>
+          <p class="reserva-meta-value">${usuario.correo}</p>
+        </div>
+        <div class="fila cuenta-meta">
+          <span class="reserva-meta-label">Cédula</span>
+          <p class="reserva-meta-value">${usuario.cedula}</p>
+        </div>
+      </div>
+    </div>
+  </section>
   `
 
   

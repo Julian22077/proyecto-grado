@@ -1117,6 +1117,18 @@ app.get("/reservausuarios", verficarUsuario, limite, async (req, res) => {
         return res.status(500).json({ error: error.message })
     }
 })
+app.get("/parqueaderoreservasadmin",verficarUsuario,limite,async(req,res)=>{
+    try{
+        const email = req.email;
+        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
+            return res.status(403).json("No posee los permisos para hacer esta accion")
+        }
+        const parqueaderos = await db.collection("parqueaderos").where("tipo","==","reserva").get();
+        return res.json({ total: parqueaderos.size })
+    }catch(error){
+        return res.status(500).json({error:error.message})
+    }
+})
 app.listen(3000, () => {
     console.log("corriendo en el puerto")
 })

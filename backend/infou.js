@@ -115,66 +115,56 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             };
 
             html += `
-             <center><h1 class="titu">Mi Reserva</h1></center>
-            <div class="reserva_hoy">
-            <div class="info_reserva">
-            <div class="fila">
-            <svg  xmlns="http://www.w3.org/2000/svg"  class="icono_principal" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="m19.94 7.68-.03-.09a.8.8 0 0 0-.2-.29l-5-5c-.09-.09-.19-.15-.29-.2l-.09-.03a.8.8 0 0 0-.26-.05c-.02 0-.04-.01-.06-.01H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-12s-.01-.04-.01-.06c0-.09-.02-.17-.05-.26ZM6 20V4h7v4c0 .55.45 1 1 1h4v11z"></path><path d="M8 11h8v2H8zm0 4h8v2H8zm0-8h3v2H8z"></path>
-            </svg>
-                <p>Detalles de la reserva</p> 
-            </div>
-            <div class="fila">
-            <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M21 5H3c-.55 0-1 .45-1 1v3.55c0 .48.33.89.8.98a1.499 1.499 0 0 1 0 2.94c-.47.09-.8.5-.8.98V18c0 .55.45 1 1 1h18c.55 0 1-.45 1-1v-3.55c0-.48-.33-.89-.8-.98a1.499 1.499 0 0 1 0-2.94c.47-.09.8-.5.8-.98V6c0-.55-.45-1-1-1m-1 3.84c-1.2.57-2 1.79-2 3.16s.8 2.59 2 3.16V17h-4v-2h-1v2H4v-1.84c1.2-.57 2-1.79 2-3.16s-.8-2.59-2-3.16V7h11v1h1V7h4z"></path><path d="M15 9h1v2h-1zm0 3h1v2h-1z"></path>
-            </svg>
-                <p> Parqueadero: ${data.parqueaderoId} </p> 
-            </div>
-            <div class="fila">
-            <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2M5 20V8h14V6v14z"></path><path d="M12 13h5v5h-5z"></path>
-            </svg>
-                <p>  Fecha: ${data.fecha}</p> 
-            </div>  
-            <div class="fila"> 
-            <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M12 2C6.58 2 2 6.58 2 12s4.58 10 10 10 10-4.58 10-10S17.42 2 12 2m0 18c-4.34 0-8-3.66-8-8s3.66-8 8-8 8 3.66 8 8-3.66 8-8 8"></path><path d="M13 7h-2v6h6v-2h-4z"></path>
-            </svg> 
-                <p>Hora Entrada: ${data.horaEntrada} </p>
-            </div>
-            <div class="fila">
-             <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M12 2C6.58 2 2 6.58 2 12s4.58 10 10 10 10-4.58 10-10S17.42 2 12 2m0 18c-4.34 0-8-3.66-8-8s3.66-8 8-8 8 3.66 8 8-3.66 8-8 8"></path><path d="M13 7h-2v6h6v-2h-4z"></path>
-            </svg> 
-                <p> Hora Salida: ${data.horaSalida} </p>
-            </div>
-            <div class="fila">
-             <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M12 2a2 2 0 1 0 0 4 2 2 0 1 0 0-4m-2 20h4v-7h2V8c0-.55-.45-1-1-1H9c-.55 0-1 .45-1 1v7h2z"></path>
-            </svg>
-                <p> Código Seguridad: ${data.uid.slice(0, 8)} </p>
-            </div>
-            <div class="fila">
-                <a href="aumentar.html"><button class="boton_aumentar">Aumentar</button></a>
+            <section class="mi-reserva">
+              <header class="mi-reserva-heading">
+                <p class="mi-reserva-kicker">Hoy</p>
+                <h1 class="titu mi-reserva-title">Mi Reserva</h1>
+              </header>
+              <article class="reserva_hoy mi-reserva-card">
+                <div class="info_reserva">
+                  <div class="mi-reserva-card-head">
+                    <span class="mi-reserva-cupo">Cupo ${data.parqueaderoId}</span>
+                    <span class="mi-reserva-badge ok">Confirmada</span>
+                  </div>
+                  <div class="mi-reserva-grid">
+                    <div class="fila mi-reserva-meta">
+                      <span class="reserva-meta-label">Parqueadero</span>
+                      <p class="reserva-meta-value">${data.parqueaderoId}</p>
+                    </div>
+                    <div class="fila mi-reserva-meta">
+                      <span class="reserva-meta-label">Fecha</span>
+                      <p class="reserva-meta-value">${data.fecha}</p>
+                    </div>
+                    <div class="fila mi-reserva-meta">
+                      <span class="reserva-meta-label">Entrada</span>
+                      <p class="reserva-meta-value">${data.horaEntrada}</p>
+                    </div>
+                    <div class="fila mi-reserva-meta">
+                      <span class="reserva-meta-label">Salida</span>
+                      <p class="reserva-meta-value">${data.horaSalida}</p>
+                    </div>
+                    <div class="fila mi-reserva-meta mi-reserva-code">
+                      <span class="reserva-meta-label">Código de seguridad</span>
+                      <p class="reserva-meta-value reserva-code">${data.uid.slice(0, 8)}</p>
+                    </div>
+                  </div>
+                  <div class="fila mi-reserva-actions">
+                    <a class="boton_aumentar" href="aumentar.html">Aumentar tiempo</a>
+                  </div>
                 </div>
-            </div>
-            <div class="derecha">
-                <center><svg  xmlns="http://www.w3.org/2000/svg" class="icono_derecha_reserva"
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M19 3h-2c0-.55-.45-1-1-1H8c-.55 0-1 .45-1 1H5c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 17H5V5h2v2h10V5h2z"></path><path d="M11 14.09 8.71 11.8 7.3 13.21l3 3c.2.2.45.29.71.29s.51-.1.71-.29l5-5-1.41-1.41-4.29 4.29Z"></path>
-                </svg></center>
-                <center><h3>Reserva confirmada<h3></center>
-                <center><p>Tu espacio ha sido asegurado</p></center>
-                 <center><div id="contadoor" class="contador"></div></center>
-            <div>
-           
-             </div>
+                <aside class="derecha mi-reserva-status">
+                  <div class="mi-reserva-status-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                      <path d="M20 6 9 17l-5-5"/>
+                    </svg>
+                  </div>
+                  <h3 class="mi-reserva-status-title">Reserva confirmada</h3>
+                  <p class="mi-reserva-status-sub">Tu espacio ha sido asegurado</p>
+                  <p class="mi-reserva-timer-label">Tiempo restante</p>
+                  <div id="contadoor" class="contador"></div>
+                </aside>
+              </article>
+            </section>
         `;
 
         }
@@ -183,69 +173,65 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
 
 
             html2 += `
-              
-              <center><h1 class="titu">Reserva Mañana</h1></center>
-             <div class="reserva_mañana">
-            <div class="info_reserva">
-            <div class="fila">
-            <svg  xmlns="http://www.w3.org/2000/svg"  class="iconi" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="m19.94 7.68-.03-.09a.8.8 0 0 0-.2-.29l-5-5c-.09-.09-.19-.15-.29-.2l-.09-.03a.8.8 0 0 0-.26-.05c-.02 0-.04-.01-.06-.01H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-12s-.01-.04-.01-.06c0-.09-.02-.17-.05-.26ZM6 20V4h7v4c0 .55.45 1 1 1h4v11z"></path><path d="M8 11h8v2H8zm0 4h8v2H8zm0-8h3v2H8z"></path>
-            </svg>
-                <p>Detalles de la reserva</p> 
-            </div>
-            <div class="fila">
-            <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M21 5H3c-.55 0-1 .45-1 1v3.55c0 .48.33.89.8.98a1.499 1.499 0 0 1 0 2.94c-.47.09-.8.5-.8.98V18c0 .55.45 1 1 1h18c.55 0 1-.45 1-1v-3.55c0-.48-.33-.89-.8-.98a1.499 1.499 0 0 1 0-2.94c.47-.09.8-.5.8-.98V6c0-.55-.45-1-1-1m-1 3.84c-1.2.57-2 1.79-2 3.16s.8 2.59 2 3.16V17h-4v-2h-1v2H4v-1.84c1.2-.57 2-1.79 2-3.16s-.8-2.59-2-3.16V7h11v1h1V7h4z"></path><path d="M15 9h1v2h-1zm0 3h1v2h-1z"></path>
-            </svg>
-                <p> Parqueadero: ${data.parqueaderoId} </p> 
-            </div>
-            <div class="fila">
-            <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M19 4h-2V2h-2v2H9V2H7v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2M5 20V8h14V6v14z"></path><path d="M12 13h5v5h-5z"></path>
-            </svg>
-                <p>  Fecha: ${data.fecha}</p> 
-            </div>  
-            <div class="fila"> 
-            <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M12 2C6.58 2 2 6.58 2 12s4.58 10 10 10 10-4.58 10-10S17.42 2 12 2m0 18c-4.34 0-8-3.66-8-8s3.66-8 8-8 8 3.66 8 8-3.66 8-8 8"></path><path d="M13 7h-2v6h6v-2h-4z"></path>
-            </svg> 
-                <p>Hora Entrada: ${data.horaEntrada} </p>
-            </div>
-            <div class="fila">
-             <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M12 2C6.58 2 2 6.58 2 12s4.58 10 10 10 10-4.58 10-10S17.42 2 12 2m0 18c-4.34 0-8-3.66-8-8s3.66-8 8-8 8 3.66 8 8-3.66 8-8 8"></path><path d="M13 7h-2v6h6v-2h-4z"></path>
-            </svg> 
-                <p> Hora Salida: ${data.horaSalida} </p>
-            </div>
-            <div class="fila">
-             <svg  xmlns="http://www.w3.org/2000/svg" class="mini_icono" width="24" height="24"  
-            fill="currentColor" viewBox="0 0 24 24" >
-            <path d="M12 2a2 2 0 1 0 0 4 2 2 0 1 0 0-4m-2 20h4v-7h2V8c0-.55-.45-1-1-1H9c-.55 0-1 .45-1 1v7h2z"></path>
-            </svg>
-                <p> Código Seguridad: ${data.uid.slice(0, 8)} </p>
-            </div>
-            </div>
-              <div class="derecha">
-                <center><svg  xmlns="http://www.w3.org/2000/svg" class="icono_derecha_reserva"
-                fill="currentColor" viewBox="0 0 24 24" >
-                <path d="M19 3h-2c0-.55-.45-1-1-1H8c-.55 0-1 .45-1 1H5c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 17H5V5h2v2h10V5h2z"></path><path d="M11 14.09 8.71 11.8 7.3 13.21l3 3c.2.2.45.29.71.29s.51-.1.71-.29l5-5-1.41-1.41-4.29 4.29Z"></path>
-                </svg></center>
-                <center><h3>Reserva confirmada<h3></center>
-                 <center><p>Tu espacio ha sido asegurado</p></center>
-            <div>
-             </div>
+            <section class="mi-reserva">
+              <header class="mi-reserva-heading">
+                <p class="mi-reserva-kicker">Mañana</p>
+                <h1 class="titu mi-reserva-title">Reserva Mañana</h1>
+              </header>
+              <article class="reserva_mañana mi-reserva-card">
+                <div class="info_reserva">
+                  <div class="mi-reserva-card-head">
+                    <span class="mi-reserva-cupo">Cupo ${data.parqueaderoId}</span>
+                    <span class="mi-reserva-badge ok">Confirmada</span>
+                  </div>
+                  <div class="mi-reserva-grid">
+                    <div class="fila mi-reserva-meta">
+                      <span class="reserva-meta-label">Parqueadero</span>
+                      <p class="reserva-meta-value">${data.parqueaderoId}</p>
+                    </div>
+                    <div class="fila mi-reserva-meta">
+                      <span class="reserva-meta-label">Fecha</span>
+                      <p class="reserva-meta-value">${data.fecha}</p>
+                    </div>
+                    <div class="fila mi-reserva-meta">
+                      <span class="reserva-meta-label">Entrada</span>
+                      <p class="reserva-meta-value">${data.horaEntrada}</p>
+                    </div>
+                    <div class="fila mi-reserva-meta">
+                      <span class="reserva-meta-label">Salida</span>
+                      <p class="reserva-meta-value">${data.horaSalida}</p>
+                    </div>
+                    <div class="fila mi-reserva-meta mi-reserva-code">
+                      <span class="reserva-meta-label">Código de seguridad</span>
+                      <p class="reserva-meta-value reserva-code">${data.uid.slice(0, 8)}</p>
+                    </div>
+                  </div>
+                </div>
+                <aside class="derecha mi-reserva-status mi-reserva-status--soon">
+                  <div class="mi-reserva-status-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                      <path d="M20 6 9 17l-5-5"/>
+                    </svg>
+                  </div>
+                  <h3 class="mi-reserva-status-title">Reserva confirmada</h3>
+                  <p class="mi-reserva-status-sub">Tu espacio ha sido asegurado</p>
+                </aside>
+              </article>
+            </section>
         `;
         }
 
     });
 
     if (html === "" && html2 === "") {
-        html += "<center><h1>No hay reservas</h1><center>"
+        html += `
+          <section class="mi-reserva mi-reserva-empty">
+            <p class="mi-reserva-kicker">Sin actividad</p>
+            <h1 class="titu mi-reserva-title">No hay reservas</h1>
+            <p class="mi-reserva-empty-sub">Cuando reserves un cupo, aparecerá aquí con el detalle y el contador.</p>
+            <a class="boton_aumentar" href="reservar.html">Ir a reservar</a>
+          </section>
+        `;
     }
 
     reservasContainer.innerHTML = html;

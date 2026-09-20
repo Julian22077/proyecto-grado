@@ -1,14 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uso común — Parqueadero CJ</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button id="comun">Generar uso comun</button>
-     <script type="module" src="./backend/comun.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <div class="contenido" style="display:flex;align-items:center;justify-content:center;min-height:100vh;">
+    <button id="comun" class="reserr">Generar uso común</button>
+  </div>
+  <script type="module" src="./backend/comun.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <div id="pantallaCarga" class="pantalla_carga" aria-hidden="true" role="status">
+    <div class="pantalla_carga_caja">
+      <div class="pantalla_carga_anillo" aria-hidden="true"><span class="pantalla_carga_p">CJ</span></div>
+      <p class="pantalla_carga_texto">Procesando…</p>
+      <p class="pantalla_carga_sub">Parqueadero CJ</p>
+    </div>
+  </div>
+  <script src="loader.js"></script>
 </body>
-
 </html>

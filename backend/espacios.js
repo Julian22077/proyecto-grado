@@ -2,10 +2,29 @@ import { crearParqueaderos, obtenerTotalParqueaderos, actualizarParqueaderos, re
 const inputReserva = document.getElementById("espaciosReserva");
 const spanComunes = document.getElementById("espaciosComunes");
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
+let htmlreservas="";
+const containerreser=document.getElementById("espa_reser")
 inputReserva.addEventListener("input", () => {
     const reserva = Number(inputReserva.value) || 0;
+    const comunes = 100 - reserva;
 
-    spanComunes.textContent = 100 - reserva;
+    spanComunes.textContent = comunes;
+
+    const kpiReserva = document.getElementById("kpiReservaVista");
+    const kpiComunes = document.getElementById("kpiComunesVista");
+    const barraReserva = document.getElementById("barraReserva");
+    const barraComunes = document.getElementById("barraComunes");
+    const labelReservaBar = document.getElementById("labelReservaBar");
+    const asideReserva = document.getElementById("asideReserva");
+    const asideComunes = document.getElementById("asideComunes");
+
+    if (kpiReserva) kpiReserva.textContent = reserva;
+    if (kpiComunes) kpiComunes.textContent = comunes;
+    if (barraReserva) barraReserva.style.width = `${Math.min(Math.max(reserva, 0), 100)}%`;
+    if (barraComunes) barraComunes.style.width = `${Math.min(Math.max(comunes, 0), 100)}%`;
+    if (labelReservaBar) labelReservaBar.textContent = reserva;
+    if (asideReserva) asideReserva.textContent = reserva;
+    if (asideComunes) asideComunes.textContent = comunes;
 });
 const form = document.getElementById("espaciosForm");
 const infoEspacios = document.getElementById("infoespacios");
@@ -13,6 +32,24 @@ const infoEspacios = document.getElementById("infoespacios");
 onAuthStateChanged(auth, async (usuarioAuth) => {
 
     const token=await usuarioAuth.getIdToken()
+    const totalusuario = await fetch("http://localhost:3000/parqueaderoreservasadmin", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+    })
+    const total = await totalusuario.json();
+    if (!totalusuario.ok) {
+        Swal.fire({
+            title: "Error",
+            text: total.error,
+            icon: "error"
+        });
+        return;
+    }
+      htmlreservas = `<span class="kpi-num">${total.total}</span>`
+      containerreser.innerHTML=htmlreservas;
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const espaciosReserva = Number(document.getElementById("espaciosReserva").value);

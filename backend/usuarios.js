@@ -43,14 +43,15 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
   let html=""
   lista.forEach((data)=>{
       const inicial = data.nombre.charAt(0).toUpperCase();
+      const placa = data.placa ? `<span class="usuario-meta">${data.placa}</span>` : "";
+      const correo = data.correo ? `<span class="usuario-meta usuario-meta-mail">${data.correo}</span>` : "";
       html+=`
-      <div class="tarjeta_usuario" data-id="${data.id}">
-       <div class="incial_usuario">
-            ${inicial}
-            </div>
-      <p>
-        ${data.nombre}
-    </p>
+      <div class="tarjeta_usuario" data-id="${data.id}" role="button" tabindex="0">
+       <div class="incial_usuario">${inicial}</div>
+       <div class="usuario-card-text">
+         <p class="usuario-nombre">${data.nombre}</p>
+         ${placa}${correo}
+       </div>
     </div>`
   }) 
   containerusuarios.innerHTML=html

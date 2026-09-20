@@ -1,34 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cambiar contraseña — Parqueadero CJ</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+<body class="cuenta-page">
+  <a href="perfil.html" class="volver" aria-label="Volver al perfil">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+      <path d="M15 18l-6-6 6-6"/>
+      <path d="M9 12h12"/>
+    </svg>
+  </a>
 
-<body>
-    <a href="perfil.html"><svg xmlns="http://www.w3.org/2000/svg" class="volver" width="24" height="24"
-            fill="currentColor" viewBox="0 0 24 24">
-            <path d="M11.79 6.29 6.09 12l5.7 5.71 1.42-1.42L9.91 13H18v-2H9.91l3.3-3.29z"></path>
-        </svg></a>
-    <center>
-        <form id="CambioContraseña">
-            <div class="actualizar_datos">
-                <h1 class="titu">Actualizar Contraseña</h1>
-                <label for="contraseñaActual">Contraseña actual</label>
-                <input type="password" id="contraseñaActual" placeholder="Contraseña actual">
-                <label for="nuevaContraseña">Nueva contraseña</label>
-                <input type="password" id="nuevaContraseña" placeholder="Nueva contraseña">
-                <label for="confirmarContraseña">Confirmar nueva contraseña</label>
-                <input type="password" id="confirmarContraseña" placeholder="Confirmar nueva contraseña">
-                <button type="submit"> Cambiar contraseña</button>
-            </div>
-        </form>
-    </center>
-    <script type="module" src="./backend/contraseña.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <main class="cuenta-edit">
+    <form id="CambioContraseña" class="actualizar_datos cuenta-form-card">
+      <header class="cuenta-form-head">
+        <p class="cuenta-kicker">Seguridad</p>
+        <h1 class="titu">Actualizar contraseña</h1>
+        <p class="cuenta-form-lead">Usa entre 8 y 30 caracteres con mayúscula, minúscula, número y un carácter especial.</p>
+      </header>
+
+      <div class="cuenta-field">
+        <label for="contraseñaActual">Contraseña actual</label>
+        <input type="password" id="contraseñaActual" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div class="cuenta-field">
+        <label for="nuevaContraseña">Nueva contraseña</label>
+        <input type="password" id="nuevaContraseña" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div class="cuenta-field">
+        <label for="confirmarContraseña">Confirmar nueva contraseña</label>
+        <input type="password" id="confirmarContraseña" placeholder="••••••••" autocomplete="new-password">
+      </div>
+
+      <button type="submit">Cambiar contraseña</button>
+      <a class="cuenta-back-link" href="perfil.html">Cancelar y volver</a>
+    </form>
+  </main>
+
+  <script type="module" src="./backend/contraseña.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <div id="pantallaCarga" class="pantalla_carga" aria-hidden="true" role="status">
+    <div class="pantalla_carga_caja">
+      <div class="pantalla_carga_anillo" aria-hidden="true"><span class="pantalla_carga_p">CJ</span></div>
+      <p class="pantalla_carga_texto">Procesando…</p>
+      <p class="pantalla_carga_sub">Parqueadero CJ</p>
+    </div>
+  </div>
+  <script src="loader.js"></script>
 </body>
-
 </html>

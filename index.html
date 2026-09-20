@@ -1,88 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro — Parqueadero CJ</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
-<body>
-    <div class="registro">
-        <form id="registroForm">
-            <div class="campos">
-                <div class="campos_sec">
-                    <center>
-                        <h1 class="titu">Registro</h1>
-                    </center>
-                    <div class="formulario">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"
-                            fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M19 2H5c-.55 0-1 .45-1 1v4H2v2h2v2H2v2h2v2H2v2h2v4c0 .55.45 1 1 1h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m0 18H6V4h13z">
-                            </path>
-                            <path
-                                d="M12.5 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 1 0 0-5m4.5 9c0-1.66-1.34-3-3-3h-3c-1.66 0-3 1.34-3 3v1h9z">
-                            </path>
-                        </svg>
-                        <input type="text" id="nombre"  maxlength="50"  minlength="3" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" placeholder="Nombre" required>
-                    </div>
-                    <div class="formulario">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"
-                            fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 2v.51l-8 6.22-8-6.22V6zM4 18V9.04l7.39 5.74c.18.14.4.21.61.21s.43-.07.61-.21L20 9.03v8.96H4Z">
-                            </path>
-                        </svg>
-                        <input type="email" id="correo"   maxlength="100" placeholder="Correo" required>
-                    </div>
-                    <div class="formulario">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"
-                            fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2m0 2v.51l-8 6.22-8-6.22V6zM4 18V9.04l7.39 5.74c.18.14.4.21.61.21s.43-.07.61-.21L20 9.03v8.96H4Z">
-                            </path>
-                        </svg>
-                        <input type="password" id="contraseña"  minlength="8" maxlength="30" placeholder="Contraseña" required>
-                    </div>
-                    <div class="formulario">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24" fill="currentColor"
-                            viewBox="0 0 24 24">
-                            <path d="M13 9h5v2h-5zm1 4h4v2h-4z"></path>
-                            <path
-                                d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2M4 18V6h16v12z">
-                            </path>
-                            <path d="M9 8a2 2 0 1 0 0 4 2 2 0 1 0 0-4m0 5c-1.66 0-3 1.34-3 3h6c0-1.66-1.34-3-3-3">
-                            </path>
-                        </svg>
-                        <input type="text" id="cedula"  maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="Cédula" required>
-                    </div>
-                    <div class="formulario">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icono_principal" width="24" height="24"
-                            fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M6.5 12a1.5 1.5 0 1 0 0 3 1.5 1.5 0 1 0 0-3m11 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 1 0 0-3">
-                            </path>
-                            <path
-                                d="m20.77 9.16-1.37-4.1a2.99 2.99 0 0 0-2.85-2.05H7.44a3 3 0 0 0-2.85 2.05l-1.37 4.1c-.72.3-1.23 1.02-1.23 1.84v5c0 .74.41 1.38 1 1.72V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-2h12v2c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-2.28a2 2 0 0 0 1-1.72v-5c0-.83-.51-1.54-1.23-1.84ZM7.44 5h9.12a1 1 0 0 1 .95.68L18.62 9H5.39L6.5 5.68A1 1 0 0 1 7.45 5ZM4 16v-5h16v5z">
-                            </path>
-                        </svg>
-                        <input type="text" maxlength="6" id="placa" placeholder="Placa">
-                    </div>
-                    <button type="submit" class="reserrr">Registrar</button>
-                    <div>
-                        <p>Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="imagen">
-                <img src="./asstes/parkjc.png">
-            </div>
-        </form>
+<body class="auth">
+  <div class="registro">
+    <aside class="auth-brand imagen">
+      <div class="auth-brand-copy auth-copy">
+        <div class="auth-mark"><span>P</span> Parqueadero CJ</div>
+        <h2>Alta de usuario</h2>
+        <p>Registre sus datos para reservar cupos y consultar el estado de sus vehículos.</p>
+      </div>
+    </aside>
+    <div class="campos">
+      <form id="registroForm" class="campos_sec">
+        <h1 class="titu">Crear cuenta</h1>
+        <p class="auth-lead">Complete la información requerida para habilitar el acceso.</p>
+        <div class="formulario">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" maxlength="50" minlength="3" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+" placeholder="Nombre" required>
+        </div>
+        <div class="formulario">
+          <label for="correo">Correo</label>
+          <input type="email" id="correo" maxlength="100" placeholder="correo@ejemplo.com" required>
+        </div>
+        <div class="formulario">
+          <label for="contraseña">Contraseña</label>
+          <input type="password" id="contraseña" minlength="8" maxlength="30" placeholder="Mínimo 8 caracteres" required>
+        </div>
+        <div class="formulario">
+          <label for="cedula">Cédula</label>
+          <input type="text" id="cedula" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="Solo números" required>
+        </div>
+        <div class="formulario">
+          <label for="placa">Placa</label>
+          <input type="text" maxlength="6" id="placa" placeholder="ABC123">
+        </div>
+        <button type="submit" class="reserrr">Registrar</button>
+        <div class="auth-links">
+          <p>¿Ya tiene cuenta? <a href="login.html">Iniciar sesión</a></p>
+        </div>
+      </form>
     </div>
-    <script type="module" src="./backend/Registro.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </div>
+  <script type="module" src="./backend/Registro.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <div id="pantallaCarga" class="pantalla_carga" aria-hidden="true" role="status">
+    <div class="pantalla_carga_caja">
+      <div class="pantalla_carga_anillo" aria-hidden="true"><span class="pantalla_carga_p">CJ</span></div>
+      <p class="pantalla_carga_texto">Procesando…</p>
+      <p class="pantalla_carga_sub">Parqueadero CJ</p>
+    </div>
+  </div>
+  <script src="loader.js"></script>
 </body>
-
 </html>
