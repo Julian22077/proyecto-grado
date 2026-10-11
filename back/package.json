@@ -17,5 +17,10 @@
     "express-rate-limit": "^8.7.0",
     "firebase-admin": "^14.3.0",
     "multer": "^2.4.0"
+  },
+  "overrides": {
+  "jwks-rsa": {
+    "jose": "5.10.0"
   }
+}
 }
