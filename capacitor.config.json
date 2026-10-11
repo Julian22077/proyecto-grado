@@ -1,0 +1,14 @@
+{
+  "appId": "com.calatrava.parqueadero",
+  "appName": "Calatrava",
+  "webDir": ".",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1800,
+      "launchAutoHide": true,
+      "backgroundColor": "#101820",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false
+    }
+  }
+}

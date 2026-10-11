@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1045474082793",
+    "project_id": "parqueadero-40b7c",
+    "storage_bucket": "parqueadero-40b7c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045474082793:android:cd601d66a3ffc54dd1d578",
+        "android_client_info": {
+          "package_name": "com.calatrava.parqueadero"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045474082793-1nbs9fpbib2a8rb1q2im5fm5pm52q77t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNDTP2iGPlJhuKDZlxUD-p6_9UKvOrWmI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045474082793-1nbs9fpbib2a8rb1q2im5fm5pm52q77t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

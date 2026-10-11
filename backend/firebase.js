@@ -121,7 +121,36 @@ export const cancelarNotificacion = async (colaId, fecha,  parqueaderoId)=>{
     await gestionarCola(fecha, parqueaderoId);
     await deleteDoc(doc(db, "colaespera", colaId));
 }
+let avisoNativoListo = false;
+
+async function obtenerTokenNativo() {
+    const push = window.Capacitor?.Plugins?.FirebaseMessaging;
+    if (!push) return null;
+    let permiso = await push.checkPermissions();
+    if (permiso.receive !== "granted") {
+        permiso = await push.requestPermissions();
+    }
+    if (!permiso || permiso.receive !== "granted") return null;
+    if (!avisoNativoListo) {
+        avisoNativoListo = true;
+        push.addListener("notificationReceived", (evento) => {
+            const aviso = evento?.notification || {};
+            if (!window.Swal) return;
+            window.Swal.fire({
+                title: aviso.title || "Calatrava",
+                text: aviso.body || "Tienes una nueva notificación",
+                icon: "info"
+            });
+        });
+    }
+    const resultado = await push.getToken();
+    return resultado?.token || null;
+}
+
 export const obtenertokenFCM=async()=>{
+    if (window.Capacitor?.isNativePlatform?.()) {
+        return obtenerTokenNativo();
+    }
     const messagin= getMessaging();
     const permiso = await Notification.requestPermission();
         console.log("Permiso obtenido:", permiso);

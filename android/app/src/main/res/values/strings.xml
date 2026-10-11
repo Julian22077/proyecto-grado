@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Calatrava</string>
+    <string name="title_activity_main">Calatrava</string>
+    <string name="package_name">com.calatrava.parqueadero</string>
+    <string name="custom_url_scheme">com.calatrava.parqueadero</string>
+</resources>
