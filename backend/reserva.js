@@ -63,7 +63,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     const reservaForm = document.getElementById("reservacontainer");
     const token=await usuarioAuth.getIdToken()
-    const usuarios = await fetch("http://localhost:3000/detalleusuario",{
+    const usuarios = await fetch("https://proyecto-grado-rouge.vercel.app/detalleusuario",{
           method: "GET",
                 headers: {
                      "Authorization": `Bearer ${token}`
@@ -78,7 +78,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         })
         return;
     }
-    const configg=await fetch("http://localhost:3000/configuracion",{
+    const configg=await fetch("https://proyecto-grado-rouge.vercel.app/configuracion",{
           method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`
