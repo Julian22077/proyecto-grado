@@ -1382,6 +1382,10 @@ app.get("/asignacionesactivas", verficarUsuario, limite, async (req, res) => {
         return res.status(500).json({error: error.message});
     }
 })
-app.listen(3000, () => {
-    console.log("corriendo en el puerto")
-})
+if (!process.env.VERCEL) {
+    app.listen(3000, () => {
+        console.log("corriendo en el puerto")
+    })
+}
+
+export default app;
