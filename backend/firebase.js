@@ -152,19 +152,16 @@ export const obtenertokenFCM=async()=>{
         return obtenerTokenNativo();
     }
     const messagin= getMessaging();
-    const permiso = await Notification.requestPermission();
-        console.log("Permiso obtenido:", permiso);
-     if (permiso !== "granted") {
-        console.log("No se concedieron permisos");
+    if (typeof Notification === "undefined" || Notification.permission === "denied") {
         return null;
     }
-    if(permiso==="granted"){
-     
-        const token= await getToken(messagin, { vapidKey: "BG8q0p1LPECiE-QNbCZMKOQNOY_1RZw5NShNsNnsRKJkBw_k5sDAlU6liuzh1_j-em6mU0DHanZOkQ62HQNmdXI"
-        })
-        console.log(token)
-        return token;
-
+    const permiso = Notification.permission === "granted"
+        ? "granted"
+        : await Notification.requestPermission();
+    if (permiso !== "granted") {
+        return null;
     }
+    const token = await getToken(messagin, { vapidKey: "BG8q0p1LPECiE-QNbCZMKOQNOY_1RZw5NShNsNnsRKJkBw_k5sDAlU6liuzh1_j-em6mU0DHanZOkQ62HQNmdXI" });
+    return token;
 }
 
