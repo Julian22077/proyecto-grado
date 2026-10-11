@@ -24,7 +24,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
 
 let dataconfig;
 
- const configg=await fetch("http://localhost:3000/configuracion",{
+ const configg=await fetch("https://proyecto-grado-rouge.vercel.app/configuracion",{
           method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`
@@ -40,7 +40,7 @@ let dataconfig;
         return 
     }
     dataconfig=config;
-const usosadmin=await fetch("http://localhost:3000/totalusos",{
+const usosadmin=await fetch("https://proyecto-grado-rouge.vercel.app/totalusos",{
         method:"GET",
         headers:{
             "Authorization": `Bearer ${token}`
@@ -55,7 +55,7 @@ if(!usosadmin.ok){
     });
     return;
 }
-const reservasadmin=await fetch("http://localhost:3000/totalreservas",{
+const reservasadmin=await fetch("https://proyecto-grado-rouge.vercel.app/totalreservas",{
      method:"GET",
     headers:{
          "Authorization": `Bearer ${token}`

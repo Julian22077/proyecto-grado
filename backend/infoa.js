@@ -14,7 +14,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
  
     const token = await usuarioAuth.getIdToken();
-    const usuariosa = await fetch("http://localhost:3000/detalleusuario",{
+    const usuariosa = await fetch("https://proyecto-grado-rouge.vercel.app/detalleusuario",{
           method: "GET",
                 headers: {
                      "Authorization": `Bearer ${token}`
@@ -43,7 +43,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     
     let dataconfig;
 
-    const configg=await fetch("http://localhost:3000/configuracion",{
+    const configg=await fetch("https://proyecto-grado-rouge.vercel.app/configuracion",{
           method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`
@@ -60,7 +60,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     dataconfig=config;
     console.log(dataconfig.metaIngreso);
-    const reservasadmin = await fetch("http://localhost:3000/reservasadmin", {
+    const reservasadmin = await fetch("https://proyecto-grado-rouge.vercel.app/reservasadmin", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -76,7 +76,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         });
         return;
     }
-    const usosadmin = await fetch("http://localhost:3000/usoscomunes", {
+    const usosadmin = await fetch("https://proyecto-grado-rouge.vercel.app/usoscomunes", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -92,7 +92,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         });
         return;
     }
-    const totaladmin = await fetch("http://localhost:3000/parqueaderos", {
+    const totaladmin = await fetch("https://proyecto-grado-rouge.vercel.app/parqueaderos", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -108,7 +108,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         });
         return;
     }
-    const usuariosadmin = await fetch("http://localhost:3000/usuarios", {
+    const usuariosadmin = await fetch("https://proyecto-grado-rouge.vercel.app/usuarios", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

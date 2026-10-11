@@ -25,7 +25,7 @@ const limite = rateLimit({
     standardHeaders: true,
     legacyHeaders: false
 })
-app.use(cors({ origin: "http://127.0.0.1:5500" }))
+app.use(cors({ origin: "https://proyecto-grado-front-black.vercel.app" }))
 dotenv.config();
 const serviceAccount = JSON.parse(
     process.env.FIREBASE_SERVICE_ACCOUNT

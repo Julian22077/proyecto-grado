@@ -34,7 +34,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const mañana = new Date();
     const tokenfcm=await obtenertokenFCM();
     if(tokenfcm){
-        const tokenn=await fetch("http://localhost:3000/guardartoken",{
+        const tokenn=await fetch("https://proyecto-grado-rouge.vercel.app/guardartoken",{
              method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -87,7 +87,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         }
     });
     try{
-    const respuestareserva=await fetch("http://localhost:3000/reserva",{
+    const respuestareserva=await fetch("https://proyecto-grado-rouge.vercel.app/reserva",{
         method: "GET",
         headers: {
             "Content-Type": "application/json",
