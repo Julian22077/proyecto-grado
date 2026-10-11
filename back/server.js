@@ -4,7 +4,7 @@ import { getAuth } from "firebase-admin/auth"
 import dotenv from "dotenv";
 import cors from "cors"
 import rateLimit from "express-rate-limit"
-import { initializeApp, applicationDefault } from "firebase-admin/app";
+import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { convertirHora, hayConflicto, minutosAHora,convertirHoracomun } from "../backend/utils.js";
 import { getFirestore } from "firebase-admin/firestore";
 import { getMessaging } from "firebase-admin/messaging";
@@ -27,9 +27,14 @@ const limite = rateLimit({
 })
 app.use(cors({ origin: "http://127.0.0.1:5500" }))
 dotenv.config();
-initializeApp({
-    credential: applicationDefault()
-});
+const serviceAccount = JSON.parse(
+    process.env.FIREBASE_SERVICE_ACCOUNT
+);
+if (getApps().length === 0) {
+    initializeApp({
+        credential: cert(serviceAccount)
+    });
+}
 const db = getFirestore();
 const adminauth = getAuth();
 app.use(express.json())

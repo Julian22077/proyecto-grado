@@ -140,8 +140,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                   </div>
                   <div class="mi-reserva-grid">
                     <div class="fila mi-reserva-meta">
-                      <span class="reserva-meta-label">Parqueadero</span>
-                      <p class="reserva-meta-value">${data.parqueaderoId}</p>
+                      <span class="reserva-meta-label">Valor</span>
+                      <p class="reserva-meta-value">${data.precio}</p>
                     </div>
                     <div class="fila mi-reserva-meta">
                       <span class="reserva-meta-label">Fecha</span>
@@ -198,8 +198,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                   </div>
                   <div class="mi-reserva-grid">
                     <div class="fila mi-reserva-meta">
-                      <span class="reserva-meta-label">Parqueadero</span>
-                      <p class="reserva-meta-value">${data.parqueaderoId}</p>
+                      <span class="reserva-meta-label">Valor</span>
+                      <p class="reserva-meta-value">${data.precio}</p>
                     </div>
                     <div class="fila mi-reserva-meta">
                       <span class="reserva-meta-label">Fecha</span>

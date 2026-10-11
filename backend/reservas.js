@@ -181,8 +181,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const texto = buscador.value.toLowerCase();
     const filtradas = reservas.filter((data) => {
       return (
-        data.uid.toLowerCase().includes(texto) ||
-        String(data.nombre).includes(texto)
+        data.nombre.toLowerCase().includes(texto)
       );
     });
     MostrarReserva(filtradas);
