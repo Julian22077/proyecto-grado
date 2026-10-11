@@ -99,7 +99,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     if(/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(userData.placa)){
          precio_minuto=config.minutosCobroMoto;
     }
-    const reservasusuarios = await fetch("http://localhost:3000/reservausuarios", {
+    const reservasusuarios = await fetch("https://proyecto-grado-rouge.vercel.app/reservausuarios", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -115,7 +115,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         });
         return;
     }
-    const totalusuario = await fetch("http://localhost:3000/parqueaderoreservas", {
+    const totalusuario = await fetch("https://proyecto-grado-rouge.vercel.app/parqueaderoreservas", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -178,7 +178,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             return;
         }
         try{
-        const reserva= await fetch("http://localhost:3000/disponibilidad",{
+        const reserva= await fetch("https://proyecto-grado-rouge.vercel.app/disponibilidad",{
             method:"POST",
             headers:{
                 "Content-Type":"application/json",
@@ -206,7 +206,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                 });
                 if(perticion.isConfirmed){
                     try {
-                        const colaEspera=await fetch("http://localhost:3000/colaespera",{
+                        const colaEspera=await fetch("https://proyecto-grado-rouge.vercel.app/colaespera",{
                              method:"POST",
             headers:{
                 "Content-Type":"application/json",
@@ -249,7 +249,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         }
         const parqueaderoId=disponibilidad.bloqueoId;
 
-        const firmas= await fetch("http://localhost:3000/firma",{
+        const firmas= await fetch("https://proyecto-grado-rouge.vercel.app/firma",{
              method:"POST",
             headers:{
                 "Content-Type":"application/json",
@@ -279,7 +279,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             if(resultado.transaction?.status==="APPROVED"){
                 const idtransaccion=resultado.transaction.id
                 try{
-                    const reservahecha=await fetch("http://localhost:3000/hacerreserva",{
+                    const reservahecha=await fetch("https://proyecto-grado-rouge.vercel.app/hacerreserva",{
                      method:"POST",
             headers:{
                 "Content-Type":"application/json",
@@ -296,7 +296,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                         })
                         return;
                     }
-                    const vaciarCola=await fetch("http://localhost:3000/eliminarcola",{
+                    const vaciarCola=await fetch("https://proyecto-grado-rouge.vercel.app/eliminarcola",{
                          method:"POST",
             headers:{
                 "Content-Type":"application/json",

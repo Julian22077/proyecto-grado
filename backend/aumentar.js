@@ -30,7 +30,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     const token=await usuarioAuth.getIdToken();
     try{
-    const aumentar=await fetch("http://localhost:3000/reservaaumento", {
+    const aumentar=await fetch("https://proyecto-grado-rouge.vercel.app/reservaaumento", {
         headers: {
             "Authorization": `Bearer ${token}`
         }
@@ -115,7 +115,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
 
     });
     let precio_minuto
-    const usuarios = await fetch("http://localhost:3000/detalleusuario",{
+    const usuarios = await fetch("https://proyecto-grado-rouge.vercel.app/detalleusuario",{
           method: "GET",
                 headers: {
                      "Authorization": `Bearer ${token}`
@@ -130,7 +130,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         })
         return;
     }
-    const configg=await fetch("http://localhost:3000/configuracion",{
+    const configg=await fetch("https://proyecto-grado-rouge.vercel.app/configuracion",{
           method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`
@@ -195,7 +195,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             try{
 
          
-            const validacion= await fetch("http://localhost:3000/validaraumento",{
+            const validacion= await fetch("https://proyecto-grado-rouge.vercel.app/validaraumento",{
                  method:"POST",
             headers:{
                 "Content-Type":"application/json",
@@ -221,7 +221,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                 });
                 return;
             }
-            const firmas=await fetch("http://localhost:3000/firmaaumento",{
+            const firmas=await fetch("https://proyecto-grado-rouge.vercel.app/firmaaumento",{
                      method:"POST",
             headers:{
                 "Content-Type":"application/json",
@@ -250,7 +250,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             if(resultado.transaction?.status==="APPROVED"){
                 const idtransaccion=resultado.transaction.id
                 try{
-                    const aumento=await fetch("http://localhost:3000/aumentar",{
+                    const aumento=await fetch("https://proyecto-grado-rouge.vercel.app/aumentar",{
                          method:"POST",
             headers:{
                 "Content-Type":"application/json",

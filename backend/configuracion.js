@@ -27,7 +27,7 @@ form.addEventListener("submit", async (e) => {
     const minutoCobroMoto = Number(document.getElementById("minutoCobroMoto").value)
     const ahora = new Date();
     const fehahoy = ahora.toLocaleDateString("sv-SE")
-    const vigencia = await fetch("http://localhost:3000/reservasvigentes",{
+    const vigencia = await fetch("https://proyecto-grado-rouge.vercel.app/reservasvigentes",{
             method:"GET",
              headers:{
             "Authorization": `Bearer ${token}`
@@ -42,7 +42,7 @@ form.addEventListener("submit", async (e) => {
             })
             return;
         }
-    const asignaciones = await fetch("http://localhost:3000/asignacionesactivas", {
+    const asignaciones = await fetch("https://proyecto-grado-rouge.vercel.app/asignacionesactivas", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -59,7 +59,7 @@ form.addEventListener("submit", async (e) => {
         }
     let dataconfig;
 
-    const configg=await fetch("http://localhost:3000/configuracion",{
+    const configg=await fetch("https://proyecto-grado-rouge.vercel.app/configuracion",{
           method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`
@@ -108,7 +108,7 @@ form.addEventListener("submit", async (e) => {
                 icon: "error",
             });
         } else {
-            const crearconfig=await fetch("http://localhost:3000/crearconfiguracion",{
+            const crearconfig=await fetch("https://proyecto-grado-rouge.vercel.app/crearconfiguracion",{
                 method: "POST",
         headers: {
             "Content-Type": "application/json",

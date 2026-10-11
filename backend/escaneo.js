@@ -57,7 +57,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             const formData = new FormData();
             formData.append("imagen", blob, "captura.jpg");
             mostrarEstado("Detectando placa...", "busy");
-            const respuesta = await fetch("http://localhost:3000/detectar", {
+            const respuesta = await fetch("https://proyecto-grado-rouge.vercel.app/detectar", {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`

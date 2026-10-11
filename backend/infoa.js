@@ -216,7 +216,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             }
         }
     })
-    const ultimasadmin = await fetch("http://localhost:3000/ultimasreservas", {
+    const ultimasadmin = await fetch("https://proyecto-grado-rouge.vercel.app/ultimasreservas", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

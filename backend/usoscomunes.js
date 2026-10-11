@@ -19,7 +19,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     return;
   }
 
-  const usosadmin = await fetch("http://localhost:3000/usoscomunes", {
+  const usosadmin = await fetch("https://proyecto-grado-rouge.vercel.app/usoscomunes", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -117,7 +117,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
       salio.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {
-          const saliocomun = await fetch("http://localhost:3000/finalizarusoComun", {
+          const saliocomun = await fetch("https://proyecto-grado-rouge.vercel.app/finalizarusoComun", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -179,7 +179,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           if (result.isConfirmed) {
             const metodoPago = result.value.metodoPago;
             try {
-              const pagar = await fetch("http://localhost:3000/validarpago", {
+              const pagar = await fetch("https://proyecto-grado-rouge.vercel.app/validarpago", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -248,7 +248,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         try {
 
           const actualizar = await fetch(
-            "http://localhost:3000/actualizarplaca",
+            "https://proyecto-grado-rouge.vercel.app/actualizarplaca",
             {
               method: "PUT",
               headers: {

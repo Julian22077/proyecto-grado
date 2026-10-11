@@ -45,7 +45,7 @@ window.addEventListener("offline",()=>{
 onAuthStateChanged(auth, async (usuarioAuth) => {
 
     const token=await usuarioAuth.getIdToken()
-    const totalusuario = await fetch("http://localhost:3000/parqueaderoreservasadmin", {
+    const totalusuario = await fetch("https://proyecto-grado-rouge.vercel.app/parqueaderoreservasadmin", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -75,7 +75,7 @@ form.addEventListener("submit", async (e) => {
     return;
 }
     try {
-        const vigencia = await fetch("http://localhost:3000/reservasvigentes",{
+        const vigencia = await fetch("https://proyecto-grado-rouge.vercel.app/reservasvigentes",{
             method:"GET",
              headers:{
             "Authorization": `Bearer ${token}`
@@ -90,7 +90,7 @@ form.addEventListener("submit", async (e) => {
             })
             return;
         }
-        const asignaciones = await fetch("http://localhost:3000/asignacionesactivas", {
+        const asignaciones = await fetch("https://proyecto-grado-rouge.vercel.app/asignacionesactivas", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`
@@ -113,7 +113,7 @@ form.addEventListener("submit", async (e) => {
             });
             return;
         }
-        const totaladmin = await fetch("http://localhost:3000/parqueaderos", {
+        const totaladmin = await fetch("https://proyecto-grado-rouge.vercel.app/parqueaderos", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -130,7 +130,7 @@ form.addEventListener("submit", async (e) => {
         return; 
     }
         if (espacios.total>0) {
-            const actualizarpar=await fetch("http://localhost:3000/actualizarparqueaderos",{
+            const actualizarpar=await fetch("https://proyecto-grado-rouge.vercel.app/actualizarparqueaderos",{
                 method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -154,7 +154,7 @@ form.addEventListener("submit", async (e) => {
             });
             return;
         }
-        const crearparqueaderos= await fetch("http://localhost:3000/crearparqueaderos",{
+        const crearparqueaderos= await fetch("https://proyecto-grado-rouge.vercel.app/crearparqueaderos",{
             method: "POST",
         headers: {
             "Content-Type": "application/json",

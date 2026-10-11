@@ -29,7 +29,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     return;
   }
   const token=await usuarioAuth.getIdToken()
-  const conusltausuario=await fetch(`http://localhost:3000/usuarios/${id}`,{
+  const conusltausuario=await fetch(`https://proyecto-grado-rouge.vercel.app/usuarios/${id}`,{
      method:"GET",
         headers:{
             "Authorization": `Bearer ${token}`

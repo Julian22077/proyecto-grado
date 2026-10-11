@@ -30,7 +30,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
   }
    const token=await usuarioAuth.getIdToken()
 
-  const reservasadmin=await fetch("http://localhost:3000/reservasadmin",{
+  const reservasadmin=await fetch("https://proyecto-grado-rouge.vercel.app/reservasadmin",{
         method:"GET",
         headers:{
             "Content-Type":"application/json",
@@ -121,7 +121,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
       penalizacion.addEventListener("submit", async (e) => {
         e.preventDefault();
         try {
-         const penal=await fetch("http://localhost:3000/penalizar",{
+         const penal=await fetch("https://proyecto-grado-rouge.vercel.app/penalizar",{
            method:"POST",
             headers:{
                 "Content-Type":"application/json",
@@ -140,8 +140,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           return;
          }
          const parqueaderoId=datos.parqueaderoId
-         const Gestionar=await fetch("http://localhost:3000/gestionarcola",{
-           method:"POST",
+         const Gestionar=await fetch("https://proyecto-grado-rouge.vercel.app/gestionarcola",{
+           method:"POST", 
             headers:{
                 "Content-Type":"application/json",
                 "Authorization": `Bearer ${token}`

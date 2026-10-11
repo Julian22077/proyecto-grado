@@ -21,7 +21,7 @@ containerPlaca.addEventListener("submit", async (e)=>{
     e.preventDefault()
     const placa=containerPlaca["PlacaInfo"].value;
     try{
-        const comun=await fetch("http://localhost:3000/validarusoComun",{
+        const comun=await fetch("https://proyecto-grado-rouge.vercel.app/validarusoComun",{
             method: "POST",
                 headers: {
                     "Content-Type": "application/json",
