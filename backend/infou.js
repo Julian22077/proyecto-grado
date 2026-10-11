@@ -68,7 +68,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         if(noti.isConfirmed){
             window.location.href = "reservar.html";
         }else{
-            const cancelar=await fetch("http://localhost:3000/cancelarCola", {
+            const cancelar=await fetch("https://proyecto-grado-rouge.vercel.app/cancelarCola", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
