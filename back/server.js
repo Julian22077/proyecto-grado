@@ -1,4 +1,4 @@
-import "./zona.js";
+import "./zonahoraria.js";
 import express from "express";
 import crypto from "crypto"
 import { getAuth } from "firebase-admin/auth"
