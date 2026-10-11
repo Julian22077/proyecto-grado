@@ -1099,7 +1099,7 @@ boton.addEventListener("click", async () => {
     })
 })
 const botonexport = document.getElementById("exportar");
-botonexport.addEventListener("click", () => {
+botonexport.addEventListener("click", async () => {
     const inicio = document.getElementById("fechaInicio").value;    
     const fin = document.getElementById("fechaFin").value;
     const datosexcel = [];
@@ -1158,7 +1158,32 @@ botonexport.addEventListener("click", () => {
 const hojita =XLSX.utils.json_to_sheet(datosexcel);
 const libro = XLSX.utils.book_new();
 XLSX.utils.book_append_sheet(libro, hojita, "Estadisticas");
-XLSX.writeFile(libro, `estadisticas_${inicio}_a_${fin}.xlsx`);
+const nombre = `estadisticas_${inicio}_a_${fin}.xlsx`;
+if (window.Capacitor?.isNativePlatform?.()) {
+    try {
+        const base64 = XLSX.write(libro, { bookType: "xlsx", type: "base64" });
+        const guardado = await window.Capacitor.Plugins.Filesystem.writeFile({
+            path: nombre,
+            data: base64,
+            directory: "CACHE"
+        });
+        await window.Capacitor.Plugins.Share.share({
+            title: nombre,
+            files: [guardado.uri],
+            dialogTitle: "Exportar Excel"
+        });
+    } catch (error) {
+        const mensaje = String(error?.message || error).toLowerCase();
+        if (mensaje.includes("cancel") || mensaje.includes("abort")) return;
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "No se pudo exportar el archivo."
+        });
+    }
+    return;
+}
+XLSX.writeFile(libro, nombre);
 });
 });
 

@@ -29,10 +29,29 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     const token = await usuarioAuth.getIdToken()
     let stream = null;
+    async function solicitarCamaraMovil() {
+        if (!window.Capacitor?.isNativePlatform?.()) return true;
+        const camara = window.Capacitor.Plugins?.Camera;
+        if (!camara) return true;
+        let permiso = await camara.checkPermissions();
+        if (permiso.camera !== "granted") {
+            permiso = await camara.requestPermissions({ permissions: ["camera"] });
+        }
+        return permiso.camera === "granted";
+    }
     async function iniciarCamara() {
         try {
+            const permitido = await solicitarCamaraMovil();
+            if (!permitido) {
+                mostrarEstado("No se pudo acceder a la cámara.", "error");
+                return;
+            }
             stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false })
             video.srcObject = stream
+            if (window.Capacitor?.isNativePlatform?.()) {
+                video.muted = true;
+                await video.play();
+            }
         } catch (error) {
             console.error("Error al acceder a la cámara:", error);
             mostrarEstado("No se pudo acceder a la cámara.", "error");
