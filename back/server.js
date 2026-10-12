@@ -10,6 +10,7 @@ import { convertirHora, hayConflicto, minutosAHora,convertirHoracomun } from "..
 import { getFirestore } from "firebase-admin/firestore";
 import { getMessaging } from "firebase-admin/messaging";
 import multer from "multer"
+import { leerCache, guardarCache, borrarCache } from "./cache.js"
 const app = express();
 const upload = multer({
     storage: multer.memoryStorage()
@@ -333,6 +334,7 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
                 await db.collection("colaespera").doc(colo.id).delete();
             }
         }
+        borrarCache("totalreservas");
         return res.json({ reservaID: reser.id })
     } catch (error) {
         console.error(error);
@@ -495,6 +497,7 @@ app.post("/aumentar", verficarUsuario, limite, async (req, res) => {
             trans.update(refreserva, { horaSalida: minutosAHora(nuevaSalida), minutosExtra: minutosExtra, extensionMinutos: true, PrecioExtension: nuevoPrecio })
             return { message: "reserva aumentada con exito" }
         })
+        borrarCache("totalreservas");
         return res.json(proceso)
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -557,6 +560,7 @@ app.post("/penalizar", verficarUsuario, limite, async (req, res) => {
             }
             return infodata.parqueaderoId
         })
+        borrarCache("totalreservas");
         return res.json({ parqueaderoId: penlizar });
     } catch (error) {
         console.error(error);
@@ -790,6 +794,7 @@ app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
             return { message: "la asiganción se creo" }
 
         })
+        borrarCache("totalusos");
         return res.json(resultado)
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -839,6 +844,7 @@ app.post("/finalizarusocomun", verficarUsuario, limite, async (req, res) => {
             return { message: "El usuario salió" }
 
         })
+        borrarCache("totalusos");
         return res.json(resultado)
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -920,8 +926,12 @@ app.get("/parqueaderos", verficarUsuario, limite, async (req, res) => {
         if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
             return res.status(403).json("No posee los permisos para hacer esta accion")
         }
+        const enCache = leerCache("parqueaderos:total");
+        if (enCache) return res.json(enCache);
         const parqueaderos = await db.collection("parqueaderos").get();
-        return res.json({ total: parqueaderos.size })
+        const respuesta = { total: parqueaderos.size };
+        guardarCache("parqueaderos:total", respuesta, 30);
+        return res.json(respuesta)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -946,8 +956,12 @@ app.get("/usuarios", verficarUsuario, limite, async (req, res) => {
         if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
             return res.status(403).json("No posee los permisos para hacer esta accion")
         }
+        const enCache = leerCache("usuarios:conteo");
+        if (enCache) return res.json(enCache);
         const usuarios = await db.collection("usuarios").where("correo", "!=", "julian.lozanoh@uniagustiniana.edu.co").get();
-        return res.json({ total: usuarios.size })
+        const respuesta = { total: usuarios.size };
+        guardarCache("usuarios:conteo", respuesta, 5);
+        return res.json(respuesta)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -972,8 +986,17 @@ app.get("/totalreservas", verficarUsuario, limite, async (req, res) => {
         if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
             return res.status(403).json("No posee los permisos para hacer esta accion")
         }
-        const reservas = await db.collection("reservas").get();
-        return res.json(reservas.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+        const fechahoy = new Date().toLocaleDateString("sv-SE");
+        const siguiente= new Date();
+        siguiente.setDate(siguiente.getDate() - 30);
+        const fechainicio = siguiente.toLocaleDateString("sv-SE");
+        const clave = `totalreservas:${fechainicio}:${fechahoy}`;
+        const enCache = leerCache(clave);
+        if (enCache) return res.json(enCache);
+        const reservas = await db.collection("reservas").where("fecha", ">=", fechainicio).where("fecha", "<=", fechahoy).get();
+        const datos = reservas.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        guardarCache(clave, datos, 5);
+        return res.json(datos)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -984,8 +1007,17 @@ app.get("/totalusos", verficarUsuario, limite, async (req, res) => {
         if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
             return res.status(403).json("No posee los permisos para hacer esta accion")
         }
-        const usos = await db.collection("usocomun").get();
-        return res.json(usos.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+        const fechahoy = new Date().toLocaleDateString("sv-SE");
+        const siguiente= new Date();
+        siguiente.setDate(siguiente.getDate() - 30);
+        const fechainicio = siguiente.toLocaleDateString("sv-SE");
+        const clave = `totalusos:${fechainicio}:${fechahoy}`;
+        const enCache = leerCache(clave);
+        if (enCache) return res.json(enCache);
+        const usos = await db.collection("usocomun").where("fecha", ">=", fechainicio).where("fecha", "<=", fechahoy).get();
+        const datos = usos.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        guardarCache(clave, datos, 5);
+        return res.json(datos)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -1094,6 +1126,7 @@ app.post("/crearparqueaderos", verficarUsuario, limite, async (req, res) => {
             const tipo = i <= espaciosReserva ? "reserva" : "comun";
             await db.collection("parqueaderos").doc(i.toString()).set({ numero: i, tipo: tipo })
         }
+        borrarCache("parqueaderos");
         return res.json({ message: "Parqueaderos creados correctamente" })
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -1119,6 +1152,7 @@ app.post("/actualizarparqueaderos", verficarUsuario, limite, async (req, res) =>
             const tipo = i <= espaciosReserva ? "reserva" : "comun";
             await db.collection("parqueaderos").doc(i.toString()).update({ tipo: tipo })
         }
+        borrarCache("parqueaderos");
         return res.json({ message: "Parqueaderos catualizado correctamente" })
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -1126,11 +1160,15 @@ app.post("/actualizarparqueaderos", verficarUsuario, limite, async (req, res) =>
 })
 app.get("/configuracion", verficarUsuario, limite, async (req, res) => {
     try {
+        const enCache = leerCache("configuracion");
+        if (enCache) return res.json(enCache);
         const configuracion = await db.collection("configuracion").doc("general").get()
         if (!configuracion.exists) {
             return res.status.apply(400).json({ error: "la configuracion no existe" })
         }
-        return res.json(configuracion.data())
+        const datos = configuracion.data();
+        guardarCache("configuracion", datos, 30);
+        return res.json(datos)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -1163,6 +1201,7 @@ app.post("/crearconfiguracion", verficarUsuario, limite, async (req, res) => {
         const ahora = new Date();
         const fechaConfigurado = ahora.toLocaleDateString("sv-SE");
         await db.collection("configuracion").doc("general").set({ metaIngreso, metaGeneral, metaReservas, metaUsos, minutosCobro, minutosCobroMoto, fechaConfigurado })
+        borrarCache("configuracion");
         return res.json({ message: "configuarcion guardada con exito" })
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -1174,8 +1213,12 @@ app.get("/usuariostotales", verficarUsuario, limite, async (req, res) => {
         if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
             return res.status(403).json("No posee los permisos para hacer esta accion")
         }
+        const enCache = leerCache("usuarios:lista");
+        if (enCache) return res.json(enCache);
         const usuarios = await db.collection("usuarios").where("correo", "!=", "julian.lozanoh@uniagustiniana.edu.co").get()
-        return res.json(usuarios.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+        const datos = usuarios.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        guardarCache("usuarios:lista", datos, 5);
+        return res.json(datos)
 
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -1199,19 +1242,28 @@ app.get("/usuarios/:id", verficarUsuario, limite, async (req, res) => {
 app.get("/detalleusuario", verficarUsuario, limite, async (req, res) => {
     try {
         const uid = req.uid;
+        const clave = `usuario:${uid}`;
+        const enCache = leerCache(clave);
+        if (enCache) return res.json(enCache);
         const usuario = await db.collection("usuarios").doc(uid).get()
         if (!usuario.exists) {
             return res.status(400).json({ error: "no se encontro el usuario" })
         }
-        return res.json({ id: usuario.id, ...usuario.data() })
+        const datos = { id: usuario.id, ...usuario.data() };
+        guardarCache(clave, datos, 2);
+        return res.json(datos)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
 })
 app.get("/parqueaderoreservas", verficarUsuario, limite, async (req, res) => {
     try {
+        const enCache = leerCache("parqueaderos:reserva");
+        if (enCache) return res.json(enCache);
         const parqueaderos = await db.collection("parqueaderos").where("tipo", "==", "reserva").get();
-        return res.json({ total: parqueaderos.size })
+        const respuesta = { total: parqueaderos.size };
+        guardarCache("parqueaderos:reserva", respuesta, 30);
+        return res.json(respuesta)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -1232,8 +1284,12 @@ app.get("/parqueaderoreservasadmin", verficarUsuario, limite, async (req, res) =
         if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
             return res.status(403).json("No posee los permisos para hacer esta accion")
         }
+        const enCache = leerCache("parqueaderos:reserva");
+        if (enCache) return res.json(enCache);
         const parqueaderos = await db.collection("parqueaderos").where("tipo", "==", "reserva").get();
-        return res.json({ total: parqueaderos.size })
+        const respuesta = { total: parqueaderos.size };
+        guardarCache("parqueaderos:reserva", respuesta, 30);
+        return res.json(respuesta)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -1317,6 +1373,7 @@ app.post("/detectar", verficarUsuario, upload.single("imagen"), async (req, res)
                 horaEntrada: horaEntrada
             };
         });
+        borrarCache("totalusos");
         return res.json(asignacion);
     } catch (error) {
         return res.status(500).json({ error: error.message })
