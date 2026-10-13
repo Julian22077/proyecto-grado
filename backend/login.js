@@ -82,6 +82,9 @@ recuperar.addEventListener("submit", async (e) => {
   }
 })
 onAuthStateChanged(auth, (usuario) => {
+  if (!usuario) {
+    return;
+  }
   if (usuario.email === "julian.lozanoh@uniagustiniana.edu.co") {
     window.location.href = "admin.html";
   } else {

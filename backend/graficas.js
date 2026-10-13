@@ -17,8 +17,12 @@ window.addEventListener("offline",()=>{
     })
 onAuthStateChanged(auth, async (usuarioAuth) => {
     if (!usuarioAuth) {
-        adminContainer.innerHTML = "<p>No hay sesión iniciada</p>";
-        window.location.href = "index.html";
+        window.location.href = "login.html";
+        return;
+    }
+    if (usuarioAuth.email !== "julian.lozanoh@uniagustiniana.edu.co") {
+        window.location.href = "usuario.html";
+        return;
     }
     const token = await usuarioAuth.getIdToken();
 
@@ -72,7 +76,12 @@ if(!reservasadmin.ok){
 }
 const boton = document.getElementById("verGrafico");
 const inputt = document.getElementById("fechaInicio1");
-
+const fechahoyy = new Date().toLocaleDateString("sv-SE");
+const siguiente = new Date();
+siguiente.setDate(siguiente.getDate() - 30);
+const fechaSiguiente = siguiente.toLocaleDateString("sv-SE");
+inputt.min = fechaSiguiente;
+inputt.max = fechahoyy;
 let grafica = null;
 let grafica2 = null;
 let graficaa = null;
@@ -948,6 +957,12 @@ inputt.addEventListener("change", () => {
     diaComparacion1.innerHTML = htmlComparacionIngre
 
 });
+const rango1= document.getElementById("fechaInicio");
+const rango2= document.getElementById("fechaFin");
+rango1.min= fechaSiguiente
+rango1.max= fechahoyy
+rango2.min= fechaSiguiente
+rango2.max= fechahoyy
 boton.addEventListener("click", async () => {
     const inicio = document.getElementById("fechaInicio").value;
     const fin = document.getElementById("fechaFin").value;

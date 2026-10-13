@@ -116,11 +116,6 @@ export const NotificarUsuario = async (uid, fecha, callback)=>{
         });
     });
 }
-export const cancelarNotificacion = async (colaId, fecha,  parqueaderoId)=>{
-    await updateDoc(doc(db, "colaespera", colaId), { estado: "cancelado" });
-    await gestionarCola(fecha, parqueaderoId);
-    await deleteDoc(doc(db, "colaespera", colaId));
-}
 let avisoNativoListo = false;
 
 async function obtenerTokenNativo() {

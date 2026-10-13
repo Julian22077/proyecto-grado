@@ -60,6 +60,11 @@ salida.addEventListener("change", calcularTiempoYPrecio);
 onAuthStateChanged(auth, async (usuarioAuth) => {
     if (!usuarioAuth) {
         window.location.href = "login.html";
+        return;
+    }
+    if (usuarioAuth.email === "julian.lozanoh@uniagustiniana.edu.co") {
+        window.location.href = "admin.html";
+        return;
     }
     const reservaForm = document.getElementById("reservacontainer");
     const token=await usuarioAuth.getIdToken()

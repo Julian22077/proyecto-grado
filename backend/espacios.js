@@ -43,7 +43,14 @@ window.addEventListener("offline",()=>{
         });
     })
 onAuthStateChanged(auth, async (usuarioAuth) => {
-
+    if (!usuarioAuth) {
+        window.location.href = "login.html";
+        return;
+    }
+    if (usuarioAuth.email !== "julian.lozanoh@uniagustiniana.edu.co") {
+        window.location.href = "usuario.html";
+        return;
+    }
     const token=await usuarioAuth.getIdToken()
     const totalusuario = await fetch("https://proyecto-grado-rouge.vercel.app/parqueaderoreservasadmin", {
         method: "GET",

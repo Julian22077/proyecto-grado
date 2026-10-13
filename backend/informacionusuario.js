@@ -20,7 +20,7 @@ window.addEventListener("offline",()=>{
     })
 onAuthStateChanged(auth, async (usuarioAuth) => {
        if (!usuarioAuth) {
-    reservasUsuariosContainer.innerHTML = "<p>No hay sesión iniciada</p>";
+    containerusuario.innerHTML = "<p>No hay sesión iniciada</p>";
     window.location.href = "login.html";
     return;
   }

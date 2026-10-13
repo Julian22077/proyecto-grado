@@ -16,6 +16,14 @@ window.addEventListener("offline",()=>{
     })
 const containerPlaca=document.getElementById("placacontenido")
 onAuthStateChanged(auth, async (user)=>{
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+    if (user.email !== "julian.lozanoh@uniagustiniana.edu.co") {
+        window.location.href = "usuario.html";
+        return;
+    }
     const token= await user.getIdToken();
 containerPlaca.addEventListener("submit", async (e)=>{
     e.preventDefault()

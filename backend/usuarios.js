@@ -25,7 +25,7 @@ containerusuarios.addEventListener("click", (e) => {
 });
 onAuthStateChanged(auth, async (usuarioAuth) => {
      if (!usuarioAuth) {
-    reservasUsuariosContainer.innerHTML = "<p>No hay sesión iniciada</p>";
+    containerusuarios.innerHTML = "<p>No hay sesión iniciada</p>";
     window.location.href = "login.html";
     return;
   }

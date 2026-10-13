@@ -23,10 +23,12 @@ window.addEventListener("offline",()=>{
 onAuthStateChanged(auth, async (usuarioAuth) => {
     if (!usuarioAuth) {
         usuarioContainer.innerHTML = "<p>No hay sesión iniciada</p>";
-        window.location.href = "index.html";
+        window.location.href = "login.html";
+        return;
     }
     if (usuarioAuth.email === "julian.lozanoh@uniagustiniana.edu.co") {
         window.location.href = "admin.html";
+        return;
     }
     const token=await usuarioAuth.getIdToken();
     try{
