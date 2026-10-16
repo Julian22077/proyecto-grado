@@ -117,7 +117,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             data.finalizadaAntes
         );
 
-        if (estado === "finalizada") {
+        if (estado === "finalizada" || data.cancelado) {
             return;
         }
         if (data.fecha == fechahoy) {
@@ -164,6 +164,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                   </div>
                   <div class="fila mi-reserva-actions">
                     <a class="boton_aumentar" href="aumentar.html">Aumentar tiempo</a>
+                    <button type="button" class="boton_aumentar boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
                   </div>
                 </div>
                 <aside class="derecha mi-reserva-status">
@@ -220,6 +221,9 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                       <p class="reserva-meta-value reserva-code">${data.uid.slice(0, 8)}</p>
                     </div>
                   </div>
+                  <div class="fila mi-reserva-actions">
+                    <button type="button" class="boton_aumentar boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
+                  </div>
                 </div>
                 <aside class="derecha mi-reserva-status mi-reserva-status--soon">
                   <div class="mi-reserva-status-icon" aria-hidden="true">
@@ -250,6 +254,44 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
 
     reservasContainer.innerHTML = html;
     reservasContainerMañana.innerHTML = html2;
+    document.querySelectorAll("[data-cancelar]").forEach((boton) => {
+        boton.addEventListener("click", async () => {
+            const seguro = await Swal.fire({
+                title: "Cancelar reserva",
+                text: "¿Está seguro de cancelar esta reserva?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sí, cancelar",
+                cancelButtonText: "No"
+            });
+            if (!seguro.isConfirmed) {
+                return;
+            }
+            const respuesta = await fetch("https://proyecto-grado-rouge.vercel.app/cancelarreserva", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ reservaID: boton.dataset.cancelar })
+            });
+            const datos = await respuesta.json();
+            if (!respuesta.ok) {
+                await Swal.fire({
+                    title: "Error",
+                    text: datos.error,
+                    icon: "error"
+                });
+                return;
+            }
+            await Swal.fire({
+                title: "Reserva cancelada",
+                text: "El espacio ha sido liberado",
+                icon: "success"
+            });
+            window.location.reload();
+        });
+    });
     if (datosContador) {
 
         const contador =

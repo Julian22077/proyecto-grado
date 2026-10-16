@@ -104,6 +104,9 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           <form id="penalizar-${data.id}">
             <button type="submit" class="reserrrr">Salió</button>
           </form>
+          <form id="pago-${data.id}">
+            <button type="submit" class="reserrrr">Pagar</button>
+          </form>
         </footer>
       </article>
             `;
@@ -172,6 +175,70 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           });
         }
       });
+      const pago = document.getElementById(`pago-${data.id}`);
+      pago.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        Swal.fire({
+          title: "Agregue el metodo de pago",
+          html: `<div class="formulario">
+            <label for="metodoPago">Método de pago</label>
+        <select id="metodoPago" class="swal2-select">
+            <option value="">Seleccione una opción</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="nequi">Nequi</option>
+            <option value="daviplata">Daviplata</option>
+            <option value="tarjeta">Tarjeta</option>
+        </select>
+        </div>`,
+          showCancelButton: true,
+          confirmButtonText: "Confirmar Pago",
+          cancelButtonText: "Cancelar",
+          preConfirm: async () => {
+            const metodoPago = document.getElementById("metodoPago").value;
+            if (!metodoPago) {
+              Swal.showValidationMessage("Por favor, selecciona un método de pago.");
+              return;
+            }
+            return { metodoPago };
+          }
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const metodoPago = result.value.metodoPago;
+            try {
+              const pagar = await fetch("https://proyecto-grado-rouge.vercel.app/validarpagoreserva", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ reservaID: data.id, metodoPago: metodoPago })
+              })
+              const datospago = await pagar.json();
+              if (!pagar.ok) {
+                await Swal.fire({
+                  title: "Error",
+                  text: datospago.error,
+                  icon: "error"
+                });
+                return;
+              }
+              await Swal.fire({
+                title: "Pago confirmado",
+                text: "El pago se ha realizado con éxito",
+                icon: "success",
+              });
+              window.location.reload();
+            } catch (error) {
+              console.error(error);
+              await Swal.fire({
+                title: "Error",
+                text: error.message,
+                icon: "error",
+              });
+            }
+          }
+        })
+      })
     });
   }
 

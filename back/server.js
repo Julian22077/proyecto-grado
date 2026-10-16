@@ -121,6 +121,9 @@ app.post("/disponibilidad", verficarUsuario, limite, async (req, res) => {
                 let disponible = true;
                 for (const reservainfo of reserva.docs) {
                     const data = reservainfo.data();
+                    if (data.cancelado) {
+                        continue;
+                    }
                     if (data.uid === uid) {
                         throw new Error(" Ya posees una reserva para este dia ")
                     }
@@ -338,7 +341,9 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
                 minutosPasados: 0,
                 costoAdicional: 0,
                 penalizado: false,
+                pagoPenalizacion: false,
                 finalizadaAntes: false,
+                cancelado: false,
                 creado: new Date()
             })
             trans.delete(refbloqueo);
@@ -623,7 +628,9 @@ app.post("/eventowompi", async (req, res) => {
                     minutosPasados: 0,
                     costoAdicional: 0,
                     penalizado: false,
+                    pagoPenalizacion: false,
                     finalizadaAntes: false,
+                    cancelado: false,
                     creado: new Date()
                 });
                 trans.delete(refbloqueo);
@@ -815,6 +822,9 @@ app.post("/gestionarcola", verficarUsuario, limite, async (req, res) => {
             let siguientereserva = cierre;
             for (const reservita of reserva.docs) {
                 const data = reservita.data();
+                if (data.cancelado) {
+                    continue;
+                }
                 const entrada = convertirHora(data.horaEntrada);
                 if (entrada >= minutos && entrada < siguientereserva) {
                     siguientereserva = entrada;
@@ -864,6 +874,9 @@ const gestionarcola = async (fecha, parqueaderoId) => {
         let siguientereserva = cierre;
         for (const reservita of reserva.docs) {
             const data = reservita.data();
+            if (data.cancelado) {
+                continue;
+            }
             const entrada = convertirHora(data.horaEntrada);
             if (entrada >= minutos && entrada < siguientereserva) {
                 siguientereserva = entrada;
@@ -924,6 +937,43 @@ app.post("/cancelarCola", verficarUsuario, limite, async (req, res) => {
         return res.json({ message: "Se ha cancelado la cola y se ha gestionado la siguiente", gestion: resultado })
     } catch (error) {
         return res.status(500).json({ error: error.message })
+    }
+})
+app.post("/cancelarreserva", verficarUsuario, limite, async (req, res) => {
+    try {
+        const uid = req.uid;
+        const { reservaID } = req.body;
+        if (!reservaID) {
+            return res.status(400).json({ error: "faltan datos" });
+        }
+        const refreserva = db.collection("reservas").doc(reservaID);
+        const datos = await db.runTransaction(async (trans) => {
+            const reserva = await trans.get(refreserva);
+            if (!reserva.exists) {
+                throw new Error("La reserva no existe");
+            }
+            const data = reserva.data();
+            if (data.uid !== uid) {
+                throw new Error("Esta reserva no te corresponde");
+            }
+            if (data.cancelado === true) {
+                throw new Error("La reserva ya fue cancelada");
+            }
+            const ahora = new Date();
+            const fechahoy = ahora.toLocaleDateString("sv-SE");
+            const minutosactuales = ahora.getHours() * 60 + ahora.getMinutes();
+            const entrada = convertirHora(data.horaEntrada);
+            if (data.fecha < fechahoy || (data.fecha === fechahoy && minutosactuales >= entrada)) {
+                throw new Error("La reserva ya inició");
+            }
+            trans.update(refreserva, { cancelado: true });
+            return { fecha: data.fecha, parqueaderoId: data.parqueaderoId };
+        });
+        const gestion = await gestionarcola(datos.fecha, datos.parqueaderoId);
+        borrarCache("totalreservas");
+        return res.json({ message: "La reserva fue cancelada", gestion });
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
     }
 })
 app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
@@ -1066,6 +1116,38 @@ app.post("/validarpago", verficarUsuario, limite, async (req, res) => {
         return res.status(500).json({ error: error.message })
     }
 })
+app.post("/validarpagoreserva", verficarUsuario, limite, async (req, res) => {
+    try {
+        const email = req.email
+        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
+            return res.status(403).json("No posee los permisos para hacer esta accion")
+        }
+        const { reservaID, metodoPago } = req.body
+        if (!reservaID || !metodoPago) {
+            return res.status(400).json({ error: "faltan datos" })
+        }
+        const pagoo = await db.runTransaction(async (transaccion) => {
+            const refreserva = db.collection("reservas").doc(reservaID)
+            const reserva = await transaccion.get(refreserva);
+            if (!reserva.exists) {
+                throw new Error("La reserva no existe")
+            }
+            const info = reserva.data();
+            if (!info.penalizado || !(Number(info.minutosPasados) > 5) || !(Number(info.costoAdicional) > 0)) {
+                throw new Error("La reserva no tiene un cobro por penalización")
+            }
+            if (info.pagoPenalizacion) {
+                throw new Error("El usuario ya ha pagado")
+            }
+            transaccion.update(refreserva, { pagoPenalizacion: true, metodoPagoPenalizacion: metodoPago })
+            return { message: "El pago se ha registrado con exito" }
+        })
+        borrarCache("totalreservas");
+        return res.json(pagoo)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+})
 app.get("/reserva", verficarUsuario, limite, async (req, res) => {
     try {
         const uid = req.uid
@@ -1075,7 +1157,7 @@ app.get("/reserva", verficarUsuario, limite, async (req, res) => {
         mañana.setDate(mañana.getDate() + 1);
         const fechamañana = mañana.toLocaleDateString("sv-SE");
         const reservas = await db.collection("reservas").where("uid", "==", uid).where("fecha", ">=", fechahoy).where("fecha", "<=", fechamañana).get();
-        return res.json(reservas.docs.map((doc) => doc.data()))
+        return res.json(reservas.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }

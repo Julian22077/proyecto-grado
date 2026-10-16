@@ -107,7 +107,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         iniciarContadorUsoComun(
           data.horaEntrada,
           data.estado,
-          contador
+          contador,
+          data.creado
         );
       }
 

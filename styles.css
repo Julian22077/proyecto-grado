@@ -1047,6 +1047,15 @@ body.auth #registroForm {
 
 .mi-reserva-actions {
   margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.boton_cancelar {
+  background: transparent;
+  color: var(--steel-2) !important;
+  border: 1px solid var(--steel);
 }
 
 .mi-reserva-actions .boton_aumentar {
