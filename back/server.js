@@ -1181,7 +1181,7 @@ app.get("/reservasadmin", verficarUsuario, limite, async (req, res) => {
         }
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
-        const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).get();
+        const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).where("cancelado", "==", false).get();
         return res.json(reservas.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -1260,7 +1260,7 @@ app.get("/totalreservas", verficarUsuario, limite, async (req, res) => {
         const clave = `totalreservas:${fechainicio}:${fechahoy}`;
         const enCache = leerCache(clave);
         if (enCache) return res.json(enCache);
-        const reservas = await db.collection("reservas").where("fecha", ">=", fechainicio).where("fecha", "<=", fechahoy).get();
+        const reservas = await db.collection("reservas").where("fecha", ">=", fechainicio).where("fecha", "<=", fechahoy).where("cancelado", "==", false).get();
         const datos = reservas.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         guardarCache(clave, datos, 5);
         return res.json(datos)
