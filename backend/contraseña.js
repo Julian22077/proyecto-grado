@@ -17,12 +17,11 @@ window.addEventListener("offline",()=>{
     })
 onAuthStateChanged(auth, async (usuarioAuth) => {
     if (!usuarioAuth) {
-        window.location.href = "login.html";
-        return;
+        usuarioContainer.innerHTML = "<p>No hay sesión iniciada</p>";
+        window.location.href = "index.html";
     }
     if (usuarioAuth.email === "julian.lozanoh@uniagustiniana.edu.co") {
         window.location.href = "admin.html";
-        return;
     }
     cambioContraseña.addEventListener("submit", async (e) => {
         e.preventDefault();

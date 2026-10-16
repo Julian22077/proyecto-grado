@@ -229,7 +229,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                 "Content-Type":"application/json",
                 "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify({minutosExtra:minutosExtra})
+            body: JSON.stringify({minutosExtra:minutosExtra, reservaID:data.id})
             })
             const firm=await firmas.json();
         if(!firmas.ok){

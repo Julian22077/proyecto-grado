@@ -201,9 +201,17 @@ app.post("/disponibilidad", verficarUsuario, limite, async (req, res) => {
 app.post("/firma", verficarUsuario, limite, async (req, res) => {
     try {
         const uid = req.uid
-        const { horaEntrada, horaSalida } = req.body
-        if (!horaEntrada || !horaSalida) {
+        const { horaEntrada, horaSalida, bloqueoId } = req.body
+        if (!horaEntrada || !horaSalida || !bloqueoId) {
             return res.status(400).json({ error: "faltan datos " })
+        }
+        const bloqueoRef = db.collection("bloqueos").doc(bloqueoId);
+        const bloqueoSnap = await bloqueoRef.get();
+        if (!bloqueoSnap.exists || bloqueoSnap.data().uid !== uid || bloqueoSnap.data().horaEntrada !== horaEntrada || bloqueoSnap.data().horaSalida !== horaSalida) {
+            return res.status(400).json({ error: "Los datos no coinciden " })
+        }
+        if (bloqueoSnap.data().expira && bloqueoSnap.data().expira.toMillis() <= Date.now()) {
+            return res.status(400).json({ error: "El bloqueo ha expirado" })
         }
         const usuario = await db.collection("usuarios").doc(uid).get()
         const userData = usuario.data()
@@ -230,6 +238,7 @@ app.post("/firma", verficarUsuario, limite, async (req, res) => {
         }
         const texto = refrencia + monto + moneda + llaveintegridad
         const firma = crypto.createHash("sha256").update(texto).digest("hex");
+        await bloqueoRef.update({ referencia: refrencia, monto, nombre: req.displayName || "" });
         return res.json({ firma, referencia: refrencia, monto });
 
 
@@ -248,6 +257,10 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
         const { nombre, bloqueoId, fecha, horaEntrada, horaSalida, idtransaccion, monto, referencia } = req.body
         if (!nombre || !bloqueoId || !fecha || !horaEntrada || !horaSalida) {
             return res.status(400).json({ error: "faltan datos " });
+        }
+        const yaHecha = await db.collection("reservas").where("referencia", "==", referencia).limit(1).get();
+        if (!yaHecha.empty && yaHecha.docs[0].data().uid === uid) {
+            return res.json({ reservaID: yaHecha.docs[0].id });
         }
         const comfiguracion = await db.collection("configuracion").doc("general").get()
         const usuario = await db.collection("usuarios").doc(uid).get()
@@ -304,7 +317,7 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
             if (data.expira && data.expira.toMillis() <= Date.now()) {
                 throw new Error("El bloqueo ha expirado")
             }
-            if (data.fecha !== fecha || data.horaEntrada !== horaEntrada || data.horaSalida !== horaSalida) {
+            if (data.fecha !== fecha || data.horaEntrada !== horaEntrada || data.horaSalida !== horaSalida || data.referencia !== referencia) {
                 throw new Error("Los datos no coinciden ")
             }
             const parqueaderoId = data.parqueaderoId;
@@ -317,6 +330,8 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
                 horaSalida,
                 precio,
                 placa: userData.placa,
+                referencia,
+                idtransaccion,
                 extensionMinutos: false,
                 minutosExtra: 0,
                 HoraSalidaReal: "",
@@ -425,9 +440,13 @@ app.post("/validaraumento", verficarUsuario, limite, async (req, res) => {
 app.post("/firmaaumento", verficarUsuario, limite, async (req, res) => {
     try {
         const uid = req.uid
-        const { minutosExtra } = req.body
-        if (!minutosExtra) {
+        const { minutosExtra, reservaID } = req.body
+        if (!minutosExtra || !reservaID) {
             return res.status(400).json({ error: "Faltan datos" })
+        }
+        const reservaAumento = await db.collection("reservas").doc(reservaID).get();
+        if (!reservaAumento.exists || reservaAumento.data().uid !== uid) {
+            return res.status(400).json({ error: "La reserva no existe" })
         }
         const configuracion = await db.collection("configuracion").doc("general").get()
         const usuario = await db.collection("usuarios").doc(uid).get()
@@ -450,6 +469,11 @@ app.post("/firmaaumento", verficarUsuario, limite, async (req, res) => {
         }
         const texto = referencia + monto + moneda + llaveintegridad
         const firma = crypto.createHash("sha256").update(texto).digest("hex");
+        await db.collection("reservas").doc(reservaID).update({
+            referenciaAumento: referencia,
+            montoAumento: monto,
+            minutosExtraPendiente: Number(minutosExtra)
+        });
         return res.json({ firma, referencia: referencia, monto });
 
     } catch (error) {
@@ -462,6 +486,10 @@ app.post("/aumentar", verficarUsuario, limite, async (req, res) => {
         const { reservaID, idtransaccion, minutosExtra, referencia } = req.body
         if (!reservaID || !idtransaccion || !minutosExtra) {
             return res.status(400).json({ error: "faltan datos" })
+        }
+        const yaAumentada = await db.collection("reservas").doc(reservaID).get();
+        if (yaAumentada.exists && yaAumentada.data().extensionMinutos && yaAumentada.data().referenciaAumento === referencia && yaAumentada.data().uid === uid) {
+            return res.json({ message: "reserva aumentada con exito" })
         }
         const configuracion = await db.collection("configuracion").doc("general").get()
         const minuto = configuracion.data();
@@ -494,7 +522,7 @@ app.post("/aumentar", verficarUsuario, limite, async (req, res) => {
             }
             const horaSalida = convertirHora(reservi.horaSalida);
             const nuevaSalida = horaSalida + minutosExtra;
-            trans.update(refreserva, { horaSalida: minutosAHora(nuevaSalida), minutosExtra: minutosExtra, extensionMinutos: true, PrecioExtension: nuevoPrecio })
+            trans.update(refreserva, { horaSalida: minutosAHora(nuevaSalida), minutosExtra: minutosExtra, extensionMinutos: true, PrecioExtension: nuevoPrecio, idtransaccionAumento: idtransaccion })
             return { message: "reserva aumentada con exito" }
         })
         borrarCache("totalreservas");
@@ -503,6 +531,163 @@ app.post("/aumentar", verficarUsuario, limite, async (req, res) => {
         return res.status(500).json({ error: error.message })
     }
 })
+
+function firmaEventoWompiValida(evento, secreto) {
+    const propiedades = evento?.signature?.properties;
+    const checksum = evento?.signature?.checksum;
+    const timestamp = evento?.timestamp;
+    if (!Array.isArray(propiedades) || !checksum || timestamp === undefined || timestamp === null) {
+        return false;
+    }
+    let texto = "";
+    for (const propiedad of propiedades) {
+        let valor = evento.data;
+        for (const parte of String(propiedad).split(".")) {
+            valor = valor?.[parte];
+        }
+        if (valor === undefined || valor === null) {
+            return false;
+        }
+        texto += valor;
+    }
+    texto += timestamp;
+    texto += secreto;
+    const calculado = crypto.createHash("sha256").update(texto).digest("hex");
+    return calculado === String(checksum).toLowerCase();
+}
+
+app.post("/eventowompi", async (req, res) => {
+    try {
+        const secreto = process.env.SECRETO_EVENTOS_WOMPI?.trim();
+        if (!secreto) {
+            return res.status(500).json({ error: "falta secreto de eventos" });
+        }
+        if (!firmaEventoWompiValida(req.body, secreto)) {
+            return res.status(401).json({ error: "firma de evento invalida" });
+        }
+        if (req.body?.event !== "transaction.updated") {
+            return res.json({ recibido: true });
+        }
+        const pago = req.body?.data?.transaction;
+        if (!pago || pago.status !== "APPROVED") {
+            return res.json({ recibido: true });
+        }
+        const baseWompi = req.body.environment === "prod" ? "https://production.wompi.co" : "https://sandbox.wompi.co";
+        const wompi = await fetch(`${baseWompi}/v1/transactions/${pago.id}`);
+        if (!wompi.ok) {
+            return res.status(400).json({ error: "erro ene verificacion" });
+        }
+        const transaccion = (await wompi.json()).data;
+        if (transaccion.status !== "APPROVED" || transaccion.reference !== pago.reference) {
+            return res.status(400).json({ error: "el pago no se aprobo" });
+        }
+
+        const bloqueos = await db.collection("bloqueos").where("referencia", "==", transaccion.reference).limit(1).get();
+        if (!bloqueos.empty) {
+            const bloqueoDoc = bloqueos.docs[0];
+            const data = bloqueoDoc.data();
+            if (Number(transaccion.amount_in_cents) !== Number(data.monto)) {
+                return res.status(400).json({ error: "Monto no coincide" });
+            }
+            if (data.expira && data.expira.toMillis() <= Date.now()) {
+                return res.status(400).json({ error: "El bloqueo ha expirado" });
+            }
+            const usuario = await db.collection("usuarios").doc(data.uid).get();
+            const userData = usuario.data();
+            const reser = db.collection("reservas").doc();
+            const refbloqueo = db.collection("bloqueos").doc(bloqueoDoc.id);
+            const resultado = await db.runTransaction(async (trans) => {
+                const existente = await trans.get(db.collection("reservas").where("referencia", "==", transaccion.reference).limit(1));
+                if (!existente.empty) {
+                    return { reservaID: existente.docs[0].id };
+                }
+                const bloqueo = await trans.get(refbloqueo);
+                if (!bloqueo.exists) {
+                    throw new Error("el bloqueo no existe o ya fue utilizado ");
+                }
+                const info = bloqueo.data();
+                trans.set(reser, {
+                    nombre: info.nombre || "",
+                    uid: info.uid,
+                    parqueaderoId: info.parqueaderoId,
+                    fecha: info.fecha,
+                    horaEntrada: info.horaEntrada,
+                    horaSalida: info.horaSalida,
+                    precio: Number(info.monto) / 100,
+                    placa: userData.placa,
+                    referencia: transaccion.reference,
+                    idtransaccion: transaccion.id,
+                    extensionMinutos: false,
+                    minutosExtra: 0,
+                    HoraSalidaReal: "",
+                    minutosPasados: 0,
+                    costoAdicional: 0,
+                    penalizado: false,
+                    finalizadaAntes: false,
+                    creado: new Date()
+                });
+                trans.delete(refbloqueo);
+                return { reservaID: reser.id };
+            });
+            const colita = await db.collection("colaespera").where("fecha", "==", data.fecha).where("estado", "==", "espera").where("uid", "==", data.uid).get();
+            for (const colo of colita.docs) {
+                await db.collection("colaespera").doc(colo.id).delete();
+            }
+            const prioritario = await db.collection("colaespera").where("fecha", "==", data.fecha).where("estado", "==", "prioritario").where("uid", "==", data.uid).get();
+            for (const colo of prioritario.docs) {
+                await db.collection("colaespera").doc(colo.id).delete();
+            }
+            borrarCache("totalreservas");
+            return res.json(resultado);
+        }
+
+        const aumentos = await db.collection("reservas").where("referenciaAumento", "==", transaccion.reference).limit(1).get();
+        if (!aumentos.empty) {
+            const reservaDoc = aumentos.docs[0];
+            const reservi = reservaDoc.data();
+            if (reservi.extensionMinutos) {
+                return res.json({ message: "reserva aumentada con exito" });
+            }
+            if (Number(transaccion.amount_in_cents) !== Number(reservi.montoAumento)) {
+                return res.status(400).json({ error: "Monto no coincide" });
+            }
+            const minutosExtra = Number(reservi.minutosExtraPendiente);
+            const refreserva = db.collection("reservas").doc(reservaDoc.id);
+            const proceso = await db.runTransaction(async (trans) => {
+                const reserva = await trans.get(refreserva);
+                if (!reserva.exists) {
+                    throw new Error("La reserva no existe ");
+                }
+                const actual = reserva.data();
+                if (actual.extensionMinutos) {
+                    return { message: "reserva aumentada con exito" };
+                }
+                const horaSalida = convertirHora(actual.horaSalida);
+                const nuevaSalida = horaSalida + minutosExtra;
+                trans.update(refreserva, {
+                    horaSalida: minutosAHora(nuevaSalida),
+                    minutosExtra: minutosExtra,
+                    extensionMinutos: true,
+                    PrecioExtension: Number(actual.montoAumento) / 100,
+                    idtransaccionAumento: transaccion.id
+                });
+                return { message: "reserva aumentada con exito" };
+            });
+            borrarCache("totalreservas");
+            return res.json(proceso);
+        }
+
+        const ya = await db.collection("reservas").where("referencia", "==", transaccion.reference).limit(1).get();
+        if (!ya.empty) {
+            return res.json({ reservaID: ya.docs[0].id });
+        }
+        return res.status(404).json({ error: "no hay bloqueo para esa referencia" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: error.message });
+    }
+})
+
 app.post("/penalizar", verficarUsuario, limite, async (req, res) => {
     try {
         const email = req.email

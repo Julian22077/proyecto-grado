@@ -260,7 +260,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                 "Content-Type":"application/json",
                 "Authorization": `Bearer ${token}`
             },
-            body:JSON.stringify({horaEntrada:horaEntrada,horaSalida:horaSalida})
+            body:JSON.stringify({horaEntrada:horaEntrada,horaSalida:horaSalida,bloqueoId:parqueaderoId})
 
         })
         const firm=await firmas.json();
