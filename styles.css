@@ -3969,8 +3969,15 @@ html .swal2-popup.cj-swal-popup {
 /* ---------- Portada ---------- */
 html body.portada {
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
-  background: var(--paper) !important;
+  background-color: #101820 !important;
+  background-image:
+    linear-gradient(180deg, rgba(16, 24, 32, 0.82) 0%, rgba(16, 24, 32, 0.68) 46%, rgba(16, 24, 32, 0.8) 100%),
+    url("assets/fondo-parqueadero.png") !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  background-size: cover !important;
   color: var(--text);
   display: flex;
   flex-direction: column;
@@ -3982,8 +3989,9 @@ html body.portada {
   justify-content: space-between;
   gap: 16px;
   padding: 18px 7vw;
-  background: #121c26;
-  border-bottom: 1px solid var(--line);
+  background: rgba(16, 24, 32, 0.55);
+  border-bottom: 1px solid rgba(44, 61, 76, 0.7);
+  backdrop-filter: blur(8px);
 }
 
 .portada-marca {
@@ -4166,6 +4174,12 @@ html body.portada {
   display: block;
   margin-top: 4px;
   line-height: 1.35;
+}
+
+@media (min-width: 901px) {
+  html body.portada {
+    background-attachment: fixed;
+  }
 }
 
 @media (max-width: 900px) {
