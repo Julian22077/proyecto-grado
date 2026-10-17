@@ -163,7 +163,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                     </div>
                   </div>
                   <div class="fila mi-reserva-actions">
-                    <a class="boton_aumentar" href="aumentar.html">Aumentar tiempo</a>
+                    <a class="boton_aumentar" href="aumentar.html">Aumentar Reserva</a>
                     <button type="button" class="boton_aumentar boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
                   </div>
                 </div>
@@ -246,7 +246,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           <section class="mi-reserva mi-reserva-empty">
             <p class="mi-reserva-kicker">Sin actividad</p>
             <h1 class="titu mi-reserva-title">No hay reservas</h1>
-            <p class="mi-reserva-empty-sub">Cuando reserves un cupo, aparecerá aquí con el detalle y el contador.</p>
+            <p class="mi-reserva-empty-sub">Cuando reserves un cupo, aparecerá aquí con los detalles de la reserva realizada.</p>
+            <p class="mi-reserva-empty-sub">Atención: Las reservas se podrán cancelar antes del inicio de las mismas, en caso de cancelación, por favor guardar comprobante de pago y comuniquese al correo calatrava.parqueadero@gmail.com, para el proceso de reembolso correspondiente.</p>
             <a class="boton_aumentar" href="reservar.html">Ir a reservar</a>
           </section>
         `;

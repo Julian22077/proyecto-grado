@@ -102,10 +102,10 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         </div>
         <footer class="reserva-card-actions">
           <form id="penalizar-${data.id}">
-            <button type="submit" class="reserrrr">Salió</button>
+            <button type="submit" class="reserrrr">Finalizar Reserva</button>
           </form>
           <form id="pago-${data.id}">
-            <button type="submit" class="reserrrr">Pagar</button>
+            <button type="submit" class="reserrrr">Registrar Pago</button>
           </form>
         </footer>
       </article>

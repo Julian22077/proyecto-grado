@@ -78,13 +78,13 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         </div>
         <footer class="reserva-card-actions">
           <form id="salio-${data.id}">
-            <button type="submit" class="reserrrr">Salió</button>
+            <button type="submit" class="reserrrr">Finalizar Ingreso Directo</button>
           </form>
           <form id="pago-${data.id}">
-            <button type="submit" class="reserrrr">Pagar</button>
+            <button type="submit" class="reserrrr">Registrar Pago</button>
           </form>
           <form id="imprimir-${data.id}">
-            <button type="submit" class="reserrrr">Imprimir</button>
+            <button type="submit" class="reserrrr">Imprimir Ingreso Directo</button>
           </form>
         </footer>
       </article>
@@ -93,7 +93,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     if (!html) {
       html = `
       <div class="dash-empty">
-        <p class="dash-empty-title">Sin usos comunes</p>
+        <p class="dash-empty-title">Sin Ingresos Directos</p>
         <p class="dash-empty-text">No hay ingresos para mostrar en este momento.</p>
       </div>`;
     }
@@ -136,8 +136,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             return;
           }
           await Swal.fire({
-            title: "Uso finalizada",
-            text: "El ususario ha llegado y finalizado su asignación con exito",
+            title: "Ingreso finalizado",
+            text: "El usuario ha llegado y finalizado su ingreso con éxito",
             icon: "success",
           });
           window.location.reload();
