@@ -234,4 +234,52 @@ if (formularioImprimir) {
 
   applySwalTheme();
   document.addEventListener("DOMContentLoaded", applySwalTheme);
+
+  function prepararDesplazamientoMenu() {
+    const cuerpo = document.querySelector(".menu-cuerpo");
+    const menu = document.querySelector(".menu");
+    if (!cuerpo || !menu || cuerpo.dataset.deslizar) return;
+    cuerpo.dataset.deslizar = "listo";
+
+    function boton(direccion) {
+      const control = document.createElement("button");
+      control.type = "button";
+      control.className = "menu-deslizar";
+      control.setAttribute("aria-label", direccion < 0 ? "Ver opciones anteriores" : "Ver más opciones");
+      control.innerHTML = direccion < 0
+        ? '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M14 6 8 12l6 6"/></svg>'
+        : '<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></svg>';
+      control.addEventListener("click", function () {
+        cuerpo.scrollBy({ left: direccion * Math.max(180, cuerpo.clientWidth * 0.6), behavior: "smooth" });
+      });
+      return control;
+    }
+
+    const anterior = boton(-1);
+    const siguiente = boton(1);
+    menu.insertBefore(anterior, cuerpo);
+    cuerpo.insertAdjacentElement("afterend", siguiente);
+
+    function actualizar() {
+      const sobra = cuerpo.scrollWidth - cuerpo.clientWidth > 4;
+      anterior.hidden = !sobra || cuerpo.scrollLeft <= 4;
+      siguiente.hidden = !sobra || cuerpo.scrollLeft + cuerpo.clientWidth >= cuerpo.scrollWidth - 4;
+    }
+
+    cuerpo.addEventListener("scroll", actualizar, { passive: true });
+    cuerpo.addEventListener("wheel", function (evento) {
+      if (cuerpo.scrollWidth <= cuerpo.clientWidth) return;
+      if (Math.abs(evento.deltaY) <= Math.abs(evento.deltaX)) return;
+      cuerpo.scrollLeft += evento.deltaY;
+      evento.preventDefault();
+    }, { passive: false });
+    window.addEventListener("resize", actualizar);
+    actualizar();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", prepararDesplazamientoMenu);
+  } else {
+    prepararDesplazamientoMenu();
+  }
 })();

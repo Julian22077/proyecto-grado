@@ -3559,11 +3559,42 @@ body.app {
   padding: 4px 4px 4px 0;
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
   scroll-padding-inline: 8px;
 }
 
 .menu-cuerpo::-webkit-scrollbar {
+  display: none;
+  height: 0;
+}
+
+.menu-deslizar {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: #7f93a6;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.menu-deslizar svg {
+  width: 16px;
+  height: 16px;
+}
+
+.menu-deslizar:hover {
+  color: #d7e2ec;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.menu-deslizar[hidden] {
   display: none;
 }
 
