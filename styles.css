@@ -3520,12 +3520,15 @@ body.app {
   right: auto;
   bottom: auto;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   height: auto;
   min-height: 76px;
   flex-direction: row;
   align-items: center;
   gap: 14px;
   padding: 10px 20px;
+  overflow: hidden;
   background: rgba(255, 255, 255, 0.94);
   color: var(--ink);
   border-right: none;
@@ -3560,7 +3563,6 @@ body.app {
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
-  scroll-behavior: smooth;
   scroll-padding-inline: 8px;
 }
 

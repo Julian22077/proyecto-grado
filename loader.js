@@ -268,9 +268,9 @@ if (formularioImprimir) {
 
     cuerpo.addEventListener("scroll", actualizar, { passive: true });
     cuerpo.addEventListener("wheel", function (evento) {
-      if (cuerpo.scrollWidth <= cuerpo.clientWidth) return;
-      if (Math.abs(evento.deltaY) <= Math.abs(evento.deltaX)) return;
-      cuerpo.scrollLeft += evento.deltaY;
+      if (cuerpo.scrollWidth <= cuerpo.clientWidth + 4) return;
+      const horizontal = Math.abs(evento.deltaX) > Math.abs(evento.deltaY);
+      cuerpo.scrollLeft += horizontal ? evento.deltaX : evento.deltaY;
       evento.preventDefault();
     }, { passive: false });
     window.addEventListener("resize", actualizar);
