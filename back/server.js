@@ -1211,7 +1211,7 @@ app.get("/ultimasreservas", verficarUsuario, limite, async (req, res) => {
         }
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
-        const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).orderBy("creado", "desc").limit(2).get();
+        const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).where("cancelado", "==", false).orderBy("creado", "desc").limit(2).get();
         return res.json(reservas.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
     } catch (error) {
         return res.status(500).json({ error: error.message })
