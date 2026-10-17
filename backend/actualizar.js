@@ -1,4 +1,4 @@
-import { updateUsusario, auth } from "./firebase.js";
+import { auth } from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 window.addEventListener("offline",()=>{
         Swal.fire({
@@ -73,8 +73,24 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         return;
         }
         try{
-             await updateUsusario(usuarioAuth.uid, { nombre, cedula, placa });
-        }catch(error){
+             const actualizado = await fetch("https://proyecto-grado-rouge.vercel.app/actualizarusuario", {
+                method: "PUT",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ nombre: nombre.trim(), cedula: cedula.trim(), placa: placa.trim() })
+             });
+             const resultado = await actualizado.json();
+             if (!actualizado.ok) {
+                await Swal.fire({
+                    title: "Error",
+                    text: resultado.error,
+                    icon: "error"
+                });
+                return;
+            }
+             }catch(error){
             await Swal.fire({
             title: "Error",
             text: error.message,

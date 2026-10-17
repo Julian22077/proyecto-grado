@@ -1523,6 +1523,35 @@ app.get("/detalleusuario", verficarUsuario, limite, async (req, res) => {
         return res.status(500).json({ error: error.message })
     }
 })
+app.put("/actualizarusuario", verficarUsuario, limite, async (req, res) => {
+    try {
+        const uid = req.uid;
+        const { nombre, cedula, placa } = req.body;
+        if (!nombre?.trim() || !cedula?.trim() || !placa?.trim()) {
+            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        }
+        const nombreLimpio = nombre.trim();
+        const cedulaLimpia = cedula.trim();
+        const placaLimpia = placa.trim().toUpperCase();
+        if (!/^[A-Z]{3}[0-9]{3}$/.test(placaLimpia) && !/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placaLimpia)) {
+            return res.status(400).json({ error: "La placa debe tener el formato ABC123 o ABC12D" });
+        }
+        const referencia = db.collection("usuarios").doc(uid);
+        const usuario = await referencia.get();
+        if (!usuario.exists) {
+            return res.status(400).json({ error: "no se encontro el usuario" });
+        }
+        await referencia.update({ nombre: nombreLimpio, cedula: cedulaLimpia, placa: placaLimpia });
+        await adminauth.updateUser(uid, { displayName: nombreLimpio });
+        const datos = { id: uid, ...usuario.data(), nombre: nombreLimpio, cedula: cedulaLimpia, placa: placaLimpia };
+        borrarCache(`usuario:${uid}`);
+        guardarCache(`usuario:${uid}`, datos, 2);
+        borrarCache("usuarios:lista");
+        return res.json(datos);
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+})
 app.get("/parqueaderoreservas", verficarUsuario, limite, async (req, res) => {
     try {
         const enCache = leerCache("parqueaderos:reserva");
