@@ -164,7 +164,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                   </div>
                   <div class="fila mi-reserva-actions">
                     <a class="boton_aumentar" href="aumentar.html">Aumentar Reserva</a>
-                    <button type="button" class="boton_aumentar boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
+                    <button type="button" class="boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
                   </div>
                 </div>
                 <aside class="derecha mi-reserva-status">
@@ -222,7 +222,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                     </div>
                   </div>
                   <div class="fila mi-reserva-actions">
-                    <button type="button" class="boton_aumentar boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
+                    <button type="button" class="boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
                   </div>
                 </div>
                 <aside class="derecha mi-reserva-status mi-reserva-status--soon">
