@@ -1539,7 +1539,7 @@ app.get("/reservausuarios", verficarUsuario, limite, async (req, res) => {
     try {
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
-        const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).get();
+        const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).where("cancelado", "==", false).get();
         return res.json(reservas.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
     } catch (error) {
         return res.status(500).json({ error: error.message })
