@@ -1359,7 +1359,7 @@ app.get("/reservasvigentes", verficarUsuario, limite, async (req, res) => {
             return res.status(403).json("No posee los permisos para hacer esta accion")
         }
         const fechahoy = new Date().toLocaleDateString("sv-SE");
-        const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).get()
+        const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).where("cancelado", "==", false).get()
         for (const reserva of reservas.docs) {
             const data = reserva.data()
             const estado = obtenerEstado(data.fecha, data.horaEntrada, data.horaSalida, data.finalizadaAntes);
