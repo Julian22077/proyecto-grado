@@ -163,7 +163,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                     </div>
                   </div>
                   <div class="fila mi-reserva-actions">
-                    <a class="boton_aumentar" href="aumentar.html">Aumentar Reserva</a>
+                    <a class="boton_aumentar" href="aumentar.html">Extender Reserva</a>
                     <button type="button" class="boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
                   </div>
                 </div>
