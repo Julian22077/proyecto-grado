@@ -51,7 +51,7 @@ containerPlaca.addEventListener("submit", async (e)=>{
             text: "Se generó la asigancion",
             icon: "success"
         })
-         window.location.href="admin.html"
+         window.location.href="usoscomunes.html"
     }catch(error){
         console.log(error);
     }
