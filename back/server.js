@@ -989,10 +989,11 @@ app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
          if (!/^[A-Z]{3}[0-9]{3}$/.test(placa)) {
             return res.status(400).json({error: "La placa no tiene un formato valido"});
         }
+        const fechahoyy = new Date().toLocaleDateString("sv-SE");
         const resultado = await db.runTransaction(async (transaccion) => {
             const parqueaderos = db.collection("parqueaderos").where("tipo", "==", "comun")
             const parqueadeross = await transaccion.get(parqueaderos);
-            const comunes = db.collection("usocomun").where("estado", "==", "activo")
+            const comunes = db.collection("usocomun").where("estado", "==", "activo").where("fecha", "==", fechahoyy)
             const comunesactivos = await transaccion.get(comunes);
             for (const comun of comunesactivos.docs) {
                     const data = comun.data();
