@@ -10,8 +10,12 @@ if (!document.querySelector(`link[data-blobatar]`)) {
 }
 
 export function avatar(nombre) {
-    return blobatar(String(nombre || "usuario")).replace(
+    const svg = blobatar(String(nombre || "usuario"));
+    const colores = [...svg.matchAll(/fill="(#[0-9a-fA-F]{6})"/g)].map((coincidencia) => coincidencia[1]);
+    const cabeza = colores[0] || "#e08a4a";
+    const ojo = colores[1] || "#101820";
+    return svg.replace(
         "<svg ",
-        '<svg class="mo-root mo-always" '
+        `<svg class="mo-root mo-always" style="--mo-head:${cabeza};--mo-eye:${ojo}" `
     );
 }
