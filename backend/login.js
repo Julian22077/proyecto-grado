@@ -45,9 +45,13 @@ loginForm.addEventListener("submit", async (e) => {
 
   } catch (error) {
     console.error(error);
+    const credencialInvalida = error.code === "auth/invalid-credential"
+      || error.code === "auth/wrong-password"
+      || error.code === "auth/user-not-found"
+      || error.code === "auth/invalid-email";
     Swal.fire({
       title: "Error al Iniciar Sesion",
-      text: error.message,
+      text: credencialInvalida ? "Correo o contraseña incorrectos" : error.message,
       icon: "error",
 
     });
