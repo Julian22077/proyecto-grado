@@ -46,8 +46,15 @@ export function precioPorMinutos(minutos, tarifaMinuto) {
     }
     const horaCruda = tarifa * 60;
     const hora = horaCruda % 1000 === 0 ? horaCruda : Math.round(horaCruda / 1000) * 1000;
-    if (minutosCobrados > 180 && minutosCobrados < 12 * 60) {
-        return hora * 3;
+    const tarifaFija = hora * 3;
+    if (minutosCobrados > 180 && minutosCobrados <= 12 * 60) {
+        return tarifaFija;
+    }
+    if (minutosCobrados > 12 * 60) {
+        const exceso = minutosCobrados - 12 * 60;
+        const horasExceso = Math.floor(exceso / 60);
+        const restoExceso = exceso % 60;
+        return tarifaFija + horasExceso * hora + restoExceso * tarifa;
     }
     const horasCompletas = Math.floor(minutosCobrados / 60);
     const resto = minutosCobrados % 60;
