@@ -51,7 +51,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
   function MostrarReserva(lista) {
     let html = "";
     lista.forEach((data) => {
-      if (data.cancelado || (data.finalizadaAntes && data.pagoPenalizacion)) {
+      if (data.cancelado || data.finalizadaAntes || data.pagoPenalizacion) {
         return;
       }
       const estado = obtenerEstado(
@@ -125,7 +125,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     reservasUsuariosContainer.innerHTML = html;
     lista.forEach((data) => {
-      if (data.cancelado || (data.finalizadaAntes && data.pagoPenalizacion)) {
+      if (data.cancelado || data.finalizadaAntes || data.pagoPenalizacion) {
         return;
       }
       const penalizacion = document.getElementById(`penalizar-${data.id}`);
