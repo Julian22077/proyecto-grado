@@ -1134,6 +1134,23 @@ botonexport.addEventListener("click", async () => {
         });
         return;
     }
+    const dias = Math.round((new Date(fin) - new Date(inicio)) / 86400000);
+    if (dias < 15) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'El rango de exportación debe ser de al menos 15 días.',
+        });
+        return;
+    }
+    if (dias > 30) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'El rango de exportación no puede superar los 30 días.',
+        });
+        return;
+    }
     reservas.forEach((data) => {
         const estado = obtenerEstado(
             data.fecha,
