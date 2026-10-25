@@ -38,6 +38,21 @@ export function minutosAHora(
     );
 
 }
+export function precioPorMinutos(minutos, tarifaMinuto) {
+    const minutosCobrados = Math.round(Number(minutos));
+    const tarifa = Number(tarifaMinuto);
+    if (minutosCobrados <= 0 || !tarifa) {
+        return 0;
+    }
+    const horaCruda = tarifa * 60;
+    const hora = horaCruda % 1000 === 0 ? horaCruda : Math.round(horaCruda / 1000) * 1000;
+    if (minutosCobrados > 180 && minutosCobrados < 12 * 60) {
+        return hora * 3;
+    }
+    const horasCompletas = Math.floor(minutosCobrados / 60);
+    const resto = minutosCobrados % 60;
+    return horasCompletas * hora + resto * tarifa;
+}
 export function generarPlaca(){
  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

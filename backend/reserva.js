@@ -1,6 +1,6 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { auth, obtenerEstado } from "./firebase.js";
-import { convertirHora } from "./utils.js";
+import { convertirHora, precioPorMinutos } from "./utils.js";
 const containerreser=document.getElementById("espa_reser")
 const entrada = document.getElementById("horaEntrada");
 const salida = document.getElementById("horaSalida");
@@ -51,7 +51,7 @@ function calcularTiempoYPrecio() {
     }
 
     minutosSpan.textContent = diferencia;
-    precioSpan.textContent = diferencia * precio_minuto;
+    precioSpan.textContent = precioPorMinutos(diferencia, precio_minuto);
 }
 
 entrada.addEventListener("change", calcularTiempoYPrecio);

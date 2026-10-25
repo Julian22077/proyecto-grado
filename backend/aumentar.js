@@ -1,6 +1,7 @@
 import { auth} from "./firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { iniciarContador } from "./contador.js";
+import { precioPorMinutos } from "./utils.js";
 const usuarioContainer = document.getElementById("usuarioContainer");
 const infoContainer = document.getElementById("infoForm");
 const reservasContainer = document.getElementById("reservasContainer");
@@ -161,7 +162,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         function numeris() {
             const valor = minutis.value;
             span1.textContent = valor;
-            span2.textContent = valor * precio_minuto;
+            span2.textContent = precioPorMinutos(Number(valor), precio_minuto);
 
         }
         minutis.addEventListener("change", numeris)

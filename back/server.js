@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import cors from "cors"
 import rateLimit from "express-rate-limit"
 import { initializeApp, cert, getApps } from "firebase-admin/app";
-import { convertirHora, hayConflicto, minutosAHora,convertirHoracomun } from "../backend/utils.js";
+import { convertirHora, hayConflicto, minutosAHora, convertirHoracomun, precioPorMinutos } from "../backend/utils.js";
 import { getFirestore } from "firebase-admin/firestore";
 import { getMessaging } from "firebase-admin/messaging";
 import multer from "multer"
@@ -230,7 +230,7 @@ app.post("/firma", verficarUsuario, limite, async (req, res) => {
         if(/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(userData.placa)){
              precio_minuto=minuto.minutosCobroMoto;
         }
-        const diferencia1 = diferencia * precio_minuto;
+        const diferencia1 = precioPorMinutos(diferencia, precio_minuto);
         const monto = diferencia1 * 100;
         const moneda = "COP";
         const refrencia = "RES-" + uid + "-" + Date.now()
@@ -279,7 +279,7 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
         if(/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(userData.placa)){
              precio_minuto=minuto.minutosCobroMoto;
         }
-        const precio = diferencia * precio_minuto;
+        const precio = precioPorMinutos(diferencia, precio_minuto);
         const montoreal = precio * 100;
         const abre = 8 * 60
         const cierra = 24 * 60
@@ -436,7 +436,14 @@ app.post("/validaraumento", verficarUsuario, limite, async (req, res) => {
             }
             return res.status(400).json({ error: `Solo puedes aumnetar hasta ${maximores} minutos` })
         }
-        const nuevoPrecio = minutosExtra * minuto.minutosCobro;
+        let precio_minuto;
+        if (/^[A-Z]{3}[0-9]{3}$/.test(reserva.placa)) {
+            precio_minuto = minuto.minutosCobro;
+        }
+        if (/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(reserva.placa)) {
+            precio_minuto = minuto.minutosCobroMoto;
+        }
+        const nuevoPrecio = precioPorMinutos(Number(minutosExtra), precio_minuto);
         res.json({ reservaID: reservaID, nuevoPrecio: nuevoPrecio })
     } catch (error) {
         res.status(400).json({ error: error.message })
@@ -464,7 +471,7 @@ app.post("/firmaaumento", verficarUsuario, limite, async (req, res) => {
         if(/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(userData.placa)){
              precio_minuto=minuto.minutosCobroMoto;
         }
-        const precio = minutosExtra * precio_minuto
+        const precio = precioPorMinutos(Number(minutosExtra), precio_minuto)
         const monto = precio * 100;
         const referencia = "RES-" + uid + "-" + Date.now();
         const moneda = "COP"
@@ -498,7 +505,15 @@ app.post("/aumentar", verficarUsuario, limite, async (req, res) => {
         }
         const configuracion = await db.collection("configuracion").doc("general").get()
         const minuto = configuracion.data();
-        const nuevoPrecio = minutosExtra * minuto.minutosCobro
+        const placaReserva = yaAumentada.exists ? yaAumentada.data().placa : "";
+        let precio_minuto;
+        if (/^[A-Z]{3}[0-9]{3}$/.test(placaReserva)) {
+            precio_minuto = minuto.minutosCobro;
+        }
+        if (/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placaReserva)) {
+            precio_minuto = minuto.minutosCobroMoto;
+        }
+        const nuevoPrecio = precioPorMinutos(Number(minutosExtra), precio_minuto)
         const montoreal = nuevoPrecio * 100
         const wompi = await fetch(`https://sandbox.wompi.co/v1/transactions/${idtransaccion}`)
         if (!wompi.ok) {
@@ -745,7 +760,7 @@ app.post("/penalizar", verficarUsuario, limite, async (req, res) => {
                 if(/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(infodata.placa)){
                     preciocostoAdicional=infconfig.minutosCobroMoto;
                 }
-                const costoAdicional = minutoscobrables * preciocostoAdicional
+                const costoAdicional = precioPorMinutos(minutoscobrables, preciocostoAdicional)
                 transaccion.update(refreserva, { HoraSalidaReal: minutosAHora(minutosactuales), minutosPasados: minutospasados, costoAdicional: costoAdicional, penalizado: true })
             } else {
                 transaccion.update(refreserva, { HoraSalidaReal: minutosAHora(minutosactuales), penalizado: true, finalizadaAntes: true });
@@ -1112,7 +1127,7 @@ app.post("/finalizarusocomun", verficarUsuario, limite, async (req, res) => {
             if(/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(infocomun.placa)){
                  precio_minuto=infoconfig.minutosCobroMoto;
             }
-            const precio = Math.round(diferenciainutos * precio_minuto);
+            const precio = precioPorMinutos(diferenciainutos, precio_minuto);
             transaccion.update(refcomun, { horaSalida: horaSalida, precio: precio, estado: "finalizado" })
             return { message: "El usuario salió" }
 
