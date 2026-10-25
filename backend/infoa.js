@@ -141,6 +141,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const conteoMulta = {};
     htmlusu = `<a class="kpi-link" href="usuarios.html"><span class="kpi-num">${usuarios.total}</span></a>`
     usu.innerHTML = htmlusu;
+    const escaneo = document.getElementById("general_escaneo");
+    escaneo.innerHTML = `<a class="kpi-link" href="escaneo.html"><span class="kpi-num">Abrir</span></a>`;
     usos.forEach((data) => {
 
         if (!conteouso[data.fecha]) {

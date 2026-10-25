@@ -976,6 +976,43 @@ app.post("/cancelarreserva", verficarUsuario, limite, async (req, res) => {
         return res.status(400).json({ error: error.message });
     }
 })
+app.post("/cancelarreservaadmin", verficarUsuario, limite, async (req, res) => {
+    try {
+        const email = req.email;
+        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+        }
+        const { reservaID } = req.body;
+        if (!reservaID) {
+            return res.status(400).json({ error: "faltan datos" });
+        }
+        const refreserva = db.collection("reservas").doc(reservaID);
+        const datos = await db.runTransaction(async (trans) => {
+            const reserva = await trans.get(refreserva);
+            if (!reserva.exists) {
+                throw new Error("La reserva no existe");
+            }
+            const data = reserva.data();
+            if (data.cancelado === true) {
+                throw new Error("La reserva ya fue cancelada");
+            }
+            const ahora = new Date();
+            const fechahoy = ahora.toLocaleDateString("sv-SE");
+            const minutosactuales = ahora.getHours() * 60 + ahora.getMinutes();
+            const entrada = convertirHora(data.horaEntrada);
+            if (data.fecha < fechahoy || (data.fecha === fechahoy && minutosactuales >= entrada)) {
+                throw new Error("La reserva ya inició");
+            }
+            trans.update(refreserva, { cancelado: true });
+            return { fecha: data.fecha, parqueaderoId: data.parqueaderoId };
+        });
+        const gestion = await gestionarcola(datos.fecha, datos.parqueaderoId);
+        borrarCache("totalreservas");
+        return res.json({ message: "La reserva fue cancelada", gestion });
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+})
 app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
     try {
         const email = req.email
@@ -986,7 +1023,7 @@ app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
         if(!placa){
            return res.status(400).json({error:"faltan datos"})
         }
-         if (!/^[A-Z]{3}[0-9]{3}$/.test(placa)) {
+         if (!/^[A-Z]{3}[0-9]{3}$/.test(placa)&&!/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placa)) {
             return res.status(400).json({error: "La placa no tiene un formato valido"});
         }
         const fechahoyy = new Date().toLocaleDateString("sv-SE");

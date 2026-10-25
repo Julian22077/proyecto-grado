@@ -84,7 +84,10 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             <button type="submit" class="reserrrr">Registrar Pago</button>
           </form>
           <form id="imprimir-${data.id}">
-            <button type="submit" class="reserrrr">Imprimir Ingreso Directo</button>
+            <button type="submit" class="reserrrr">Imprimir factura</button>
+          </form>
+          <form id="imprimir-comprobante-${data.id}">
+            <button type="submit" class="reserrrr">Imprimir comprobante</button>
           </form>
         </footer>
       </article>
@@ -305,6 +308,14 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           })
           return;
         }
+        if (!data.pago) {
+          Swal.fire({
+            title: "Error",
+            text: "Debe registrar el pago para imprimir la factura",
+            icon: "error"
+          })
+          return;
+        }
         const pdf = new jsPDF({
           orientation: "portrait",
           unit: "mm",
@@ -328,6 +339,39 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         pdf.line(5, 88, 75, 88)
         pdf.setFont("helvetica", "bold");
         pdf.text("Gracias por su vista", 40, 96, { align: "center" })
+        const pdfurl = pdf.output("bloburl")
+        const ventana = window.open(pdfurl, "_blank")
+        if (!ventana) {
+          Swal.fire({
+            title: "Ventana bloqueada",
+            text: "Permita las ventanas emergentes para imprimir la factura.",
+            icon: "warning"
+          });
+        }
+      })
+      const comprobante = document.getElementById(`imprimir-comprobante-${data.id}`)
+      comprobante.addEventListener("submit", (e) => {
+        e.preventDefault()
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "mm",
+          format: [80, 90]
+        })
+        pdf.setFont("helvetica", "bold")
+        pdf.setFontSize(16)
+        pdf.text("Parqueadero", 40, 12, { align: "center" })
+        pdf.text("Calatrava", 40, 19, { align: "center" })
+        pdf.setFontSize(11)
+        pdf.text("Comprobante de uso", 40, 28, { align: "center" })
+        pdf.setFont("helvetica", "normal")
+        pdf.setFontSize(10)
+        pdf.line(5, 34, 75, 34)
+        pdf.text(`Placa: ${data.placa}`, 5, 44)
+        pdf.text(`Fecha: ${data.fecha}`, 5, 52)
+        pdf.text(`Hora entrada: ${data.horaEntrada}`, 5, 60)
+        pdf.line(5, 68, 75, 68)
+        pdf.setFont("helvetica", "bold")
+        pdf.text("Gracias por su visita", 40, 78, { align: "center" })
         const pdfurl = pdf.output("bloburl")
         const ventana = window.open(pdfurl, "_blank")
         if (!ventana) {

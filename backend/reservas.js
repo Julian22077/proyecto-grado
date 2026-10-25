@@ -50,6 +50,9 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
   function MostrarReserva(lista) {
     let html = "";
     lista.forEach((data) => {
+      if (data.cancelado) {
+        return;
+      }
       const estado = obtenerEstado(
         data.fecha,
         data.horaEntrada,
@@ -107,6 +110,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           <form id="pago-${data.id}">
             <button type="submit" class="reserrrr">Registrar Pago</button>
           </form>
+          <button type="button" class="boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
         </footer>
       </article>
             `;
@@ -120,6 +124,9 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     reservasUsuariosContainer.innerHTML = html;
     lista.forEach((data) => {
+      if (data.cancelado) {
+        return;
+      }
       const penalizacion = document.getElementById(`penalizar-${data.id}`);
       penalizacion.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -239,6 +246,52 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           }
         })
       })
+      const cancelar = document.querySelector(`[data-cancelar="${data.id}"]`);
+      cancelar.addEventListener("click", async () => {
+        const seguro = await Swal.fire({
+          title: "Cancelar reserva",
+          text: "¿Está seguro de cancelar esta reserva?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Sí, cancelar",
+          cancelButtonText: "No"
+        });
+        if (!seguro.isConfirmed) {
+          return;
+        }
+        try {
+          const respuesta = await fetch("https://proyecto-grado-rouge.vercel.app/cancelarreservaadmin", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ reservaID: data.id })
+          });
+          const datosCancelar = await respuesta.json();
+          if (!respuesta.ok) {
+            await Swal.fire({
+              title: "Error",
+              text: datosCancelar.error,
+              icon: "error"
+            });
+            return;
+          }
+          await Swal.fire({
+            title: "Reserva cancelada",
+            text: "El espacio ha sido liberado",
+            icon: "success"
+          });
+          window.location.reload();
+        } catch (error) {
+          console.error(error);
+          await Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
+          });
+        }
+      });
     });
   }
 
