@@ -1,4 +1,5 @@
 import { obtenerEstado, auth } from "./firebase.js";
+import { avatar } from "./avatar.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 
 const reservasUsuariosContainer = document.getElementById("reservasUsuarios");
@@ -63,7 +64,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
       <article class="datos_generales reserva-card">
         <header class="filll reserva-card-top">
           <div class="reserva-card-user">
-            <span class="reserva-avatar" aria-hidden="true">${String(data.nombre || "?").charAt(0).toUpperCase()}</span>
+            <span class="reserva-avatar" aria-hidden="true">${avatar(data.nombre)}</span>
             <div>
               <p class="nombree">${data.nombre}</p>
               <p class="reserva-cupo">Cupo ${data.parqueaderoId}</p>

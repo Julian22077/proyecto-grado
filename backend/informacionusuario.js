@@ -1,5 +1,6 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { auth} from "./firebase.js";
+import { avatar } from "./avatar.js";
 const parametros= new URLSearchParams(window.location.search)
 const id= parametros.get("id")
 const containerusuario=document.getElementById("contenidousuario")
@@ -44,11 +45,11 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     })
     return;
   }
-  const inicial = String(usuario.nombre || "?").charAt(0).toUpperCase();
+  const figura = avatar(usuario.nombre);
   containerusuario.innerHTML=`
   <section class="cuenta ficha-usuario">
     <header class="cuenta-hero">
-      <div class="avatar">${inicial}</div>
+      <div class="avatar">${figura}</div>
       <div class="cuenta-hero-text">
         <p class="cuenta-kicker">Administración</p>
         <h2 class="cuenta-nombre">${usuario.nombre}</h2>

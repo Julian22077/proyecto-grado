@@ -1,4 +1,5 @@
 import { auth } from "./firebase.js";
+import { avatar } from "./avatar.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { iniciarContadorUsoComun } from "./contador.js";
 const { jsPDF } = window.jspdf;
@@ -42,7 +43,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
       <article class="datos_generales reserva-card">
         <header class="filll reserva-card-top">
           <div class="reserva-card-user">
-            <span class="reserva-avatar" aria-hidden="true">${String(data.placa || "?").charAt(0).toUpperCase()}</span>
+            <span class="reserva-avatar" aria-hidden="true">${avatar(data.placa)}</span>
             <div>
               <button type="button" class="nombree btn-placa" id="placa-${data.id}">
               ${data.placa}
@@ -76,7 +77,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             </div>
           </div>
         </div>
-        <footer class="reserva-card-actions">
+        <footer class="reserva-card-actions uso-acciones">
           <form id="salio-${data.id}">
             <button type="submit" class="reserrrr">Finalizar Ingreso Directo</button>
           </form>

@@ -1324,7 +1324,7 @@ body.auth #registroForm {
   width: 72px;
   height: 72px;
   border-radius: 16px;
-  background: var(--ink);
+  background: transparent;
   color: var(--steel-2);
   font-family: var(--mono);
   font-size: 1.7rem;
@@ -1332,6 +1332,7 @@ body.auth #registroForm {
   display: grid;
   place-items: center;
   box-shadow: 0 0 0 3px var(--steel-dim);
+  overflow: hidden;
   flex-shrink: 0;
 }
 
@@ -1946,7 +1947,7 @@ body.auth #registroForm {
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: var(--ink);
+  background: transparent;
   color: var(--steel-2);
   font-family: var(--mono);
   font-size: 0.95rem;
@@ -1954,6 +1955,7 @@ body.auth #registroForm {
   display: grid;
   place-items: center;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 @media (max-width: 1100px) {
@@ -3110,13 +3112,23 @@ body:not(.app) .contenido {
   border-radius: 8px;
   display: grid;
   place-items: center;
-  background: #2c2118;
+  background: transparent;
   color: var(--steel-2);
   border: 1px solid rgba(212, 137, 74, 0.45);
   font-family: var(--mono);
   font-weight: 600;
   font-size: 1rem;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.avatar svg,
+.reserva-avatar svg,
+.inicial_usuario svg,
+.incial_usuario svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .reserva-card-user .nombree {
@@ -3168,6 +3180,33 @@ footer.reserva-card-actions {
 
 .reserva-card-actions .reserrrr:hover {
   background: var(--ink-3);
+}
+
+footer.uso-acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  justify-content: stretch;
+  align-items: stretch;
+}
+
+footer.uso-acciones form {
+  display: flex;
+  min-width: 0;
+}
+
+footer.uso-acciones .reserrrr {
+  width: 100%;
+  min-height: 44px;
+  white-space: normal;
+  line-height: 1.25;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  footer.uso-acciones {
+    grid-template-columns: 1fr;
+  }
 }
 
 .reserva-card-body.reservas_admin_totales {
@@ -3834,9 +3873,6 @@ html .boton_aumentar,
 html .cuenta-btn-primary,
 html .swal2-confirm,
 html .cj-swal-confirm,
-html .avatar,
-html .inicial_usuario,
-html .incial_usuario,
 html .volver:hover {
   background: var(--btn) !important;
   color: var(--on-btn) !important;

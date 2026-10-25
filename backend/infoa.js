@@ -1,4 +1,5 @@
 import { auth, obtenerEstado } from "./firebase.js";
+import { avatar } from "./avatar.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 const adminContainer = document.getElementById("adminContainer");
 const cuentasContainer = document.getElementById("cuentas");
@@ -31,10 +32,10 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         })
         return;
     }
-        const inicial = String(userData.nombre || "?").charAt(0).toUpperCase();
+        const figura = avatar(userData.nombre);
         adminContainer.innerHTML = `
       <header class="cuenta-hero dash-welcome">
-        <div class="avatar" aria-hidden="true">${inicial}</div>
+        <div class="avatar" aria-hidden="true">${figura}</div>
         <div class="cuenta-hero-text">
           <p class="dash-kicker">Sesión administrativa</p>
           <h1 class="titu dash-title">Bienvenido, ${userData.nombre}</h1>
