@@ -1,5 +1,6 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { auth} from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { avatar } from "./avatar.js";
 const containerusuarios=document.getElementById("listausuarios")
 const buscador = document.getElementById("buscarReserva");
@@ -26,11 +27,10 @@ containerusuarios.addEventListener("click", (e) => {
 });
 onAuthStateChanged(auth, async (usuarioAuth) => {
      if (!usuarioAuth) {
-    containerusuarios.innerHTML = "<p>No hay sesión iniciada</p>";
     window.location.href = "login.html";
     return;
   }
-  if (usuarioAuth.email !=="julian.lozanoh@uniagustiniana.edu.co" ) {
+  if (!(await esAdmin(usuarioAuth))) {
     window.location.href = "usuario.html";
     return;
   }

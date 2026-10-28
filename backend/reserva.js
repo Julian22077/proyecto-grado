@@ -1,5 +1,6 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { auth, obtenerEstado } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { convertirHora, precioPorMinutos } from "./utils.js";
 const containerreser=document.getElementById("espa_reser")
 const entrada = document.getElementById("horaEntrada");
@@ -62,7 +63,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         window.location.href = "login.html";
         return;
     }
-    if (usuarioAuth.email === "julian.lozanoh@uniagustiniana.edu.co") {
+    if (await esAdmin(usuarioAuth)) {
         window.location.href = "admin.html";
         return;
     }

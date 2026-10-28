@@ -1,4 +1,5 @@
 import { loginUsusario, recuperarContraseña, auth } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 const loginForm = document.getElementById("LoginForm");
 const recuperar = document.getElementById("recuperar");
@@ -37,7 +38,7 @@ loginForm.addEventListener("submit", async (e) => {
       showConfirmButton: false,
       timer: 1500
     });
-    if (correo.value === "julian.lozanoh@uniagustiniana.edu.co") {
+    if (await esAdmin(auth.currentUser)) {
       window.location.href = "admin.html";
     } else {
       window.location.href = "usuario.html";
@@ -85,11 +86,11 @@ recuperar.addEventListener("submit", async (e) => {
     });
   }
 })
-onAuthStateChanged(auth, (usuario) => {
+onAuthStateChanged(auth, async (usuario) => {
   if (!usuario) {
     return;
   }
-  if (usuario.email === "julian.lozanoh@uniagustiniana.edu.co") {
+  if (await esAdmin(usuario)) {
     window.location.href = "admin.html";
   } else {
     window.location.href = "usuario.html";

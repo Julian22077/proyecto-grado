@@ -47,14 +47,25 @@ const verficarUsuario = async (req, res, next) => {
             return res.status(401).json({ error: "Token invalido" });
         }
         const token = header.split("Bearer ")[1];
-        const tokenfinal = await adminauth.verifyIdToken(token);
+        const tokenfinal = await adminauth.verifyIdToken(token, true);
         const usuario = await adminauth.getUser(tokenfinal.uid);
         req.uid = tokenfinal.uid;
         req.email = tokenfinal.email
+        req.admin = tokenfinal.admin === true
         req.displayName = usuario.displayName
         next();
     } catch (error) {
         return res.status(401).json({ error: error.message })
+    }
+}
+
+async function esCuentaAdmin(correo) {
+    if (!correo) return false;
+    try {
+        const cuenta = await adminauth.getUserByEmail(correo);
+        return cuenta.customClaims?.admin === true;
+    } catch (error) {
+        return false;
     }
 }
 
@@ -712,9 +723,8 @@ app.post("/eventowompi", async (req, res) => {
 
 app.post("/penalizar", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const { reservaID } = req.body
         if (!reservaID) {
@@ -993,8 +1003,7 @@ app.post("/cancelarreserva", verficarUsuario, limite, async (req, res) => {
 })
 app.post("/cancelarreservaadmin", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email;
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
+        if (req.admin !== true) {
             return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const { reservaID } = req.body;
@@ -1030,9 +1039,8 @@ app.post("/cancelarreservaadmin", verficarUsuario, limite, async (req, res) => {
 })
 app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const {placa}=req.body
         if(!placa){
@@ -1090,9 +1098,8 @@ app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
 })
 app.post("/finalizarusocomun", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const { comunId } = req.body
         if (!comunId) {
@@ -1140,9 +1147,8 @@ app.post("/finalizarusocomun", verficarUsuario, limite, async (req, res) => {
 })
 app.post("/validarpago", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const { comunId, metodoPago } = req.body
         if (!comunId || !metodoPago) {
@@ -1171,9 +1177,8 @@ app.post("/validarpago", verficarUsuario, limite, async (req, res) => {
 })
 app.post("/validarpagoreserva", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const { reservaID, metodoPago } = req.body
         if (!reservaID || !metodoPago) {
@@ -1228,9 +1233,8 @@ app.get("/reservaaumento", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/reservasadmin", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
@@ -1242,9 +1246,8 @@ app.get("/reservasadmin", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/parqueaderos", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const enCache = leerCache("parqueaderos:total");
         if (enCache) return res.json(enCache);
@@ -1258,9 +1261,8 @@ app.get("/parqueaderos", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/ultimasreservas", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
@@ -1272,14 +1274,18 @@ app.get("/ultimasreservas", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/usuarios", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const enCache = leerCache("usuarios:conteo");
         if (enCache) return res.json(enCache);
-        const usuarios = await db.collection("usuarios").where("correo", "!=", "julian.lozanoh@uniagustiniana.edu.co").get();
-        const respuesta = { total: usuarios.size };
+        const usuarios = await db.collection("usuarios").get();
+        let total = 0;
+        for (const documento of usuarios.docs) {
+            if (await esCuentaAdmin(documento.data().correo)) continue;
+            total++;
+        }
+        const respuesta = { total };
         guardarCache("usuarios:conteo", respuesta, 5);
         return res.json(respuesta)
     } catch (error) {
@@ -1288,9 +1294,8 @@ app.get("/usuarios", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/usoscomunes", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
@@ -1302,9 +1307,8 @@ app.get("/usoscomunes", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/totalreservas", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const fechahoy = new Date().toLocaleDateString("sv-SE");
         const siguiente= new Date();
@@ -1323,9 +1327,8 @@ app.get("/totalreservas", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/totalusos", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const fechahoy = new Date().toLocaleDateString("sv-SE");
         const siguiente= new Date();
@@ -1407,9 +1410,8 @@ export const obtenerEstado = (fecha, horaEntrada, horaSalida, finalizadaAntes) =
 }
 app.get("/reservasvigentes", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const fechahoy = new Date().toLocaleDateString("sv-SE");
         const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).where("cancelado", "==", false).get()
@@ -1428,9 +1430,8 @@ app.get("/reservasvigentes", verficarUsuario, limite, async (req, res) => {
 })
 app.post("/crearparqueaderos", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email;
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const { espaciosReserva } = req.body
         if(!Number.isInteger(espaciosReserva)){
@@ -1454,9 +1455,8 @@ app.post("/crearparqueaderos", verficarUsuario, limite, async (req, res) => {
 })
 app.post("/actualizarparqueaderos", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email;
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const { espaciosReserva } = req.body
         if(!Number.isInteger(espaciosReserva)){
@@ -1495,9 +1495,8 @@ app.get("/configuracion", verficarUsuario, limite, async (req, res) => {
 })
 app.post("/crearconfiguracion", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email;
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const { metaIngreso, metaGeneral, metaReservas, metaUsos, minutosCobro, minutosCobroMoto } = req.body
         if (!metaIngreso || !metaGeneral || !metaReservas || !metaUsos || !minutosCobro || !minutosCobroMoto) {
@@ -1529,14 +1528,17 @@ app.post("/crearconfiguracion", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/usuariostotales", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email;
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const enCache = leerCache("usuarios:lista");
         if (enCache) return res.json(enCache);
-        const usuarios = await db.collection("usuarios").where("correo", "!=", "julian.lozanoh@uniagustiniana.edu.co").get()
-        const datos = usuarios.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        const usuarios = await db.collection("usuarios").get();
+        const datos = [];
+        for (const documento of usuarios.docs) {
+            if (await esCuentaAdmin(documento.data().correo)) continue;
+            datos.push({ id: documento.id, ...documento.data() });
+        }
         guardarCache("usuarios:lista", datos, 5);
         return res.json(datos)
 
@@ -1546,9 +1548,8 @@ app.get("/usuariostotales", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/usuarios/:id", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email;
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const usuario = await db.collection("usuarios").doc(req.params.id).get()
         if (!usuario.exists) {
@@ -1629,9 +1630,8 @@ app.get("/reservausuarios", verficarUsuario, limite, async (req, res) => {
 })
 app.get("/parqueaderoreservasadmin", verficarUsuario, limite, async (req, res) => {
     try {
-        const email = req.email;
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const enCache = leerCache("parqueaderos:reserva");
         if (enCache) return res.json(enCache);
@@ -1645,9 +1645,8 @@ app.get("/parqueaderoreservasadmin", verficarUsuario, limite, async (req, res) =
 })
 app.post("/detectar", verficarUsuario, upload.single("imagen"), async (req, res) => {
     try {
-        const email = req.email;
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json("No posee los permisos para hacer esta accion")
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         if (!req.file) {
             res.status(400).json({ error: " no  hay imagen" })
@@ -1730,9 +1729,8 @@ app.post("/detectar", verficarUsuario, upload.single("imagen"), async (req, res)
 })
 app.put("/actualizarplaca", verficarUsuario, async (req, res) => {
     try {
-        const email = req.email;
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json({error: "No posee los permisos para hacer esta accion"});
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const { comunId, placa } = req.body;
         if (!comunId || !placa) {
@@ -1770,9 +1768,8 @@ app.put("/actualizarplaca", verficarUsuario, async (req, res) => {
 });
 app.get("/asignacionesactivas", verficarUsuario, limite, async (req, res) => {
     try{
-        const email = req.email
-        if (email !== "julian.lozanoh@uniagustiniana.edu.co") {
-            return res.status(403).json({error: "No posee los permisos para hacer esta accion"});
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
         }
         const fechahoy= new Date().toLocaleDateString("sv-SE");
         const asignaciones = await db.collection("usocomun").where("fecha", "==", fechahoy).get();

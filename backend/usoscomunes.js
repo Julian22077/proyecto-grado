@@ -1,24 +1,23 @@
 import { auth } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { avatar } from "./avatar.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { iniciarContadorUsoComun } from "./contador.js";
 const { jsPDF } = window.jspdf;
 
-const ADMIN_EMAIL = "julian.lozanoh@uniagustiniana.edu.co";
 const reservasUsuariosContainer = document.getElementById("usosUsuarios");
 const buscador = document.getElementById("buscarReserva");
 
 onAuthStateChanged(auth, async (usuarioAuth) => {
   if (!usuarioAuth) {
-    reservasUsuariosContainer.innerHTML = "<p>No hay sesión iniciada</p>";
     window.location.href = "login.html";
     return;
   }
-  const token = await usuarioAuth.getIdToken();
-  if (usuarioAuth.email !== ADMIN_EMAIL) {
+  if (!(await esAdmin(usuarioAuth))) {
     window.location.href = "usuario.html";
     return;
   }
+  const token = await usuarioAuth.getIdToken();
 
   const usosadmin = await fetch("https://proyecto-grado-rouge.vercel.app/usoscomunes", {
     method: "GET",

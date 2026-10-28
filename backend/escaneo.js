@@ -1,5 +1,6 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import {auth} from "./firebase.js"
+import { esAdmin } from "./rol.js"
 const video = document.getElementById("camara");
 const canvas = document.getElementById("canvas");
 const resultado = document.getElementById("resultado");
@@ -27,7 +28,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         window.location.href = "login.html";
         return;
     }
-    if (usuarioAuth.email !== "julian.lozanoh@uniagustiniana.edu.co") {
+    if (!(await esAdmin(usuarioAuth))) {
         window.location.href = "usuario.html";
         return;
     }

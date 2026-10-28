@@ -1,4 +1,5 @@
 import {  auth, obtenerEstado } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { convertirHora, convertirHoracomun } from "./utils.js";
 window.addEventListener("offline",()=>{
@@ -20,7 +21,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         window.location.href = "login.html";
         return;
     }
-    if (usuarioAuth.email !== "julian.lozanoh@uniagustiniana.edu.co") {
+    if (!(await esAdmin(usuarioAuth))) {
         window.location.href = "usuario.html";
         return;
     }

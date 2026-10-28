@@ -1,4 +1,5 @@
 import { cambiarContraseña, auth } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 const cambioContraseña = document.getElementById("CambioContraseña");
 window.addEventListener("offline",()=>{
@@ -17,11 +18,12 @@ window.addEventListener("offline",()=>{
     })
 onAuthStateChanged(auth, async (usuarioAuth) => {
     if (!usuarioAuth) {
-        usuarioContainer.innerHTML = "<p>No hay sesión iniciada</p>";
         window.location.href = "login.html";
+        return;
     }
-    if (usuarioAuth.email === "julian.lozanoh@uniagustiniana.edu.co") {
+    if (await esAdmin(usuarioAuth)) {
         window.location.href = "admin.html";
+        return;
     }
     cambioContraseña.addEventListener("submit", async (e) => {
         e.preventDefault();

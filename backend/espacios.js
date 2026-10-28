@@ -1,4 +1,5 @@
 import { auth } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 const inputReserva = document.getElementById("espaciosReserva");
 const spanComunes = document.getElementById("espaciosComunes");
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
@@ -47,7 +48,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         window.location.href = "login.html";
         return;
     }
-    if (usuarioAuth.email !== "julian.lozanoh@uniagustiniana.edu.co") {
+    if (!(await esAdmin(usuarioAuth))) {
         window.location.href = "usuario.html";
         return;
     }

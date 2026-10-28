@@ -1,4 +1,5 @@
 import { obtenerEstado, auth } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { avatar } from "./avatar.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 
@@ -20,12 +21,11 @@ window.addEventListener("offline",()=>{
     })
 onAuthStateChanged(auth, async (usuarioAuth) => {
   if (!usuarioAuth) {
-    reservasUsuariosContainer.innerHTML = "<p>No hay sesión iniciada</p>";
     window.location.href = "login.html";
     return;
   }
 
-  if (usuarioAuth.email !== "julian.lozanoh@uniagustiniana.edu.co") {
+  if (!(await esAdmin(usuarioAuth))) {
     window.location.href = "usuario.html";
     return;
   }

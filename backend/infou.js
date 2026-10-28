@@ -1,4 +1,5 @@
 import { auth, obtenerEstado, NotificarUsuario,obtenertokenFCM } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { iniciarContador } from "./contador.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 
@@ -23,11 +24,10 @@ window.addEventListener("offline",()=>{
     })
 onAuthStateChanged(auth, async (usuarioAuth) => {
     if (!usuarioAuth) {
-        usuarioContainer.innerHTML = "<p>No hay sesión iniciada</p>";
         window.location.href = "login.html";
         return;
     }
-    if (usuarioAuth.email === "julian.lozanoh@uniagustiniana.edu.co") {
+    if (await esAdmin(usuarioAuth)) {
         window.location.href = "admin.html";
         return;
     }

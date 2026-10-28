@@ -1,4 +1,5 @@
 import { auth } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 window.addEventListener("offline",()=>{
         Swal.fire({
@@ -19,7 +20,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         window.location.href = "login.html";
         return;
     }
-    if (usuarioAuth.email !== "julian.lozanoh@uniagustiniana.edu.co") {
+    if (!(await esAdmin(usuarioAuth))) {
         window.location.href = "usuario.html";
         return;
     }

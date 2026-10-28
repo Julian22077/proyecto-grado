@@ -1,4 +1,5 @@
 import { auth, obtenerEstado } from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { avatar } from "./avatar.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 const adminContainer = document.getElementById("adminContainer");
@@ -7,11 +8,10 @@ const ultimass = document.getElementById("ultimass")
 const usu = document.getElementById("usu");
 onAuthStateChanged(auth, async (usuarioAuth) => {
     if (!usuarioAuth) {
-        adminContainer.innerHTML = "<p>No hay sesión iniciada</p>";
         window.location.href = "login.html";
         return;
     }
-    if (usuarioAuth.email !== "julian.lozanoh@uniagustiniana.edu.co") {
+    if (!(await esAdmin(usuarioAuth))) {
         window.location.href = "usuario.html";
         return;
     }

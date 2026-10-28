@@ -1,5 +1,6 @@
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-auth.js";
 import { auth} from "./firebase.js";
+import { esAdmin } from "./rol.js";
 import { avatar } from "./avatar.js";
 const parametros= new URLSearchParams(window.location.search)
 const id= parametros.get("id")
@@ -21,11 +22,10 @@ window.addEventListener("offline",()=>{
     })
 onAuthStateChanged(auth, async (usuarioAuth) => {
        if (!usuarioAuth) {
-    containerusuario.innerHTML = "<p>No hay sesión iniciada</p>";
     window.location.href = "login.html";
     return;
   }
-  if (usuarioAuth.email !=="julian.lozanoh@uniagustiniana.edu.co" ) {
+  if (!(await esAdmin(usuarioAuth))) {
     window.location.href = "usuario.html";
     return;
   }
