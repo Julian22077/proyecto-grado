@@ -78,8 +78,8 @@ app.post("/disponibilidad", verficarUsuario, limite, async (req, res) => {
         }
         const nuevaEntrada = convertirHora(horaEntrada);
         const nuevaSalida = convertirHora(horaSalida);
-        const horaabren = 8 * 60;
-        const horacierra = 24 * 60;
+        const horaabren = 4 * 60 + 30;
+        const horacierra = 23 * 60;
         if (nuevaEntrada < horaabren || nuevaSalida > horacierra) {
             return res.status(400).json({ error: "La hora de entrada o salida está fuera de los horaios de uso del parqueadero" });
         }
@@ -292,8 +292,8 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
         }
         const precio = precioPorMinutos(diferencia, precio_minuto);
         const montoreal = precio * 100;
-        const abre = 8 * 60
-        const cierra = 24 * 60
+        const abre = 4 * 60 + 30
+        const cierra = 23 * 60
         if (entrada < abre || salida > cierra || salida < entrada) {
             return res.status(400).json({ error: "Horarios no validos" })
         }
@@ -417,7 +417,7 @@ app.post("/validaraumento", verficarUsuario, limite, async (req, res) => {
             return res.status(400).json({ error: "Solo se pueden aumentar reservas que le queden 15 minutos " })
         }
         const nuevaSalida = salidaActual + minutosExtra;
-        const cierre = 24 * 60;
+        const cierre = 23 * 60;
         const reservasdeespacio = await db.collection("reservas").where("fecha", "==", reserva.fecha).where("parqueaderoId", "==", reserva.parqueaderoId).get();
         let siguientereserva = null
         for (const reservi of reservasdeespacio.docs) {
@@ -840,7 +840,7 @@ app.post("/gestionarcola", verficarUsuario, limite, async (req, res) => {
         }
         const ahora = new Date();
         const minutos = ahora.getHours() * 60 + ahora.getMinutes();
-        const cierre = 24 * 60;
+        const cierre = 23 * 60;
         const gestion = await db.runTransaction(async (trans) => {
             const reservas = db.collection("reservas").where("fecha", "==", fecha).where("parqueaderoId", "==", parqueaderoId)
             const reserva = await trans.get(reservas);
@@ -892,7 +892,7 @@ app.post("/gestionarcola", verficarUsuario, limite, async (req, res) => {
 const gestionarcola = async (fecha, parqueaderoId) => {
     const ahora = new Date();
     const minutos = ahora.getHours() * 60 + ahora.getMinutes();
-    const cierre = 24 * 60;
+    const cierre = 23 * 60;
     const gestion = await db.runTransaction(async (trans) => {
         const reservas = db.collection("reservas").where("fecha", "==", fecha).where("parqueaderoId", "==", parqueaderoId)
         const reserva = await trans.get(reservas);
