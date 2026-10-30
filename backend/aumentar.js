@@ -11,7 +11,7 @@ const cambioContraseña = document.getElementById("CambioContraseña");
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -142,7 +142,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const config=await configg.json();
     if(!configg.ok){
         await Swal.fire({
-            title:"error",
+            title:"Error",
             text:config.error,
             icon:"error"
         })
@@ -219,7 +219,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             if(datos.nuevoPrecio<=1500){
                 await Swal.fire({
                         title: "Error",
-                        text: "solo se pueden aumentar reservas mayores a 1500  ",
+                        text: "Solo se pueden aumentar reservas mayores a 1500",
                         icon: "error"
                 });
                 return;
@@ -235,7 +235,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             const firm=await firmas.json();
         if(!firmas.ok){
             await Swal.fire({
-                title:"error",
+                title:"Error",
                 text:firm.error,
                 icon:error
             })
@@ -264,15 +264,15 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             const aumentohecho=await aumento.json()
             if(!aumento.ok){
                 await Swal.fire({
-                    title:"error",
+                    title:"Error",
                     text: aumentohecho.message,
                     icon:"error"
                 })
                 return;
             }
             await Swal.fire({
-                title:"Reserva auemntada con exito ",
-                text:"La reserva se aumento con exito",
+                title:"Reserva aumentada con éxito",
+                text:"La reserva se aumentó con éxito",
                 icon:"success"
             })
              window.location.href="usuario.html"
@@ -287,8 +287,8 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             }
             if(resultado.transaction?.status==="DECLINED"||resultado.transaction?.status==="ERROR"){
                 await Swal.fire({
-                    tittle:"Error en la transaccion",
-                    text:"el pago no fue aprobado",
+                    title:"Error en la transacción",
+                    text:"El pago no fue aprobado",
                     icon:"error"
                 })
             }

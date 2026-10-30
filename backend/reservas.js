@@ -8,7 +8,7 @@ const buscador = document.getElementById("buscarReserva");
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -170,7 +170,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
          }
           await Swal.fire({
             title: "Reserva finalizada",
-            text: "El ususario ha llegado y finalizado su reserva con exito",
+            text: "El usuario ha llegado y finalizado su reserva con éxito",
             icon: "success",
           });
           window.location.reload();
@@ -187,7 +187,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
       pago.addEventListener("submit", async (e) => {
         e.preventDefault();
         Swal.fire({
-          title: "Agregue el metodo de pago",
+          title: "Agregue el método de pago",
           html: `<div class="formulario">
             <label for="metodoPago">Método de pago</label>
         <select id="metodoPago" class="swal2-select">
@@ -204,7 +204,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           preConfirm: async () => {
             const metodoPago = document.getElementById("metodoPago").value;
             if (!metodoPago) {
-              Swal.showValidationMessage("Por favor, selecciona un método de pago.");
+              Swal.showValidationMessage("Por favor, seleccione un método de pago.");
               return;
             }
             return { metodoPago };

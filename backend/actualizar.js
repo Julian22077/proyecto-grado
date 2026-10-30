@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/f
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -49,7 +49,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         const placa = infoContainer["placa"].value
         if(userData.nombre===nombre&&userData.placa===placa){
             await Swal.fire({
-            title: "error",
+            title: "Error",
             text: "Debe actualizar al menos un dato",
             icon: "error",
         }); 
@@ -57,7 +57,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         }
         if(!nombre?.trim() || !placa?.trim()){
             await Swal.fire({
-            title: "error",
+            title: "Error",
             text: "Todos los campos son obligatorios",
             icon: "error",
         }); 
@@ -65,7 +65,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         }
         if(!/^[A-Z]{3}[0-9]{3}$/.test(placa)&&!/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placa)){
             await Swal.fire({
-            title: "error",
+            title: "Error",
             text: "La placa debe tener el formato ABC123 o ABC12D",
             icon: "error",
         }); 
@@ -99,7 +99,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         }
        
         await Swal.fire({
-            title: "Información Actualizada con exito",
+            title: "Información actualizada con éxito",
             text: "Su información ha sido actualizada",
             icon: "success",
         });

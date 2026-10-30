@@ -32,7 +32,7 @@ const infoEspacios = document.getElementById("infoespacios");
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -149,15 +149,15 @@ form.addEventListener("submit", async (e) => {
             const parqueaderosactulizados= await actualizarpar.json();
             if(!actualizarpar.ok){
                 await Swal.fire({
-                    title: "error",
+                    title: "Error",
                     text: parqueaderosactulizados.error,
                     icon:"error"
                 })
                 return;
             }
             await Swal.fire({
-                title: "Parqueaderos configurado correctamente",
-                text: "Los  han sido configurados de manera exitosa",
+                title: "Parqueaderos configurados correctamente",
+                text: "Los espacios han sido configurados de manera exitosa",
                 icon: "success"
             });
             return;
@@ -173,15 +173,15 @@ form.addEventListener("submit", async (e) => {
         const parqueaderoscreados= await crearparqueaderos.json();
         if(!crearparqueaderos.ok){
             await Swal.fire({
-                title: "error",
+                title: "Error",
                 text: parqueaderoscreados.error,
                 icon:"error"
             })
             return;
         }
         await Swal.fire({
-            title: "Parqueaderos configurado correctamente",
-            text: "Los  han sido configurados de manera exitosa",
+            title: "Parqueaderos configurados correctamente",
+            text: "Los espacios han sido configurados de manera exitosa",
             icon: "success",
         });
         return;

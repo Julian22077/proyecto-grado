@@ -55,7 +55,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const config=await configg.json();
     if(!configg.ok){
         await Swal.fire({
-            title:"error",
+            title:"Error",
             text:config.error,
             icon:"error"
         })

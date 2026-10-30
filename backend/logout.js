@@ -3,8 +3,8 @@ const logoutButton = document.getElementById("logout");
 logoutButton.addEventListener("click", async () => {
   try {
     await Swal.fire({
-      title: "Sesion cerrada Exitosamente",
-      text: "Cerrando Sesion",
+      title: "Sesión cerrada exitosamente",
+      text: "Cerrando sesión",
       icon: "success",
       showConfirmButton: false,
       timer: 1500

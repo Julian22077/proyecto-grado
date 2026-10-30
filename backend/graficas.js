@@ -5,7 +5,7 @@ import { convertirHora, convertirHoracomun } from "./utils.js";
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -38,7 +38,7 @@ let dataconfig;
     const config=await configg.json();
     if(!configg.ok){
         await Swal.fire({
-            title:"error",
+            title:"Error",
             text:config.error,
             icon:"error"
         })
@@ -1123,7 +1123,7 @@ botonexport.addEventListener("click", async () => {
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Por favor, selecciona un rango de fechas válido.',
+            text: 'Por favor, seleccione un rango de fechas válido.',
         });
         return;
     } 

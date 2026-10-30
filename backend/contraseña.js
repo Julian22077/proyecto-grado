@@ -5,7 +5,7 @@ const cambioContraseña = document.getElementById("CambioContraseña");
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -30,20 +30,20 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         const actual = cambioContraseña["contraseñaActual"].value;
         const nueva = cambioContraseña["nuevaContraseña"].value;
         const confirmar = cambioContraseña["confirmarContraseña"].value;
+        if(!actual?.trim() || !nueva?.trim() || !confirmar?.trim()){
+            await Swal.fire({
+                icon: "error",
+                title: "Campos vacíos",
+                text: "Todos los campos son obligatorios."
+            });
+            return;
+        }
         const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,30}$/;
         if (!regexPassword.test(nueva)) {
             await Swal.fire({
                 icon: "error",
                 title: "Contraseña inválida",
                 text: "La contraseña debe tener entre 8 y 30 caracteres e incluir una mayúscula, una minúscula, un número y un carácter especial."
-            });
-            return;
-        }
-        if(!actual?.trim() || !nueva?.trim() || !confirmar?.trim()){
-            await Swal.fire({
-                icon: "error",
-                title: "Campos vacíos",
-                text: "Todos los campos son obligatorios."
             });
             return;
         }
@@ -73,9 +73,12 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                 window.location.href = "perfil.html";
             } catch (error) {
                 console.error(error);
+                const contraseñaIncorrecta = error.code === "auth/invalid-credential"
+                    || error.code === "auth/wrong-password"
+                    || error.code === "auth/invalid-login-credentials";
                 await Swal.fire({
-                    title: "Error",
-                    text: error.message,
+                    title: contraseñaIncorrecta ? "Contraseña incorrecta" : "Error",
+                    text: contraseñaIncorrecta ? "La contraseña actual es incorrecta." : error.message,
                     icon: "error",
                 });
             }

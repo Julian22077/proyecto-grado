@@ -20,7 +20,7 @@ let htmlreservas="";
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -93,7 +93,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const config=await configg.json();
     if(!configg.ok){
         await Swal.fire({
-            title:"error",
+            title:"Error",
             text:config.error,
             icon:"error"
         })
@@ -178,7 +178,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         if(precio <=1500){
              Swal.fire({
                 title: "Error",
-                text: "solo se pueden hacer reservas mayores a 1500 pesos ",
+                text: "Solo se pueden hacer reservas mayores a 1500 pesos",
                 icon: "error"
             });
             return;
@@ -197,7 +197,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             if(fecha!==fechaahora){
                 await Swal.fire({
                     title:"No hay espacios disponibles",
-                    text:"No hay espacios disponibles para los horas que necesitas, intentalo de nuevo",
+                    text:"No hay espacios disponibles para las horas que necesitas, inténtalo de nuevo",
                     icon:"warning"
                 })
                 return;
@@ -247,7 +247,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         }
         if(!reserva.ok){
             await Swal.fire({
-                title:"error",
+                title:"Error",
                 text:disponibilidad.error,
                 icon:"error"
             })
@@ -267,7 +267,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         const firm=await firmas.json();
         if(!firmas.ok){
             await Swal.fire({
-                title:"error",
+                title:"Error",
                 text:firm.error,
                 icon:error
             })
@@ -296,7 +296,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                     const datosreservas=await reservahecha.json();
                     if(!reservahecha.ok){
                         await Swal.fire({
-                            tittle:"Error",
+                            title:"Error",
                             text:datosreservas.error,
                             icon:"error"
                         })
@@ -321,13 +321,13 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                     }
                     await Swal.fire({
                         title:"Reserva hecha",
-                        text:"Su espacio ha isdo reservado con exito",
+                        text:"Su espacio ha sido reservado con éxito",
                         icon:"success"
                     })
                     window.location.href="usuario.html"
                 }catch(error){
                     await Swal.fire({
-                        tittle:"Error en creacion de reserva",
+                        title:"Error en la creación de la reserva",
                         text:error.message,
                         icon:"error"
                     })
@@ -336,15 +336,15 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             }
             if(resultado.transaction?.status==="DECLINED"||resultado.transaction?.status==="ERROR"){
                 await Swal.fire({
-                    tittle:"Error en la transaccion",
-                    text:"el pago no fue aprobado",
+                    title:"Error en la transacción",
+                    text:"El pago no fue aprobado",
                     icon:"error"
                 })
             }
         })
         }catch(error){
           await Swal.fire({
-            title:"error",
+            title:"Error",
             text:error.message,
             icon:"error"
           }) 

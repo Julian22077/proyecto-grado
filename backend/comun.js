@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/f
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -49,7 +49,7 @@ containerPlaca.addEventListener("submit", async (e)=>{
         }
         await Swal.fire({
             title: "Exito",
-            text: "Se generó la asigancion",
+            text: "Se generó la asignación",
             icon: "success"
         })
          window.location.href="usoscomunes.html"

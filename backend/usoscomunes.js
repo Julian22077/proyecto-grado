@@ -157,7 +157,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
       pago.addEventListener("submit", async (e) => {
         e.preventDefault();
         Swal.fire({
-          title: "Agregue el metodo de pago",
+          title: "Agregue el método de pago",
           html: `<div class="formulario">
             <label for="metodoPago">Método de pago</label>
         <select id="metodoPago" class="swal2-select">
@@ -174,7 +174,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
           preConfirm: async () => {
             const metodoPago = document.getElementById("metodoPago").value;
             if (!metodoPago) {
-              Swal.showValidationMessage("Por favor, selecciona un método de pago.");
+              Swal.showValidationMessage("Por favor, seleccione un método de pago.");
               return;
             }
             return { metodoPago };
@@ -279,7 +279,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
 
           await Swal.fire({
             title: "Placa actualizada",
-            text: "La placa fue actualizada con exito",
+            text: "La placa fue actualizada con éxito",
             icon: "success"
           });
 
@@ -303,7 +303,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         if (data.estado === "activo") {
           Swal.fire({
             title: "Error",
-            text: "El usuario aun no ha salido",
+            text: "El usuario aún no ha salido",
             icon: "error"
           })
           return;
@@ -335,10 +335,10 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         pdf.text(`Hora entrada: ${data.horaEntrada}`, 5, 56)
         pdf.text(`Hora salida: ${data.horaSalida}`, 5, 64)
         pdf.text(`Precio: ${data.precio}`, 5, 72)
-        pdf.text(`Metodo Pago: ${data.metodoPago}`, 5, 80)
+        pdf.text(`Método de pago: ${data.metodoPago}`, 5, 80)
         pdf.line(5, 88, 75, 88)
         pdf.setFont("helvetica", "bold");
-        pdf.text("Gracias por su vista", 40, 96, { align: "center" })
+        pdf.text("Gracias por su visita", 40, 96, { align: "center" })
         const pdfurl = pdf.output("bloburl")
         const ventana = window.open(pdfurl, "_blank")
         if (!ventana) {

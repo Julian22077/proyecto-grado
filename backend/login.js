@@ -6,7 +6,7 @@ const recuperar = document.getElementById("recuperar");
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -51,7 +51,7 @@ loginForm.addEventListener("submit", async (e) => {
       || error.code === "auth/user-not-found"
       || error.code === "auth/invalid-email";
     Swal.fire({
-      title: "Error al Iniciar Sesion",
+      title: "Error al iniciar sesión",
       text: credencialInvalida ? "Correo o contraseña incorrectos" : error.message,
       icon: "error",
 

@@ -3,7 +3,7 @@ const registroForm = document.getElementById("registroForm");
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -66,7 +66,7 @@ registroForm.addEventListener("submit", async (e) => {
 
     await Swal.fire({
       title: "Registro exitoso",
-      text: "El usuario se ha registrado con exito ",
+      text: "El usuario se ha registrado con éxito",
       icon: "success",
     });
     registroForm.reset();

@@ -33,7 +33,7 @@ function bloqueCodigo(uid) {
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -82,7 +82,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const fechahoy = hoy.toLocaleDateString("sv-SE");
      await NotificarUsuario(usuarioAuth.uid, fechahoy, async (data, id)=>{
       const noti = await Swal.fire({
-            title: "Se libero un espacio en el parqueadero",
+            title: "Se liberó un espacio en el parqueadero",
             html:`<p class="dash-sub">Se ha liberado un espacio en el parqueadero.</p><p class="reserva-meta-value">${data.horaDisponible} – ${data.horaLimite}</p>`,
             icon: "info",
             showCancelButton: true,
@@ -263,7 +263,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             <p class="mi-reserva-kicker">Sin actividad</p>
             <h1 class="titu mi-reserva-title">No hay reservas</h1>
             <p class="mi-reserva-empty-sub">Cuando reserves un cupo, aparecerá aquí con los detalles de la reserva realizada.</p>
-            <p class="mi-reserva-empty-sub">Atención: Las reservas se podrán cancelar antes del inicio de las mismas, en caso de cancelación, por favor guardar comprobante de pago y comuniquese al correo calatrava.parqueadero@gmail.com, para el proceso de reembolso correspondiente.</p>
+            <p class="mi-reserva-empty-sub">Atención: Las reservas se podrán cancelar antes del inicio de las mismas, en caso de cancelación, por favor guarde el comprobante de pago y comuníquese al correo calatrava.parqueadero@gmail.com, para el proceso de reembolso correspondiente.</p>
             <a class="boton_aumentar" href="reservar.html">Ir a reservar</a>
           </section>
         `;

@@ -7,7 +7,7 @@ const resultado = document.getElementById("resultado");
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -92,15 +92,15 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             const datos = await respuesta.json();
             if (!respuesta.ok) {
                Swal.fire({
-                title:"error",
+                title:"Error",
                 text:datos.error,
                 icon:"error"
                })
                return;
             }
             await Swal.fire({
-                title:"Placa Escaneada",
-                text: "la placa se esaceno correctamente",
+                title:"Placa escaneada",
+                text: "La placa se escaneó correctamente",
                 icon:"succes"
             })
             window.location.href="usoscomunes.html"

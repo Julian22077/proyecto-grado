@@ -22,7 +22,7 @@ const limite = rateLimit({
         return req.uid
     },
     message: {
-        error: "Muchas solicitudes "
+        error: "Muchas solicitudes"
     },
     standardHeaders: true,
     legacyHeaders: false
@@ -44,7 +44,7 @@ const verficarUsuario = async (req, res, next) => {
     try {
         const header = req.headers.authorization;
         if (!header?.startsWith("Bearer ")) {
-            return res.status(401).json({ error: "Token invalido" });
+            return res.status(401).json({ error: "Token inválido" });
         }
         const token = header.split("Bearer ")[1];
         const tokenfinal = await adminauth.verifyIdToken(token, true);
@@ -81,7 +81,7 @@ app.post("/disponibilidad", verficarUsuario, limite, async (req, res) => {
         const horaabren = 4 * 60 + 30;
         const horacierra = 23 * 60;
         if (nuevaEntrada < horaabren || nuevaSalida > horacierra) {
-            return res.status(400).json({ error: "La hora de entrada o salida está fuera de los horaios de uso del parqueadero" });
+            return res.status(400).json({ error: "La hora de entrada o salida está fuera de los horarios de uso del parqueadero" });
         }
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
@@ -89,12 +89,12 @@ app.post("/disponibilidad", verficarUsuario, limite, async (req, res) => {
         mañana.setDate(ahora.getDate() + 1);
         const fechamañana = mañana.toLocaleDateString("sv-SE");
         if (fecha !== fechahoy && fecha !== fechamañana) {
-            return res.status(400).json("La fecha dde reserva debe ser entre hoy y mañana ");
+            return res.status(400).json("La fecha de reserva debe ser entre hoy y mañana");
         }
         if (fecha === fechahoy) {
             const horaactual = ahora.getHours() * 60 + ahora.getMinutes();
             if (nuevaEntrada < horaactual) {
-                return res.status(400).json({ error: "La hora de entrada no ya culmino" });
+                return res.status(400).json({ error: "La hora de entrada ya culminó" });
             }
         }
 
@@ -136,7 +136,7 @@ app.post("/disponibilidad", verficarUsuario, limite, async (req, res) => {
                         continue;
                     }
                     if (data.uid === uid) {
-                        throw new Error(" Ya posees una reserva para este dia ")
+                        throw new Error("Ya posees una reserva para este día")
                     }
                     if (data.parqueaderoId !== parqueadero.id) {
                         continue;
@@ -202,7 +202,7 @@ app.post("/disponibilidad", verficarUsuario, limite, async (req, res) => {
         })
         return res.json(verficacion)
     } catch (error) {
-        if (error.message === "Ya posees una reserva para este dia") {
+        if (error.message === "Ya posees una reserva para este día") {
             return res.status(400).json({ error: error.message })
         }
         if (error.message === "No hay espacios disponibles para esas horas") {
@@ -217,12 +217,12 @@ app.post("/firma", verficarUsuario, limite, async (req, res) => {
         const uid = req.uid
         const { horaEntrada, horaSalida, bloqueoId } = req.body
         if (!horaEntrada || !horaSalida || !bloqueoId) {
-            return res.status(400).json({ error: "faltan datos " })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         const bloqueoRef = db.collection("bloqueos").doc(bloqueoId);
         const bloqueoSnap = await bloqueoRef.get();
         if (!bloqueoSnap.exists || bloqueoSnap.data().uid !== uid || bloqueoSnap.data().horaEntrada !== horaEntrada || bloqueoSnap.data().horaSalida !== horaSalida) {
-            return res.status(400).json({ error: "Los datos no coinciden " })
+            return res.status(400).json({ error: "Los datos no coinciden" })
         }
         if (bloqueoSnap.data().expira && bloqueoSnap.data().expira.toMillis() <= Date.now()) {
             return res.status(400).json({ error: "El bloqueo ha expirado" })
@@ -248,7 +248,7 @@ app.post("/firma", verficarUsuario, limite, async (req, res) => {
 
         const llaveintegridad = process.env.LLAVE_INTEGRIDAD_WOMPI;
         if (!llaveintegridad) {
-            return res.status(500).json({ error: "mala llave " })
+            return res.status(500).json({ error: "Mala llave" })
         }
         const texto = refrencia + monto + moneda + llaveintegridad
         const firma = crypto.createHash("sha256").update(texto).digest("hex");
@@ -270,7 +270,7 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
         const uid = req.uid;
         const { nombre, bloqueoId, fecha, horaEntrada, horaSalida, idtransaccion, monto, referencia } = req.body
         if (!nombre || !bloqueoId || !fecha || !horaEntrada || !horaSalida) {
-            return res.status(400).json({ error: "faltan datos " });
+            return res.status(400).json({ error: "Faltan datos" });
         }
         const yaHecha = await db.collection("reservas").where("referencia", "==", referencia).limit(1).get();
         if (!yaHecha.empty && yaHecha.docs[0].data().uid === uid) {
@@ -295,25 +295,25 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
         const abre = 4 * 60 + 30
         const cierra = 23 * 60
         if (entrada < abre || salida > cierra || salida < entrada) {
-            return res.status(400).json({ error: "Horarios no validos" })
+            return res.status(400).json({ error: "Horarios no válidos" })
         }
         if (Number(monto) !== montoreal) {
-            return res.status(400).json({ error: "EL monto no coincide con el rango de horas seleccioandas" })
+            return res.status(400).json({ error: "El monto no coincide con el rango de horas seleccionadas" })
         }
         const wompi = await fetch(`https://sandbox.wompi.co/v1/transactions/${idtransaccion}`)
         if (!wompi.ok) {
-            return res.status(400).json({ error: "erro ene verificacion" })
+            return res.status(400).json({ error: "Error en la verificación" })
         }
         const datoswompi = await wompi.json()
         const transaccion = datoswompi.data
         if (transaccion.status !== "APPROVED") {
-            return res.status(400).json({ error: "el pago no se aprobo" })
+            return res.status(400).json({ error: "El pago no se aprobó" })
         }
         if (Number(transaccion.amount_in_cents) !== montoreal) {
             return res.status(400).json({ error: "Monto no coincide" })
         }
         if (transaccion.reference !== referencia) {
-            return res.status(400).json({ error: "referencia no coincide" })
+            return res.status(400).json({ error: "La referencia no coincide" })
         }
 
 
@@ -322,17 +322,17 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
         await db.runTransaction(async (trans) => {
             const bloqueo = await trans.get(refbloqueo);
             if (!bloqueo.exists) {
-                throw new Error("el bloqueo no existe o ya fue utilizado ")
+                throw new Error("El bloqueo no existe o ya fue utilizado")
             }
             const data = bloqueo.data();
             if (data.uid !== uid) {
-                throw new Error("el bloqueo para reservra no pertenece al usuario")
+                throw new Error("El bloqueo para la reserva no pertenece al usuario")
             }
             if (data.expira && data.expira.toMillis() <= Date.now()) {
                 throw new Error("El bloqueo ha expirado")
             }
             if (data.fecha !== fecha || data.horaEntrada !== horaEntrada || data.horaSalida !== horaSalida || data.referencia !== referencia) {
-                throw new Error("Los datos no coinciden ")
+                throw new Error("Los datos no coinciden")
             }
             const parqueaderoId = data.parqueaderoId;
             trans.set(reser, {
@@ -379,13 +379,13 @@ app.post("/validaraumento", verficarUsuario, limite, async (req, res) => {
     try {
         const { reservaID, minutosExtra } = req.body
         if (!reservaID || !minutosExtra) {
-            return res.status(400).json({ error: "faltan dattos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         if (minutosExtra > 60) {
-            return res.status(400).json({ error: "El aumento maximo es de 60 muntos" })
+            return res.status(400).json({ error: "El aumento máximo es de 60 minutos" })
         }
         if (minutosExtra <= 0) {
-            return res.status(400).json({ error: "El tiempo extra debe ser mayo de 0 minutos" })
+            return res.status(400).json({ error: "El tiempo extra debe ser mayor de 0 minutos" })
         }
         const refreservas = db.collection("reservas").doc(reservaID);
         const configuracion = await db.collection("configuracion").doc("general").get()
@@ -401,20 +401,20 @@ app.post("/validaraumento", verficarUsuario, limite, async (req, res) => {
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE")
         if (reserva.fecha !== fechahoy) {
-            return res.status(400).json({ error: "Solo se pueden auemntar reservas de hoy " })
+            return res.status(400).json({ error: "Solo se pueden aumentar reservas de hoy" })
         }
         const minutosactuales = ahora.getHours() * 60 + ahora.getMinutes();
         const entradaActual = convertirHora(reserva.horaEntrada)
         const salidaActual = convertirHora(reserva.horaSalida)
         const restante = salidaActual - minutosactuales;
         if (minutosactuales < entradaActual) {
-            return res.status(400).json({ error: "La reserva aun no ha iniciado" })
+            return res.status(400).json({ error: "La reserva aún no ha iniciado" })
         }
         if (restante <= 0) {
             return res.status(400).json({ error: "La reserva ya finalizó" })
         }
         if (restante > 15) {
-            return res.status(400).json({ error: "Solo se pueden aumentar reservas que le queden 15 minutos " })
+            return res.status(400).json({ error: "Solo se pueden aumentar las reservas a las que les queden 15 minutos" })
         }
         const nuevaSalida = salidaActual + minutosExtra;
         const cierre = 23 * 60;
@@ -437,15 +437,15 @@ app.post("/validaraumento", verficarUsuario, limite, async (req, res) => {
         const maximodiponible = siguientereserva - salidaActual
         if (siguientereserva !== null && nuevaSalida > siguientereserva) {
             if (maximodiponible <= 0) {
-                return res.status(400).json({ error: "No es posible extender la reserva, hay una inmediatamente existente" })
+                return res.status(400).json({ error: "No es posible extender la reserva, hay una reserva inmediatamente siguiente" })
             }
-            return res.status(400).json({ error: `Solos puedes extender hasta ${maximodiponible} minutos` })
+            return res.status(400).json({ error: `Solo puedes extender hasta ${maximodiponible} minutos` })
         }
         if (nuevaSalida > cierre) {
             if (maximores <= 0) {
-                return res.status(400).json({ error: "No se pueden aumentar la reserva, es mas del limite de atencion" })
+                return res.status(400).json({ error: "No se puede aumentar la reserva, es más del límite de atención" })
             }
-            return res.status(400).json({ error: `Solo puedes aumnetar hasta ${maximores} minutos` })
+            return res.status(400).json({ error: `Solo puedes aumentar hasta ${maximores} minutos` })
         }
         let precio_minuto;
         if (/^[A-Z]{3}[0-9]{3}$/.test(reserva.placa)) {
@@ -488,7 +488,7 @@ app.post("/firmaaumento", verficarUsuario, limite, async (req, res) => {
         const moneda = "COP"
         const llaveintegridad = process.env.LLAVE_INTEGRIDAD_WOMPI;
         if (!llaveintegridad) {
-            return res.status(500).json({ error: "mala llave " })
+            return res.status(500).json({ error: "Mala llave" })
         }
         const texto = referencia + monto + moneda + llaveintegridad
         const firma = crypto.createHash("sha256").update(texto).digest("hex");
@@ -508,11 +508,11 @@ app.post("/aumentar", verficarUsuario, limite, async (req, res) => {
         const uid = req.uid;
         const { reservaID, idtransaccion, minutosExtra, referencia } = req.body
         if (!reservaID || !idtransaccion || !minutosExtra) {
-            return res.status(400).json({ error: "faltan datos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         const yaAumentada = await db.collection("reservas").doc(reservaID).get();
         if (yaAumentada.exists && yaAumentada.data().extensionMinutos && yaAumentada.data().referenciaAumento === referencia && yaAumentada.data().uid === uid) {
-            return res.json({ message: "reserva aumentada con exito" })
+            return res.json({ message: "Reserva aumentada con éxito" })
         }
         const configuracion = await db.collection("configuracion").doc("general").get()
         const minuto = configuracion.data();
@@ -528,24 +528,24 @@ app.post("/aumentar", verficarUsuario, limite, async (req, res) => {
         const montoreal = nuevoPrecio * 100
         const wompi = await fetch(`https://sandbox.wompi.co/v1/transactions/${idtransaccion}`)
         if (!wompi.ok) {
-            return res.status(400).json({ error: "erro ene verificacion" })
+            return res.status(400).json({ error: "Error en la verificación" })
         }
         const datoswompi = await wompi.json()
         const transaccion = datoswompi.data
         if (transaccion.status !== "APPROVED") {
-            return res.status(400).json({ error: "el pago no se aprobo" })
+            return res.status(400).json({ error: "El pago no se aprobó" })
         }
         if (Number(transaccion.amount_in_cents) !== montoreal) {
             return res.status(400).json({ error: "Monto no coincide" })
         }
         if (transaccion.reference !== referencia) {
-            return res.status(400).json({ error: "referencia no coincide" })
+            return res.status(400).json({ error: "La referencia no coincide" })
         }
         const refreserva = db.collection("reservas").doc(reservaID)
         const proceso = await db.runTransaction(async (trans) => {
             const reserva = await trans.get(refreserva);
             if (!reserva.exists) {
-                throw new Error("La reserva no existe ")
+                throw new Error("La reserva no existe")
             }
             const reservi = reserva.data();
             if (reservi.uid !== uid) {
@@ -554,7 +554,7 @@ app.post("/aumentar", verficarUsuario, limite, async (req, res) => {
             const horaSalida = convertirHora(reservi.horaSalida);
             const nuevaSalida = horaSalida + minutosExtra;
             trans.update(refreserva, { horaSalida: minutosAHora(nuevaSalida), minutosExtra: minutosExtra, extensionMinutos: true, PrecioExtension: nuevoPrecio, idtransaccionAumento: idtransaccion })
-            return { message: "reserva aumentada con exito" }
+            return { message: "Reserva aumentada con éxito" }
         })
         borrarCache("totalreservas");
         return res.json(proceso)
@@ -594,7 +594,7 @@ app.post("/eventowompi", async (req, res) => {
             return res.status(500).json({ error: "falta secreto de eventos" });
         }
         if (!firmaEventoWompiValida(req.body, secreto)) {
-            return res.status(401).json({ error: "firma de evento invalida" });
+            return res.status(401).json({ error: "Firma de evento inválida" });
         }
         if (req.body?.event !== "transaction.updated") {
             return res.json({ recibido: true });
@@ -606,11 +606,11 @@ app.post("/eventowompi", async (req, res) => {
         const baseWompi = req.body.environment === "prod" ? "https://production.wompi.co" : "https://sandbox.wompi.co";
         const wompi = await fetch(`${baseWompi}/v1/transactions/${pago.id}`);
         if (!wompi.ok) {
-            return res.status(400).json({ error: "erro ene verificacion" });
+            return res.status(400).json({ error: "Error en la verificación" });
         }
         const transaccion = (await wompi.json()).data;
         if (transaccion.status !== "APPROVED" || transaccion.reference !== pago.reference) {
-            return res.status(400).json({ error: "el pago no se aprobo" });
+            return res.status(400).json({ error: "El pago no se aprobó" });
         }
 
         const bloqueos = await db.collection("bloqueos").where("referencia", "==", transaccion.reference).limit(1).get();
@@ -634,7 +634,7 @@ app.post("/eventowompi", async (req, res) => {
                 }
                 const bloqueo = await trans.get(refbloqueo);
                 if (!bloqueo.exists) {
-                    throw new Error("el bloqueo no existe o ya fue utilizado ");
+                    throw new Error("El bloqueo no existe o ya fue utilizado");
                 }
                 const info = bloqueo.data();
                 trans.set(reser, {
@@ -679,7 +679,7 @@ app.post("/eventowompi", async (req, res) => {
             const reservaDoc = aumentos.docs[0];
             const reservi = reservaDoc.data();
             if (reservi.extensionMinutos) {
-                return res.json({ message: "reserva aumentada con exito" });
+                return res.json({ message: "Reserva aumentada con éxito" });
             }
             if (Number(transaccion.amount_in_cents) !== Number(reservi.montoAumento)) {
                 return res.status(400).json({ error: "Monto no coincide" });
@@ -689,11 +689,11 @@ app.post("/eventowompi", async (req, res) => {
             const proceso = await db.runTransaction(async (trans) => {
                 const reserva = await trans.get(refreserva);
                 if (!reserva.exists) {
-                    throw new Error("La reserva no existe ");
+                    throw new Error("La reserva no existe");
                 }
                 const actual = reserva.data();
                 if (actual.extensionMinutos) {
-                    return { message: "reserva aumentada con exito" };
+                    return { message: "Reserva aumentada con éxito" };
                 }
                 const horaSalida = convertirHora(actual.horaSalida);
                 const nuevaSalida = horaSalida + minutosExtra;
@@ -704,7 +704,7 @@ app.post("/eventowompi", async (req, res) => {
                     PrecioExtension: Number(actual.montoAumento) / 100,
                     idtransaccionAumento: transaccion.id
                 });
-                return { message: "reserva aumentada con exito" };
+                return { message: "Reserva aumentada con éxito" };
             });
             borrarCache("totalreservas");
             return res.json(proceso);
@@ -714,7 +714,7 @@ app.post("/eventowompi", async (req, res) => {
         if (!ya.empty) {
             return res.json({ reservaID: ya.docs[0].id });
         }
-        return res.status(404).json({ error: "no hay bloqueo para esa referencia" });
+        return res.status(404).json({ error: "No hay bloqueo para esa referencia" });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: error.message });
@@ -724,11 +724,11 @@ app.post("/eventowompi", async (req, res) => {
 app.post("/penalizar", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const { reservaID } = req.body
         if (!reservaID) {
-            return res.status(400).json({ error: "faltan datos " })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         const penlizar = await db.runTransaction(async (transaccion) => {
             const refreserva = db.collection("reservas").doc(reservaID)
@@ -736,7 +736,7 @@ app.post("/penalizar", verficarUsuario, limite, async (req, res) => {
             const reserva = await transaccion.get(refreserva);
             const config = await transaccion.get(configref);
             if (!reserva.exists) {
-                throw new Error("la reserva no existe")
+                throw new Error("La reserva no existe")
             }
             const infodata = reserva.data()
             const infconfig = config.data()
@@ -749,13 +749,13 @@ app.post("/penalizar", verficarUsuario, limite, async (req, res) => {
             const entrada = convertirHora(infodata.horaEntrada)
             const salida = convertirHora(infodata.horaSalida);
             if (fechahoy < infodata.fecha) {
-                throw new Error("La reserva ya culmino")
+                throw new Error("La reserva ya culminó")
             }
             if (fechahoy > infodata.fecha) {
-                throw new Error("No se pueden modificar reservas porteriores")
+                throw new Error("No se pueden modificar reservas posteriores")
             }
             if (minutosactuales < entrada) {
-                throw new Error("La reserva aun no ha empezado")
+                throw new Error("La reserva aún no ha empezado")
             }
             if (minutosactuales === entrada) {
                 throw new Error("No puede salir a la misma hora de entrada")
@@ -790,7 +790,7 @@ app.post("/colaespera", verficarUsuario, limite, async (req, res) => {
         const uid = req.uid;
         const { fecha } = req.body
         if (!fecha) {
-            return res.status(400).json({ error: "faltan datos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         const colita = await db.runTransaction(async (transaccion) => {
             const col = db.collection("colaespera").where("fecha", "==", fecha).where("uid", "==", uid).where("estado", "==", "espera")
@@ -822,9 +822,9 @@ app.post("/eliminarcola", verficarUsuario, limite, async (req, res) => {
                 for (const cul of datacola.docs) {
                     transaccion.delete(cul.ref)
                 }
-                return { message: "se ha borrado de la cola prioritaria" }
+                return { message: "Se ha borrado de la cola prioritaria" }
             }
-            return { message: "no hay nadie en la cola de espera" }
+            return { message: "No hay nadie en la cola de espera" }
         })
         return res.json(reservacola);
 
@@ -836,7 +836,7 @@ app.post("/gestionarcola", verficarUsuario, limite, async (req, res) => {
     try {
         const { fecha, parqueaderoId } = req.body
         if (!fecha || !parqueaderoId) {
-            return res.status(400).json({ error: "faltan datos " })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         const ahora = new Date();
         const minutos = ahora.getHours() * 60 + ahora.getMinutes();
@@ -864,7 +864,7 @@ app.post("/gestionarcola", verficarUsuario, limite, async (req, res) => {
                     for (const personas of colabo.docs) {
                         trans.delete(personas.ref);
                     }
-                    return { message: "cola de espera liberada" }
+                    return { message: "Cola de espera liberada" }
                 }
                 return null;
             }
@@ -881,7 +881,7 @@ app.post("/gestionarcola", verficarUsuario, limite, async (req, res) => {
 
         })
         if (gestion) {
-            await NotificarFirebase(gestion.uid, "Se libero un espacio", "Puedes reservar ahora")
+            await NotificarFirebase(gestion.uid, "Se liberó un espacio", "Puedes reservar ahora")
         }
         return res.json(gestion);
     } catch (error) {
@@ -916,7 +916,7 @@ const gestionarcola = async (fecha, parqueaderoId) => {
                 for (const personas of colabo.docs) {
                     trans.delete(personas.ref);
                 }
-                return { message: "cola de espera liberada" }
+                return { message: "Cola de espera liberada" }
             }
             return null;
         }
@@ -932,7 +932,7 @@ const gestionarcola = async (fecha, parqueaderoId) => {
 
     })
     if (gestion) {
-        await NotificarFirebase(gestion.uid, "Se libero un espacio", `Tienes prioridad de reserva`)
+        await NotificarFirebase(gestion.uid, "Se liberó un espacio", `Tienes prioridad de reserva`)
     }
     return gestion;
 }
@@ -940,7 +940,7 @@ app.post("/cancelarCola", verficarUsuario, limite, async (req, res) => {
     try {
         const { colaId, fecha, parqueaderoId } = req.body
         if (!colaId || !fecha || !parqueaderoId) {
-            return res.status(400).json({ error: "faltan datos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         const refecola = db.collection("colaespera").doc(colaId)
         await db.runTransaction(async (transaccion) => {
@@ -953,7 +953,7 @@ app.post("/cancelarCola", verficarUsuario, limite, async (req, res) => {
                 throw new Error("La cola no pertenece al usuario")
             }
             if (data.estado !== "prioritario") {
-                throw new Error("La cola no esta en estado prioritario")
+                throw new Error("La cola no está en estado prioritario")
             }
             transaccion.update(refecola, { estado: "cancelado" })
         })
@@ -969,7 +969,7 @@ app.post("/cancelarreserva", verficarUsuario, limite, async (req, res) => {
         const uid = req.uid;
         const { reservaID } = req.body;
         if (!reservaID) {
-            return res.status(400).json({ error: "faltan datos" });
+            return res.status(400).json({ error: "Faltan datos" });
         }
         const refreserva = db.collection("reservas").doc(reservaID);
         const datos = await db.runTransaction(async (trans) => {
@@ -1004,11 +1004,11 @@ app.post("/cancelarreserva", verficarUsuario, limite, async (req, res) => {
 app.post("/cancelarreservaadmin", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const { reservaID } = req.body;
         if (!reservaID) {
-            return res.status(400).json({ error: "faltan datos" });
+            return res.status(400).json({ error: "Faltan datos" });
         }
         const refreserva = db.collection("reservas").doc(reservaID);
         const datos = await db.runTransaction(async (trans) => {
@@ -1040,14 +1040,14 @@ app.post("/cancelarreservaadmin", verficarUsuario, limite, async (req, res) => {
 app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const {placa}=req.body
         if(!placa){
-           return res.status(400).json({error:"faltan datos"})
+           return res.status(400).json({error:"Faltan datos"})
         }
          if (!/^[A-Z]{3}[0-9]{3}$/.test(placa)&&!/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placa)) {
-            return res.status(400).json({error: "La placa no tiene un formato valido"});
+            return res.status(400).json({error: "La placa no tiene un formato válido"});
         }
         const fechahoyy = new Date().toLocaleDateString("sv-SE");
         const resultado = await db.runTransaction(async (transaccion) => {
@@ -1087,7 +1087,7 @@ app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
             const horaEntrada = ahora.toLocaleTimeString("sv-SE")
             const referencia = db.collection("usocomun").doc()
             transaccion.create(referencia, { placa: placa, parqueaderoId: espaciosdisponible, fecha: fechahoy, horaEntrada: horaEntrada, horaSalida: "", precio: 0, estado: "activo", creado: new Date(), pago: false, metodoPago: "" })
-            return { message: "la asiganción se creo" }
+            return { message: "La asignación se creó" }
 
         })
         borrarCache("totalusos");
@@ -1099,11 +1099,11 @@ app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
 app.post("/finalizarusocomun", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const { comunId } = req.body
         if (!comunId) {
-            return res.status(400).json({ error: "faltan datos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         const resultado = await db.runTransaction(async (transaccion) => {
             const refcomun = db.collection("usocomun").doc(comunId)
@@ -1111,15 +1111,15 @@ app.post("/finalizarusocomun", verficarUsuario, limite, async (req, res) => {
             const refconfiguracion = db.collection("configuracion").doc("general")
             const configuracion = await transaccion.get(refconfiguracion);
             if (!comun.exists) {
-                throw new Error("El uso comun no existe")
+                throw new Error("El uso común no existe")
             }
             if (!configuracion.exists) {
-                throw new Error("La configuracion no existe")
+                throw new Error("La configuración no existe")
             }
             const infocomun = comun.data();
             const infoconfig = configuracion.data();
             if (infocomun.estado === "finalizado") {
-                throw new Error("El uso comun ya fue finalizado")
+                throw new Error("El uso común ya fue finalizado")
             }
             const ahora = new Date();
             const horaSalida = ahora.toLocaleTimeString("sv-SE")
@@ -1148,17 +1148,17 @@ app.post("/finalizarusocomun", verficarUsuario, limite, async (req, res) => {
 app.post("/validarpago", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const { comunId, metodoPago } = req.body
         if (!comunId || !metodoPago) {
-            return res.status(400).json({ error: "faltan datos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         const pagoo = await db.runTransaction(async (transaccion) => {
             const refcomun = db.collection("usocomun").doc(comunId)
             const comun = await transaccion.get(refcomun);
             if (!comun.exists) {
-                throw new Error("El uso comun no existe")
+                throw new Error("El uso común no existe")
             }
             const infocomun = comun.data();
             if (infocomun.estado !== "finalizado") {
@@ -1168,7 +1168,7 @@ app.post("/validarpago", verficarUsuario, limite, async (req, res) => {
                 throw new Error("El usuario ya ha pagado")
             }
             transaccion.update(refcomun, { pago: true, metodoPago: metodoPago })
-            return { message: "El pago se ha registrado con exito" }
+            return { message: "El pago se ha registrado con éxito" }
         })
         return res.json(pagoo)
     } catch (error) {
@@ -1178,11 +1178,11 @@ app.post("/validarpago", verficarUsuario, limite, async (req, res) => {
 app.post("/validarpagoreserva", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const { reservaID, metodoPago } = req.body
         if (!reservaID || !metodoPago) {
-            return res.status(400).json({ error: "faltan datos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         const pagoo = await db.runTransaction(async (transaccion) => {
             const refreserva = db.collection("reservas").doc(reservaID)
@@ -1198,7 +1198,7 @@ app.post("/validarpagoreserva", verficarUsuario, limite, async (req, res) => {
                 throw new Error("El usuario ya ha pagado")
             }
             transaccion.update(refreserva, { pagoPenalizacion: true, metodoPagoPenalizacion: metodoPago })
-            return { message: "El pago se ha registrado con exito" }
+            return { message: "El pago se ha registrado con éxito" }
         })
         borrarCache("totalreservas");
         return res.json(pagoo)
@@ -1234,7 +1234,7 @@ app.get("/reservaaumento", verficarUsuario, limite, async (req, res) => {
 app.get("/reservasadmin", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
@@ -1247,7 +1247,7 @@ app.get("/reservasadmin", verficarUsuario, limite, async (req, res) => {
 app.get("/parqueaderos", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const enCache = leerCache("parqueaderos:total");
         if (enCache) return res.json(enCache);
@@ -1262,7 +1262,7 @@ app.get("/parqueaderos", verficarUsuario, limite, async (req, res) => {
 app.get("/ultimasreservas", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
@@ -1275,7 +1275,7 @@ app.get("/ultimasreservas", verficarUsuario, limite, async (req, res) => {
 app.get("/usuarios", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const enCache = leerCache("usuarios:conteo");
         if (enCache) return res.json(enCache);
@@ -1295,7 +1295,7 @@ app.get("/usuarios", verficarUsuario, limite, async (req, res) => {
 app.get("/usoscomunes", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
@@ -1308,7 +1308,7 @@ app.get("/usoscomunes", verficarUsuario, limite, async (req, res) => {
 app.get("/totalreservas", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const fechahoy = new Date().toLocaleDateString("sv-SE");
         const siguiente= new Date();
@@ -1328,7 +1328,7 @@ app.get("/totalreservas", verficarUsuario, limite, async (req, res) => {
 app.get("/totalusos", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const fechahoy = new Date().toLocaleDateString("sv-SE");
         const siguiente= new Date();
@@ -1350,10 +1350,10 @@ app.post("/guardartoken", verficarUsuario, limite, async (req, res) => {
         const uid = req.uid;
         const { tokenN } = req.body
         if (!tokenN) {
-            return res.status(400).json({ error: "faltan datos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         await db.collection("usuarios").doc(uid).collection("fcmtokens").doc(tokenN).set({ token: tokenN, fecha: new Date() })
-        return res.json({ message: "token guardado" })
+        return res.json({ message: "Token guardado" })
 
     } catch (error) {
         return res.status(500).json({ error: error.message })
@@ -1411,7 +1411,7 @@ export const obtenerEstado = (fecha, horaEntrada, horaSalida, finalizadaAntes) =
 app.get("/reservasvigentes", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const fechahoy = new Date().toLocaleDateString("sv-SE");
         const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).where("cancelado", "==", false).get()
@@ -1431,14 +1431,14 @@ app.get("/reservasvigentes", verficarUsuario, limite, async (req, res) => {
 app.post("/crearparqueaderos", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const { espaciosReserva } = req.body
         if(!Number.isInteger(espaciosReserva)){
             return res.status(400).json({ error: "El valor debe ser un número entero" })
         }
         if (!espaciosReserva) {
-            return res.status(400).json({ error: "faltan datos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         if (espaciosReserva < 0 || espaciosReserva > 100) {
             return res.status(400).json({ error: "El valor debe ser entre 0 y 100" })
@@ -1456,14 +1456,14 @@ app.post("/crearparqueaderos", verficarUsuario, limite, async (req, res) => {
 app.post("/actualizarparqueaderos", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const { espaciosReserva } = req.body
         if(!Number.isInteger(espaciosReserva)){
             return res.status(400).json({ error: "El valor debe ser un número entero" })
         }
         if (!espaciosReserva) {
-            return res.status(400).json({ error: "faltan datos" })
+            return res.status(400).json({ error: "Faltan datos" })
         }
         if (espaciosReserva < 0 || espaciosReserva > 100) {
             return res.status(400).json({ error: "El valor debe ser entre 0 y 100" })
@@ -1473,7 +1473,7 @@ app.post("/actualizarparqueaderos", verficarUsuario, limite, async (req, res) =>
             await db.collection("parqueaderos").doc(i.toString()).update({ tipo: tipo })
         }
         borrarCache("parqueaderos");
-        return res.json({ message: "Parqueaderos catualizado correctamente" })
+        return res.json({ message: "Parqueaderos actualizados correctamente" })
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -1484,7 +1484,7 @@ app.get("/configuracion", verficarUsuario, limite, async (req, res) => {
         if (enCache) return res.json(enCache);
         const configuracion = await db.collection("configuracion").doc("general").get()
         if (!configuracion.exists) {
-            return res.status.apply(400).json({ error: "la configuracion no existe" })
+            return res.status.apply(400).json({ error: "La configuración no existe" })
         }
         const datos = configuracion.data();
         guardarCache("configuracion", datos, 30);
@@ -1496,20 +1496,20 @@ app.get("/configuracion", verficarUsuario, limite, async (req, res) => {
 app.post("/crearconfiguracion", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const { metaIngreso, metaGeneral, metaReservas, metaUsos, minutosCobro, minutosCobroMoto } = req.body
         if (!metaIngreso || !metaGeneral || !metaReservas || !metaUsos || !minutosCobro || !minutosCobroMoto) {
             return res.status(400).json({ error: "Faltan datos" })
         }
         if (metaIngreso == 0 || metaGeneral == 0 || metaReservas == 0 || metaUsos == 0 || minutosCobro == 0 || minutosCobroMoto == 0) {
-            return res.status(400).json({ error: "Rellene todos los datos por favor" })
+            return res.status(400).json({ error: "Rellene todos los datos, por favor" })
         }
         if (minutosCobro > 230) {
-            return res.status(400).json({ error: "El minuto por cobor no debe superar los 230 pesos" })
+            return res.status(400).json({ error: "El minuto por cobro no debe superar los 230 pesos" })
         }
         if (minutosCobroMoto > 161) {
-            return res.status(400).json({ error: "El minuto por cobor para motos no debe superar los 161 pesos" })
+            return res.status(400).json({ error: "El minuto por cobro para motos no debe superar los 161 pesos" })
         }
         if( metaIngreso < 0 || metaGeneral < 0 || metaReservas < 0 || metaUsos < 0 || minutosCobro < 0 || minutosCobroMoto < 0){
             return res.status(400).json({ error: "Los valores no pueden ser negativos" })
@@ -1521,7 +1521,7 @@ app.post("/crearconfiguracion", verficarUsuario, limite, async (req, res) => {
         const fechaConfigurado = ahora.toLocaleDateString("sv-SE");
         await db.collection("configuracion").doc("general").set({ metaIngreso, metaGeneral, metaReservas, metaUsos, minutosCobro, minutosCobroMoto, fechaConfigurado })
         borrarCache("configuracion");
-        return res.json({ message: "configuarcion guardada con exito" })
+        return res.json({ message: "Configuración guardada con éxito" })
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -1529,7 +1529,7 @@ app.post("/crearconfiguracion", verficarUsuario, limite, async (req, res) => {
 app.get("/usuariostotales", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const enCache = leerCache("usuarios:lista");
         if (enCache) return res.json(enCache);
@@ -1549,7 +1549,7 @@ app.get("/usuariostotales", verficarUsuario, limite, async (req, res) => {
 app.get("/usuarios/:id", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const usuario = await db.collection("usuarios").doc(req.params.id).get()
         if (!usuario.exists) {
@@ -1630,7 +1630,7 @@ app.get("/reservausuarios", verficarUsuario, limite, async (req, res) => {
 app.get("/parqueaderoreservasadmin", verficarUsuario, limite, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const enCache = leerCache("parqueaderos:reserva");
         if (enCache) return res.json(enCache);
@@ -1645,7 +1645,7 @@ app.get("/parqueaderoreservasadmin", verficarUsuario, limite, async (req, res) =
 app.post("/detectar", verficarUsuario, upload.single("imagen"), async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         if (!req.file) {
             res.status(400).json({ error: " no  hay imagen" })
@@ -1729,7 +1729,7 @@ app.post("/detectar", verficarUsuario, upload.single("imagen"), async (req, res)
 app.put("/actualizarplaca", verficarUsuario, async (req, res) => {
     try {
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const { comunId, placa } = req.body;
         if (!comunId || !placa) {
@@ -1737,7 +1737,7 @@ app.put("/actualizarplaca", verficarUsuario, async (req, res) => {
         }
         const nuevaPlaca = placa.trim().toUpperCase();
         if (!/^[A-Z]{3}[0-9]{3}$/.test(nuevaPlaca)&&!/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(nuevaPlaca)) {
-            return res.status(400).json({error: "La placa no tiene un formato valido"});
+            return res.status(400).json({error: "La placa no tiene un formato válido"});
         }
         const referencia = db.collection("usocomun").doc(comunId);
         const documento = await referencia.get();
@@ -1768,7 +1768,7 @@ app.put("/actualizarplaca", verficarUsuario, async (req, res) => {
 app.get("/asignacionesactivas", verficarUsuario, limite, async (req, res) => {
     try{
         if (req.admin !== true) {
-            return res.status(403).json({ error: "No posee los permisos para hacer esta accion" });
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         const fechahoy= new Date().toLocaleDateString("sv-SE");
         const asignaciones = await db.collection("usocomun").where("fecha", "==", fechahoy).get();

@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.14.0/f
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
-            text: "No hay conexión a internet, los servcios no estarán disponibles, revise su conexión y vuelva a intentarlo",
+            text: "No hay conexión a internet, los servicios no estarán disponibles, revise su conexión y vuelva a intentarlo",
             icon: "error"
         });
     })
@@ -77,7 +77,7 @@ form.addEventListener("submit", async (e) => {
     const config=await configg.json();
     if(!configg.ok){
         await Swal.fire({
-            title:"error",
+            title:"Error",
             text:config.error,
             icon:"error"
         })
@@ -96,7 +96,7 @@ form.addEventListener("submit", async (e) => {
     if (minutoCobro > 253) {
         await Swal.fire({
             title: "Error",
-            text: "el valor no puede superar los 253",
+            text: "El valor no puede superar los 253",
             icon: "error",
         });
         return;
@@ -104,7 +104,7 @@ form.addEventListener("submit", async (e) => {
     if (dataconfig.fechaConfigurado === fehahoy) {
         await Swal.fire({
             title: "Error",
-            text: "Solo se permite una configuración por dia",
+            text: "Solo se permite una configuración por día",
             icon: "error",
         });
         return;
@@ -113,7 +113,7 @@ form.addEventListener("submit", async (e) => {
         if (metaingresos === 0 || metageneral === 0 || minutoCobro === 0||metageneral===0||metaUsos===0 || minutoCobroMoto===0) {
             await Swal.fire({
                 title: "Error",
-                text: "Por favor rellene los de espacios a configurar",
+                text: "Por favor, rellene los espacios a configurar",
                 icon: "error",
             });
         } else {
@@ -128,15 +128,15 @@ form.addEventListener("submit", async (e) => {
             const configuracioncreada=await crearconfig.json()
             if(!crearconfig.ok){
                 await Swal.fire({
-                    title:"error",
+                    title:"Error",
                     text: configuracioncreada.error,
                     icon:"error"
                 })
                 return;
             }
             await Swal.fire({
-                title: "Configuracion Guardada",
-                text: "Se ha configurado las metas diarias",
+                title: "Configuración guardada",
+                text: "Se han configurado las metas diarias",
                 icon: "succes",
             });
             form.reset()
