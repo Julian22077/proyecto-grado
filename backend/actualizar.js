@@ -42,14 +42,12 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     const infoContainer = document.getElementById("infoForm");
     infoContainer["nombre"].value = userData.nombre;
-    infoContainer["cedula"].value = userData.cedula;
     infoContainer["placa"].value = userData.placa;
     infoContainer.addEventListener("submit", async (e) => {
         e.preventDefault();
          const nombre = infoContainer["nombre"].value;
-        const cedula = infoContainer["cedula"].value;
         const placa = infoContainer["placa"].value
-        if(userData.nombre===nombre&&userData.cedula===cedula&&userData.placa===placa){
+        if(userData.nombre===nombre&&userData.placa===placa){
             await Swal.fire({
             title: "error",
             text: "Debe actualizar al menos un dato",
@@ -57,7 +55,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         }); 
         return;
         }
-        if(!nombre?.trim() || !cedula?.trim() || !placa?.trim()){
+        if(!nombre?.trim() || !placa?.trim()){
             await Swal.fire({
             title: "error",
             text: "Todos los campos son obligatorios",
@@ -80,7 +78,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ nombre: nombre.trim(), cedula: cedula.trim(), placa: placa.trim() })
+                body: JSON.stringify({ nombre: nombre.trim(), placa: placa.trim() })
              });
              const resultado = await actualizado.json();
              if (!actualizado.ok) {

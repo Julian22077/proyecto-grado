@@ -574,6 +574,65 @@ body.auth {
   line-height: 1.45;
 }
 
+.clave-vista {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.clave-vista input {
+  padding-right: 46px;
+}
+
+html .clave-vista .clave-ojo,
+html .actualizar_datos .clave-vista .clave-ojo,
+html .actualizar_datos .clave-vista .clave-ojo:hover {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  width: 36px !important;
+  height: 36px;
+  margin: 0;
+  padding: 0 !important;
+  display: grid;
+  place-items: center;
+  border: none !important;
+  border-radius: 8px;
+  background: transparent !important;
+  color: var(--muted) !important;
+  box-shadow: none !important;
+  letter-spacing: 0;
+  transform: translateY(-50%);
+}
+
+html .clave-vista .clave-ojo:hover,
+html .clave-vista .clave-ojo[aria-pressed="true"],
+html .actualizar_datos .clave-vista .clave-ojo:hover,
+html .actualizar_datos .clave-vista .clave-ojo[aria-pressed="true"] {
+  color: var(--steel) !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  transform: translateY(-50%);
+}
+
+.clave-ojo svg {
+  width: 20px;
+  height: 20px;
+}
+
+.clave-ojo .ojo-cerrado {
+  display: none;
+}
+
+.clave-ojo[aria-pressed="true"] .ojo-abierto {
+  display: none;
+}
+
+.clave-ojo[aria-pressed="true"] .ojo-cerrado {
+  display: block;
+}
+
 .formulario {
   display: flex;
   flex-direction: column;
@@ -1054,6 +1113,11 @@ body.auth #registroForm {
 .mi-reserva-code .reserva-meta-value {
   color: var(--text);
   font-size: 1.15rem;
+}
+
+.clave-vista-codigo .reserva-code {
+  padding-right: 40px;
+  line-height: 1.4;
 }
 
 .mi-reserva-actions {

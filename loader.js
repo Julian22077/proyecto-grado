@@ -283,3 +283,24 @@ if (formularioImprimir) {
     prepararDesplazamientoMenu();
   }
 })();
+
+document.addEventListener("click", function (evento) {
+  const boton = evento.target.closest(".clave-ojo");
+  if (!boton) return;
+  const campo = boton.closest(".clave-vista");
+  if (!campo) return;
+  const input = campo.querySelector("input");
+  if (input) {
+    const visible = input.type === "password";
+    input.type = visible ? "text" : "password";
+    boton.setAttribute("aria-pressed", visible ? "true" : "false");
+    boton.setAttribute("aria-label", visible ? "Ocultar contraseña" : "Mostrar contraseña");
+    return;
+  }
+  const codigo = campo.querySelector("[data-codigo]");
+  if (!codigo) return;
+  const visible = boton.getAttribute("aria-pressed") !== "true";
+  codigo.textContent = visible ? codigo.dataset.codigo : "•".repeat(codigo.dataset.codigo.length);
+  boton.setAttribute("aria-pressed", visible ? "true" : "false");
+  boton.setAttribute("aria-label", visible ? "Ocultar código" : "Mostrar código");
+});

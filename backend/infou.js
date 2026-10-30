@@ -8,6 +8,28 @@ const infoContainer = document.getElementById("infoForm");
 const reservasContainer = document.getElementById("reservasContainer");
 const reservasContainerMañana = document.getElementById("reservasContainerMañana");
 const cambioContraseña = document.getElementById("CambioContraseña");
+
+function bloqueCodigo(uid) {
+    const codigo = String(uid || "").slice(0, 8);
+    const seguro = codigo.replace(/[&<>"']/g, (caracter) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    }[caracter]));
+    return `
+                    <div class="fila mi-reserva-meta mi-reserva-code">
+                      <span class="reserva-meta-label">Código de seguridad</span>
+                      <div class="clave-vista clave-vista-codigo">
+                        <p class="reserva-meta-value reserva-code" data-codigo="${seguro}">${"•".repeat(codigo.length || 8)}</p>
+                        <button type="button" class="clave-ojo" aria-label="Mostrar código" aria-pressed="false">
+                          <svg class="ojo-abierto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                          <svg class="ojo-cerrado" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 004.2 4.2"/><path d="M9.9 5.1A10.8 10.8 0 0112 5c6.5 0 10 7 10 7a18.5 18.5 0 01-3.2 4.2"/><path d="M6.1 6.1C3.6 7.9 2 12 2 12s3.5 7 10 7a10.7 10.7 0 004.1-.8"/></svg>
+                        </button>
+                      </div>
+                    </div>`;
+}
 window.addEventListener("offline",()=>{
         Swal.fire({
             title: "Error",
@@ -157,10 +179,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                       <span class="reserva-meta-label">Salida</span>
                       <p class="reserva-meta-value">${data.horaSalida}</p>
                     </div>
-                    <div class="fila mi-reserva-meta mi-reserva-code">
-                      <span class="reserva-meta-label">Código de seguridad</span>
-                      <p class="reserva-meta-value reserva-code">${data.uid.slice(0, 8)}</p>
-                    </div>
+                    ${bloqueCodigo(data.uid)}
                   </div>
                   <div class="fila mi-reserva-actions">
                     <a class="boton_aumentar" href="aumentar.html">Extender Reserva</a>
@@ -216,10 +235,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                       <span class="reserva-meta-label">Salida</span>
                       <p class="reserva-meta-value">${data.horaSalida}</p>
                     </div>
-                    <div class="fila mi-reserva-meta mi-reserva-code">
-                      <span class="reserva-meta-label">Código de seguridad</span>
-                      <p class="reserva-meta-value reserva-code">${data.uid.slice(0, 8)}</p>
-                    </div>
+                    ${bloqueCodigo(data.uid)}
                   </div>
                   <div class="fila mi-reserva-actions">
                     <button type="button" class="boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>

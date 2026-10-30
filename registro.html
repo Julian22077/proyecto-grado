@@ -31,12 +31,19 @@
         </div>
         <div class="formulario">
           <label for="contraseña">Contraseña</label>
-          <input type="password" id="contraseña" minlength="8" maxlength="30" placeholder="Ejemplo: Calatrava1*" aria-describedby="clave-ayuda" autocomplete="new-password">
+          <div class="clave-vista">
+            <input type="password" id="contraseña" minlength="8" maxlength="30" placeholder="Ejemplo: Calatrava1*" aria-describedby="clave-ayuda" autocomplete="new-password">
+            <button type="button" class="clave-ojo" aria-label="Mostrar contraseña" aria-pressed="false" aria-controls="contraseña">
+              <svg class="ojo-abierto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="ojo-cerrado" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6a3 3 0 004.2 4.2"/><path d="M9.9 5.1A10.8 10.8 0 0112 5c6.5 0 10 7 10 7a18.5 18.5 0 01-3.2 4.2"/><path d="M6.1 6.1C3.6 7.9 2 12 2 12s3.5 7 10 7a10.7 10.7 0 004.1-.8"/></svg>
+            </button>
+          </div>
           <p id="clave-ayuda" class="clave-ayuda">De 8 a 30 caracteres, con una mayúscula, una minúscula, un número y un símbolo: @ $ ! % * ? &amp; . # _ -</p>
         </div>
         <div class="formulario">
           <label for="cedula">Cédula</label>
-          <input type="text" id="cedula" maxlength="10" oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="Solo números">
+          <input type="text" id="cedula" minlength="8" maxlength="10" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')" placeholder="8 a 10 números" aria-describedby="cedula-ayuda">
+          <p id="cedula-ayuda" class="clave-ayuda">De 8 a 10 números. No se aceptan letras ni una cédula más corta.</p>
         </div>
         <div class="formulario">
           <label for="placa">Placa</label>

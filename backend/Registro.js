@@ -31,6 +31,14 @@ registroForm.addEventListener("submit", async (e) => {
     });
     return;
   }
+  if (!/^[0-9]{8,10}$/.test(cedula.value.trim())) {
+    await Swal.fire({
+      title: "Error",
+      text: "La cédula debe tener entre 8 y 10 números.",
+      icon: "error"
+    });
+    return;
+  }
   if (!regexPassword.test(contrasena.value)) {
     await Swal.fire({
       icon: "error",
