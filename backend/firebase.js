@@ -32,12 +32,12 @@ export const addUsuario = async (nombre, correo, contraseña, cedula, placa) => 
     if(!nombre?.trim() || !correo?.trim() || !contraseña?.trim() || !cedula?.trim() || !placa?.trim()){
         throw new Error("Todos los campos son obligatorios");
     }
-    if (!/^[A-Z]{3}[0-9]{3}$/.test(placa)&&!/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placa)) {
-        throw new Error("La placa debe tener el formato ABC123 o ABC12D");
-    }
     const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,30}$/;
     if (!regexPassword.test(contraseña)) {
         throw new Error("La contraseña debe tener entre 8 y 30 caracteres e incluir una mayúscula, una minúscula, un número y un carácter especial.");
+    }
+    if (!/^[A-Z]{3}[0-9]{3}$/.test(placa)&&!/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placa)) {
+        throw new Error("La placa debe tener el formato ABC123 o ABC12D");
     }
     const userCredential = await createUserWithEmailAndPassword(auth, correo, contraseña);
     const user = userCredential.user;
