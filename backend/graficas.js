@@ -198,8 +198,12 @@ reservas.forEach((data) => {
     );
     if (fechahoy === data.fecha) {
         if (estado === "activa" || estado === "finalizada") {
+            let salidaOcupacion = data.horaSalida;
+            if (data.finalizadaAntes && data.HoraSalidaReal) {
+                salidaOcupacion = data.HoraSalidaReal;
+            }
             const inicio = Math.floor(convertirHora(data.horaEntrada) / 60);
-            const fin = Math.ceil(convertirHora(data.horaSalida) / 60);
+            const fin = Math.ceil(convertirHora(salidaOcupacion) / 60);
             for (let h = inicio; h < fin; h++) {
                 ocupacion[h]++;
             }
@@ -352,7 +356,7 @@ graficahoras = new Chart(horass, {
             barPercentage: 0.85,
         },
         {
-            label: "Uso común",
+            label: "Ingresos directos",
             data: uso,
             backgroundColor: C.ink,
             borderColor: "#8f7964",
@@ -472,7 +476,7 @@ if (graficaComparacionuso) {
 graficaComparacionuso = new Chart(graficaComparacion, {
     type: "doughnut",
     data: {
-        labels: ["Reserva", "Uso común"],
+        labels: ["Reserva", "Ingreso directo"],
         datasets: [{
             data: [totalReservas, totalUsos],
             backgroundColor: [C.ink, C.steel],
@@ -518,7 +522,7 @@ if (graficaComparacionIngre) {
 graficaComparacionIngre = new Chart(graficaComparacion1, {
     type: "doughnut",
     data: {
-        labels: ["Reserva", "Uso común"],
+        labels: ["Reserva", "Ingreso directo"],
         datasets: [{
             data: [reservacontodo, totalUso],
             backgroundColor: [C.ink, C.steel],
@@ -596,8 +600,12 @@ inputt.addEventListener("change", () => {
         )
         if (data.fecha === valor) {
             if (estado === "activa" || estado === "finalizada") {
+                let salidaOcupacion = data.horaSalida;
+                if (data.finalizadaAntes && data.HoraSalidaReal) {
+                    salidaOcupacion = data.HoraSalidaReal;
+                }
                 const inicio = Math.floor(convertirHora(data.horaEntrada) / 60);
-                const fin = Math.ceil(convertirHora(data.horaSalida) / 60);
+                const fin = Math.ceil(convertirHora(salidaOcupacion) / 60);
                 for (let h = inicio; h < fin; h++) {
                     ocupacion1[h]++;
                 }
@@ -743,7 +751,7 @@ inputt.addEventListener("change", () => {
                 barPercentage: 0.85,
             },
             {
-                label: "Uso común",
+                label: "Ingresos directos",
                 data: uso1,
                 backgroundColor: C.ink,
                 borderColor: "#8f7964",
@@ -863,7 +871,7 @@ inputt.addEventListener("change", () => {
     graficaComparacionuso = new Chart(graficaComparacion, {
         type: "doughnut",
         data: {
-            labels: ["Reserva", "Uso Comun"],
+            labels: ["Reserva", "Ingreso directo"],
             datasets: [{
                 data: [totalReservasPer, totalUsoper],
                 backgroundColor: [C.ink, C.steel],
@@ -909,7 +917,7 @@ inputt.addEventListener("change", () => {
     graficaComparacionIngre = new Chart(graficaComparacion1, {
         type: "doughnut",
         data: {
-            labels: ["Reserva", "Uso común"],
+            labels: ["Reserva", "Ingreso directo"],
             datasets: [{
                 data: [totalReservaContodo, totalUsoIngresoper],
                 backgroundColor: [C.ink, C.steel],
@@ -1046,7 +1054,7 @@ boton.addEventListener("click", async () => {
                 fill: true,
             },
             {
-                label: "Uso común",
+                label: "Ingresos directos",
                 data: datos2,
                 borderColor: C.ink,
                 backgroundColor: "rgba(196, 164, 132, 0.16)",
@@ -1062,6 +1070,7 @@ boton.addEventListener("click", async () => {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     labels: {
@@ -1089,7 +1098,7 @@ boton.addEventListener("click", async () => {
                 maxBarThickness: 28,
             },
             {
-                label: "Ingresos uso común",
+                label: "Ingresos directos",
                 data: datos3,
                 backgroundColor: C.ink,
                 borderRadius: 4,
@@ -1099,6 +1108,7 @@ boton.addEventListener("click", async () => {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: {
                     labels: {
@@ -1179,7 +1189,7 @@ botonexport.addEventListener("click", async () => {
         if (data.fecha >= inicio && data.fecha <= fin) {
             if(data.estado==="finalizado"){
                 datosexcel.push({
-                    Tipo: "Uso comun",
+                    Tipo: "Ingreso directo",
                     Fecha: data.fecha,
                     HoraEntrada: data.horaEntrada,
                     HoraSalida: data.horaSalida,

@@ -142,7 +142,7 @@
             <h3 class="titulo-general">Uso general</h3>
           </div>
           <div class="dia kpi-body" id="diaa"><span class="esq-num" aria-hidden="true"></span></div>
-          <p class="kpi-hint">Reservas + usos comunes</p>
+          <p class="kpi-hint">Reservas + ingresos directos</p>
           <div class="dato grafica-wrap">
             <canvas id="graficadiaa"></canvas>
           </div>
@@ -153,10 +153,10 @@
             <span class="kpi-icon" aria-hidden="true">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
             </span>
-            <h3 class="titulo-general">Usos comunes</h3>
+            <h3 class="titulo-general">Ingresos directos</h3>
           </div>
           <div class="dia kpi-body" id="diausos"><span class="esq-num" aria-hidden="true"></span></div>
-          <p class="kpi-hint">Avance vs meta de usos</p>
+          <p class="kpi-hint">Avance vs meta de ingresos directos</p>
           <div class="dato grafica-wrap">
             <canvas id="graficadiausos"></canvas>
           </div>
@@ -186,7 +186,7 @@
             <h3 class="titulo-general">Comparación de uso</h3>
           </div>
           <div class="dia kpi-body" id="diaComparacion"><span class="esq-num" aria-hidden="true"></span></div>
-          <p class="kpi-hint">Reservas vs uso común</p>
+          <p class="kpi-hint">Reservas vs ingresos directos</p>
           <div class="dato grafica-wrap">
             <canvas id="graficaComparacion"></canvas>
           </div>
@@ -248,11 +248,15 @@
         <div class="datos_grafica stats-range-charts">
           <div class="dato_sec">
             <p class="stats-chart-label">Volumen por fecha</p>
-            <canvas id="grafica"></canvas>
+            <div class="stats-chart-box">
+              <canvas id="grafica"></canvas>
+            </div>
           </div>
           <div class="dato_sec">
             <p class="stats-chart-label">Ingresos por fecha</p>
-            <canvas id="grafica1"></canvas>
+            <div class="stats-chart-box">
+              <canvas id="grafica1"></canvas>
+            </div>
           </div>
         </div>
       </section>
