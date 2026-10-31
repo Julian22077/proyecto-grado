@@ -14,7 +14,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     return;
   }
   if (!(await esAdmin(usuarioAuth))) {
-    window.location.href = "usuario.html";
+    window.location.href = "administracion-reservas.html";
     return;
   }
   const token = await usuarioAuth.getIdToken();

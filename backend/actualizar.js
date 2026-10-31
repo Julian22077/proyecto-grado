@@ -21,7 +21,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         return;
     }
     if (await esAdmin(usuarioAuth)) {
-        window.location.href = "admin.html";
+        window.location.href = "dashboard.html";
         return;
     }
     const token=await usuarioAuth.getIdToken()
@@ -104,7 +104,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             icon: "success",
         });
         infoContainer.reset();
-        window.location.href = "perfil.html";
+        window.location.href = "gestor-perfil.html";
 
     });
 });

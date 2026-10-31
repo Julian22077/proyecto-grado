@@ -39,9 +39,9 @@ loginForm.addEventListener("submit", async (e) => {
       timer: 1500
     });
     if (await esAdmin(auth.currentUser)) {
-      window.location.href = "admin.html";
+      window.location.href = "dashboard.html";
     } else {
-      window.location.href = "usuario.html";
+      window.location.href = "administracion-reservas.html";
     }
 
   } catch (error) {
@@ -91,8 +91,8 @@ onAuthStateChanged(auth, async (usuario) => {
     return;
   }
   if (await esAdmin(usuario)) {
-    window.location.href = "admin.html";
+    window.location.href = "dashboard.html";
   } else {
-    window.location.href = "usuario.html";
+    window.location.href = "administracion-reservas.html";
   }
 })

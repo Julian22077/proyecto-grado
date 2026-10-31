@@ -12,7 +12,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         return;
     }
     if (!(await esAdmin(usuarioAuth))) {
-        window.location.href = "usuario.html";
+        window.location.href = "administracion-reservas.html";
         return;
     }
  
@@ -140,10 +140,10 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     const conteouso = {};
     const contedoextension = {};
     const conteoMulta = {};
-    htmlusu = `<a class="kpi-link" href="usuarios.html"><span class="kpi-num">${usuarios.total}</span></a>`
+    htmlusu = `<a class="kpi-link" href="panel-usuarios.html"><span class="kpi-num">${usuarios.total}</span></a>`
     usu.innerHTML = htmlusu;
     const escaneo = document.getElementById("general_escaneo");
-    escaneo.innerHTML = `<a class="kpi-link" href="escaneo.html"><span class="kpi-num">Abrir</span></a>`;
+    escaneo.innerHTML = `<a class="kpi-link" href="escaneo-placa.html"><span class="kpi-num">Abrir</span></a>`;
     usos.forEach((data) => {
 
         if (!conteouso[data.fecha]) {
@@ -282,7 +282,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             us++
         }
     })
-    html_usos = `<a class="kpi-link" href="usoscomunes.html"><span class="kpi-num">${us}</span></a>`
+    html_usos = `<a class="kpi-link" href="ingresosdirectos.html"><span class="kpi-num">${us}</span></a>`
     general_usos.innerHTML = html_usos
     const espaciosReservados = new Set();
     reservas.forEach((data) => {

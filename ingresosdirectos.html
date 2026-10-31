@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Escaneo de placa — Calatrava</title>
+  <title>Usos comunes — Calatrava</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="assets/icono-calatrava.png">
   <link rel="apple-touch-icon" href="assets/icono-app.png">
@@ -19,25 +19,25 @@
       <p class="menu-grupo">Control</p>
       <ul class="lista">
         <li>
-        <a href="admin.html" class="elemento">
+        <a href="dashboard.html" class="elemento">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
           <div class="oculto">Consultar dashboard</div>
         </a>
       </li>
         <li>
-        <a href="espacios.html" class="elemento">
+        <a href="gestor-espacios.html" class="elemento">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 8v8M8 12h3a3 3 0 0 0 0-6H8"/></svg>
           <div class="oculto">Configurar espacios</div>
         </a>
       </li>
         <li>
-        <a href="configuracion.html" class="elemento">
+        <a href="gestor-configuracion.html" class="elemento">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/></svg>
           <div class="oculto">Establecer configuración</div>
         </a>
       </li>
         <li>
-        <a href="grafica.html" class="elemento">
+        <a href="estadisticas.html" class="elemento">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 19V5M4 19h16"/><path d="M8 16v-5M12 16V8M16 16v-8"/></svg>
           <div class="oculto">Consultar estadísticas</div>
         </a>
@@ -54,19 +54,19 @@
         </a>
       </li>
         <li>
-        <a href="usoscomunes.html" class="elemento">
+        <a href="ingresosdirectos.html" class="elemento activo">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
           <div class="oculto">Consultar ingresos directos</div>
         </a>
       </li>
         <li>
-        <a href="escaneo.html" class="elemento activo">
+        <a href="escaneo-placa.html" class="elemento">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M3 10h2M19 10h2"/></svg>
           <div class="oculto">Escanear placa</div>
         </a>
       </li>
         <li>
-        <a href="usocomun.html" class="elemento">
+        <a href="registro-placas.html" class="elemento">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="7.5" cy="15" r="1.5"/><circle cx="16.5" cy="15" r="1.5"/><path d="M3 11h18"/></svg>
           <div class="oculto">Registrar placa</div>
         </a>
@@ -77,7 +77,7 @@
       <p class="menu-grupo">Directorio</p>
       <ul class="lista">
         <li>
-        <a href="usuarios.html" class="elemento">
+        <a href="panel-usuarios.html" class="elemento">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5"/><circle cx="17" cy="9" r="2.5"/><path d="M21 19c0-2.2-1.5-3.8-4-4.3"/></svg>
           <div class="oculto">Consultar usuarios</div>
         </a>
@@ -98,50 +98,33 @@
   <div class="app-main">
     <header class="topbar">
       <div>
-        <p class="topbar-kicker">Operación</p>
-        <h1 class="topbar-title">Escanear Placa</h1>
+        <p class="topbar-kicker">Administración</p>
+        <h1 class="topbar-title">Consultar Ingresos Directos</h1>
       </div>
-      <div class="topbar-meta">Cámara en vivo</div>
+      <div class="topbar-meta">Historial de ingresos</div>
     </header>
 
     <div class="contenido dash reservas-page">
       <div class="dash-welcome">
-        <p class="dash-kicker">Ingreso automático</p>
-        <h1 class="titu dash-title">Leer placa</h1>
-        <p class="dash-sub">Apunte la cámara a la placa. El sistema captura y detecta de forma continua.</p>
+        <p class="dash-kicker">Operación diaria</p>
+        <h1 class="titu dash-title">Ingresos directos activos</h1>
+        <p class="dash-sub">Consulte, filtre y gestione los ingresos registrados.</p>
       </div>
-
-      <section class="escaneo-layout">
-        <article class="escaneo-visor">
-          <div class="escaneo-visor-head">
-            <span class="escaneo-live" aria-hidden="true"></span>
-            <p class="reserva-meta-label">Vista de cámara</p>
-          </div>
-          <div class="escaneo-frame">
-            <video id="camara" autoplay playsinline></video>
-            <div class="escaneo-overlay" aria-hidden="true">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-          <canvas id="canvas" class="escaneo-canvas"></canvas>
-        </article>
-
-        <aside class="escaneo-panel">
-          <p class="cuenta-kicker">Estado</p>
-          <h2 class="mi-reserva-status-title">Detección en curso</h2>
-          <p class="escaneo-help">Mantenga la placa centrada y con buena luz. El resultado aparece abajo.</p>
-          <p id="resultado" class="escaneo-status">Preparando cámara…</p>
-        </aside>
-      </section>
+      <div class="buscador">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label for="buscarReserva">Buscar</label>
+        <input type="text" id="buscarReserva" placeholder="Placa">
+      </div>
+      <div class="contenido_reservas">
+        <div id="usosUsuarios" class="reservas-grid"><article class="esqueleto esqueleto-tarjeta" aria-hidden="true"><span></span><span></span><span></span></article><article class="esqueleto esqueleto-tarjeta" aria-hidden="true"><span></span><span></span><span></span></article></div>
+      </div>
     </div>
   </div>
 
   <script type="module" src="./backend/logout.js"></script>
-  <script type="module" src="./backend/escaneo.js"></script>
+  <script type="module" src="./backend/ingresosdirectos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
   <div id="pantallaCarga" class="pantalla_carga" aria-hidden="true" role="status">
     <div class="pantalla_carga_caja">
       <div class="pantalla_carga_anillo" aria-hidden="true"><img class="pantalla_carga_icono" src="assets/icono-calatrava.png" alt=""></div>

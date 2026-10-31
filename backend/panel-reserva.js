@@ -64,7 +64,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         return;
     }
     if (await esAdmin(usuarioAuth)) {
-        window.location.href = "admin.html";
+        window.location.href = "dashboard.html";
         return;
     }
     const reservaForm = document.getElementById("reservacontainer");
@@ -324,7 +324,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                         text:"Su espacio ha sido reservado con éxito",
                         icon:"success"
                     })
-                    window.location.href="usuario.html"
+                    window.location.href="administracion-reservas.html"
                 }catch(error){
                     await Swal.fire({
                         title:"Error en la creación de la reserva",

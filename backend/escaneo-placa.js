@@ -29,7 +29,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         return;
     }
     if (!(await esAdmin(usuarioAuth))) {
-        window.location.href = "usuario.html";
+        window.location.href = "administracion-reservas.html";
         return;
     }
     const token = await usuarioAuth.getIdToken()
@@ -103,7 +103,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                 text: "La placa se escaneó correctamente",
                 icon:"succes"
             })
-            window.location.href="usoscomunes.html"
+            window.location.href="ingresosdirectos.html"
            
             
         } catch (error) {

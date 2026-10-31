@@ -50,7 +50,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         return;
     }
     if (await esAdmin(usuarioAuth)) {
-        window.location.href = "admin.html";
+        window.location.href = "dashboard.html";
         return;
     }
     const token=await usuarioAuth.getIdToken()
@@ -90,7 +90,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             cancelButtonText: "Cancelar"
         })
         if(noti.isConfirmed){
-            window.location.href = "reservar.html";
+            window.location.href = "panel-reserva.html";
         }else{
             const cancelar=await fetch("https://proyecto-grado-rouge.vercel.app/cancelarCola", {
                 method: "POST",
@@ -182,7 +182,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
                     ${bloqueCodigo(data.uid)}
                   </div>
                   <div class="fila mi-reserva-actions">
-                    <a class="boton_aumentar" href="aumentar.html">Extender Reserva</a>
+                    <a class="boton_aumentar" href="panel-aumento.html">Extender Reserva</a>
                     <button type="button" class="boton_cancelar" data-cancelar="${data.id}">Cancelar reserva</button>
                   </div>
                 </div>
@@ -264,7 +264,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             <h1 class="titu mi-reserva-title">No hay reservas</h1>
             <p class="mi-reserva-empty-sub">Cuando reserves un cupo, aparecerá aquí con los detalles de la reserva realizada.</p>
             <p class="mi-reserva-empty-sub">Atención: Las reservas se podrán cancelar antes del inicio de las mismas, en caso de cancelación, por favor guarde el comprobante de pago y comuníquese al correo calatrava.parqueadero@gmail.com, para el proceso de reembolso correspondiente.</p>
-            <a class="boton_aumentar" href="reservar.html">Ir a reservar</a>
+            <a class="boton_aumentar" href="panel-reserva.html">Ir a reservar</a>
           </section>
         `;
     }

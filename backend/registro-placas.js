@@ -22,7 +22,7 @@ onAuthStateChanged(auth, async (user)=>{
         return;
     }
     if (!(await esAdmin(user))) {
-        window.location.href = "usuario.html";
+        window.location.href = "administracion-reservas.html";
         return;
     }
     const token= await user.getIdToken();
@@ -52,7 +52,7 @@ containerPlaca.addEventListener("submit", async (e)=>{
             text: "Se generó la asignación",
             icon: "success"
         })
-         window.location.href="usoscomunes.html"
+         window.location.href="ingresosdirectos.html"
     }catch(error){
         console.log(error);
     }
