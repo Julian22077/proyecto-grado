@@ -11,6 +11,9 @@ import { getFirestore } from "firebase-admin/firestore";
 import { getMessaging } from "firebase-admin/messaging";
 import multer from "multer"
 import { leerCache, guardarCache, borrarCache } from "./cache.js"
+if (process.env.VERCEL) {
+    console.log(process.version);
+}
 const app = express();
 const upload = multer({
     storage: multer.memoryStorage()
