@@ -16,7 +16,15 @@ if (process.env.VERCEL) {
 }
 const app = express();
 const upload = multer({
-    storage: multer.memoryStorage()
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, archivo, aceptar) => {
+        if (!archivo.mimetype?.startsWith("image/")) {
+            aceptar(new Error("El archivo debe ser una imagen"));
+            return;
+        }
+        aceptar(null, true);
+    }
 });
 const limite = rateLimit({
     windowMs: 60 * 1000,
@@ -423,6 +431,9 @@ app.post("/validaraumento", verficarUsuario, limite, async (req, res) => {
             return res.status(400).json({ error: "La reserva no existe" })
         }
         const reserva = reservas.data();
+        if (reserva.uid !== req.uid) {
+            return res.status(400).json({ error: "La reserva no existe" });
+        }
         if (reserva.extensionMinutos) {
             return res.status(400).json({ error: "La reserva ya se ha aumentado" })
         }
@@ -498,6 +509,12 @@ app.post("/firmaaumento", verficarUsuario, limite, async (req, res) => {
         const reservaAumento = await db.collection("reservas").doc(reservaID).get();
         if (!reservaAumento.exists || reservaAumento.data().uid !== uid) {
             return res.status(400).json({ error: "La reserva no existe" })
+        }
+        if (Number(minutosExtra) <= 0 || Number(minutosExtra) > 60) {
+            return res.status(400).json({ error: "El aumento máximo es de 60 minutos" });
+        }
+        if (reservaAumento.data().extensionMinutos) {
+            return res.status(400).json({ error: "La reserva ya se ha aumentado" });
         }
         const configuracion = await db.collection("configuracion").doc("general").get()
         const usuario = await db.collection("usuarios").doc(uid).get()
@@ -862,6 +879,9 @@ app.post("/eliminarcola", verficarUsuario, limite, async (req, res) => {
 })
 app.post("/gestionarcola", verficarUsuario, limite, async (req, res) => {
     try {
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
+        }
         const { fecha, parqueaderoId } = req.body
         if (!fecha || !parqueaderoId) {
             return res.status(400).json({ error: "Faltan datos" })
@@ -985,9 +1005,9 @@ app.post("/cancelarCola", verficarUsuario, limite, async (req, res) => {
             }
             transaccion.update(refecola, { estado: "cancelado" })
         })
-        const resultado = await gestionarcola(fecha, parqueaderoId)
+        await gestionarcola(fecha, parqueaderoId)
         await refecola.delete()
-        return res.json({ message: "Se ha cancelado la cola y se ha gestionado la siguiente", gestion: resultado })
+        return res.json({ message: "Se ha cancelado la cola y se ha gestionado la siguiente" })
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -1022,9 +1042,9 @@ app.post("/cancelarreserva", verficarUsuario, limite, async (req, res) => {
             trans.update(refreserva, { cancelado: true });
             return { fecha: data.fecha, parqueaderoId: data.parqueaderoId };
         });
-        const gestion = await gestionarcola(datos.fecha, datos.parqueaderoId);
+        await gestionarcola(datos.fecha, datos.parqueaderoId);
         borrarCache("totalreservas");
-        return res.json({ message: "La reserva fue cancelada", gestion });
+        return res.json({ message: "La reserva fue cancelada" });
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
@@ -1058,9 +1078,9 @@ app.post("/cancelarreservaadmin", verficarUsuario, limite, async (req, res) => {
             trans.update(refreserva, { cancelado: true });
             return { fecha: data.fecha, parqueaderoId: data.parqueaderoId };
         });
-        const gestion = await gestionarcola(datos.fecha, datos.parqueaderoId);
+        await gestionarcola(datos.fecha, datos.parqueaderoId);
         borrarCache("totalreservas");
-        return res.json({ message: "La reserva fue cancelada", gestion });
+        return res.json({ message: "La reserva fue cancelada" });
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
@@ -1676,7 +1696,16 @@ app.get("/reservausuarios", verficarUsuario, limite, async (req, res) => {
         const ahora = new Date();
         const fechahoy = ahora.toLocaleDateString("sv-SE");
         const reservas = await db.collection("reservas").where("fecha", "==", fechahoy).where("cancelado", "==", false).get();
-        return res.json(reservas.docs.map((doc) => ({ id: doc.id, ...doc.data() })))
+        return res.json(reservas.docs.map((documento) => {
+            const data = documento.data();
+            return {
+                parqueaderoId: data.parqueaderoId,
+                fecha: data.fecha,
+                horaEntrada: data.horaEntrada,
+                horaSalida: data.horaSalida,
+                finalizadaAntes: data.finalizadaAntes
+            };
+        }))
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -1702,7 +1731,7 @@ app.post("/detectar", verficarUsuario, upload.single("imagen"), async (req, res)
             return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
         }
         if (!req.file) {
-            res.status(400).json({ error: " no  hay imagen" })
+            return res.status(400).json({ error: "No hay imagen" });
         }
         const formData = new FormData()
         formData.append("file", new Blob([req.file.buffer]), req.file.originalname)
@@ -1839,6 +1868,15 @@ app.get("/asignacionesactivas", verficarUsuario, limite, async (req, res) => {
         return res.status(500).json({error: error.message});
     }
 })
+app.use((error, req, res, next) => {
+    if (error?.code === "LIMIT_FILE_SIZE") {
+        return res.status(400).json({ error: "La imagen supera el tamaño permitido" });
+    }
+    if (error?.message === "El archivo debe ser una imagen") {
+        return res.status(400).json({ error: error.message });
+    }
+    return next(error);
+});
 if (!process.env.VERCEL) {
     app.listen(3000, () => {
         console.log("corriendo en el puerto")
