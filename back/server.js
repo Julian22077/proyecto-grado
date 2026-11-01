@@ -355,9 +355,13 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
 
         const reser = db.collection("reservas").doc();
         const refbloqueo = db.collection("bloqueos").doc(bloqueoId)
-        await db.runTransaction(async (trans) => {
+        const reservaId = await db.runTransaction(async (trans) => {
             const bloqueo = await trans.get(refbloqueo);
             if (!bloqueo.exists) {
+                const existente = await trans.get(db.collection("reservas").where("referencia", "==", referencia).limit(1));
+                if (!existente.empty && existente.docs[0].data().uid === uid) {
+                    return existente.docs[0].id;
+                }
                 throw new Error("El bloqueo no existe o ya fue utilizado")
             }
             const data = bloqueo.data();
@@ -394,6 +398,7 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
                 creado: new Date()
             })
             trans.delete(refbloqueo);
+            return reser.id;
         })
         const colita = await db.collection("colaespera").where("fecha", "==", fecha).where("estado", "==", "espera").where("uid", "==", uid).get();
         if (colita.size > 0) {
@@ -402,7 +407,7 @@ app.post("/hacerreserva", verficarUsuario, limite, async (req, res) => {
             }
         }
         borrarCache("totalreservas");
-        return res.json({ reservaID: reser.id })
+        return res.json({ reservaID: reservaId })
     } catch (error) {
         console.error(error);
         return res.status(400).json({
@@ -595,6 +600,9 @@ app.post("/aumentar", verficarUsuario, limite, async (req, res) => {
             const reservi = reserva.data();
             if (reservi.uid !== uid) {
                 throw new Error("Esta reserva no te corresponde")
+            }
+            if (reservi.extensionMinutos && reservi.referenciaAumento === referencia) {
+                return { message: "Reserva aumentada con éxito" };
             }
             const horaSalida = convertirHora(reservi.horaSalida);
             const nuevaSalida = horaSalida + minutosExtra;
