@@ -4375,3 +4375,246 @@ html body.portada {
     min-height: 42px;
   }
 }
+
+.menu-abrir {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .menu-deslizar {
+    display: none !important;
+  }
+
+  body.app .menu-abrir {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--field);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  body.app .menu-abrir[aria-expanded="true"] {
+    background: var(--btn);
+    border-color: var(--btn);
+    color: var(--on-btn);
+  }
+
+  body.app .menu {
+    position: sticky;
+    top: 0;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    height: auto;
+    min-height: 60px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    overflow: visible;
+  }
+
+  body.app .logo {
+    display: flex !important;
+  }
+
+  body.app .menu-cuerpo,
+  body.app .menu .lista-salir {
+    display: none;
+  }
+
+  body.app .menu.abierto .menu-cuerpo {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 100%;
+    width: 100%;
+    min-width: 0;
+    max-height: min(68dvh, 520px);
+    gap: 0;
+    padding: 6px 0 4px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body.app .menu.abierto .lista-salir {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 100%;
+    width: 100%;
+    margin: 0;
+    padding: 8px 0 2px;
+    border-left: none;
+    border-top: 1px solid var(--line);
+  }
+
+  body.app .menu.abierto .menu-bloque {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  body.app .menu.abierto .menu-bloque + .menu-bloque {
+    margin: 8px 0 0;
+    padding: 8px 0 0;
+    border-left: none;
+    border-top: 1px solid var(--line);
+  }
+
+  body.app .menu.abierto .menu-grupo {
+    position: static;
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 8px 6px 4px;
+    overflow: visible;
+    clip: auto;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  body.app .menu.abierto .menu-cuerpo .lista,
+  body.app .menu.abierto .lista-salir {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 4px;
+  }
+
+  body.app .menu.abierto .elemento {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    gap: 12px;
+    transform: none;
+  }
+
+  body.app .menu.abierto .elemento .oculto {
+    font-size: 0.98rem;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  body.app .menu.abierto .elemento svg {
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+  }
+
+  body.app .topbar {
+    top: 60px;
+  }
+
+  body.app .menu.abierto ~ .app-main .topbar {
+    top: 0;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    min-height: 0;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+    border-bottom: none;
+    border-top: 1px solid var(--line);
+    z-index: 70;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .logo,
+  body.app .menu[aria-label="Navegación de usuario"] .menu-abrir {
+    display: none !important;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .menu-cuerpo,
+  body.app .menu[aria-label="Navegación de usuario"] .lista-salir {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    min-width: 0;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border: none;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .menu-cuerpo {
+    flex: 3 1 0;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .lista-salir {
+    flex: 1 1 0;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .menu-bloque,
+  body.app .menu[aria-label="Navegación de usuario"] .lista,
+  body.app .menu[aria-label="Navegación de usuario"] .lista-salir {
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+    gap: 4px;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .menu-bloque {
+    flex: 1;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .lista > li,
+  body.app .menu[aria-label="Navegación de usuario"] .lista-salir > li {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .elemento {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 58px;
+    padding: 6px 2px;
+    gap: 3px;
+    border-radius: 12px;
+    transform: none;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .elemento .oculto {
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.15;
+    white-space: normal;
+    text-align: center;
+  }
+
+  body.app .menu[aria-label="Navegación de usuario"] .elemento svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  body.app:has(.menu[aria-label="Navegación de usuario"]) {
+    padding-bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+
+  body.app:has(.menu[aria-label="Navegación de usuario"]) .topbar {
+    top: 0;
+  }
+}

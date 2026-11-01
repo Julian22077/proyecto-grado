@@ -235,7 +235,27 @@ if (formularioImprimir) {
   applySwalTheme();
   document.addEventListener("DOMContentLoaded", applySwalTheme);
 
+  function prepararMenuMovil() {
+    const menu = document.querySelector("nav.menu");
+    if (!menu || menu.querySelector(".menu-abrir")) return;
+    if (menu.getAttribute("aria-label") === "Navegación de usuario") return;
+    const cuerpo = menu.querySelector(".menu-cuerpo");
+    const abrir = document.createElement("button");
+    abrir.type = "button";
+    abrir.className = "menu-abrir";
+    abrir.setAttribute("aria-expanded", "false");
+    abrir.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menú</span>';
+    if (cuerpo) menu.insertBefore(abrir, cuerpo);
+    else menu.appendChild(abrir);
+    abrir.addEventListener("click", function () {
+      const abierto = menu.classList.toggle("abierto");
+      abrir.setAttribute("aria-expanded", abierto ? "true" : "false");
+      abrir.querySelector("span").textContent = abierto ? "Cerrar" : "Menú";
+    });
+  }
+
   function prepararDesplazamientoMenu() {
+    prepararMenuMovil();
     const cuerpo = document.querySelector(".menu-cuerpo");
     const menu = document.querySelector(".menu");
     if (!cuerpo || !menu || cuerpo.dataset.deslizar) return;
@@ -268,6 +288,7 @@ if (formularioImprimir) {
 
     cuerpo.addEventListener("scroll", actualizar, { passive: true });
     cuerpo.addEventListener("wheel", function (evento) {
+      if (window.matchMedia("(max-width: 860px)").matches) return;
       if (cuerpo.scrollWidth <= cuerpo.clientWidth + 4) return;
       const horizontal = Math.abs(evento.deltaX) > Math.abs(evento.deltaY);
       cuerpo.scrollLeft += horizontal ? evento.deltaX : evento.deltaY;
