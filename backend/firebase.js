@@ -51,7 +51,15 @@ export const addUsuario = async (nombre, correo, contraseña, cedula, placa) => 
     if (!validacion.ok) {
         throw new Error(validacionDatos.error || "No se pudo validar el registro");
     }
-    const userCredential = await createUserWithEmailAndPassword(auth, correo, contraseña);
+    let userCredential;
+    try {
+        userCredential = await createUserWithEmailAndPassword(auth, correo, contraseña);
+    } catch (error) {
+        if (error.code === "auth/email-already-in-use") {
+            throw new Error("Este correo ya está registrado");
+        }
+        throw error;
+    }
     const user = userCredential.user;
     await updateProfile(user, { displayName: nombre });
     await setDoc(doc(db, "usuarios", user.uid), { nombre, correo, cedula, placa });
