@@ -30,6 +30,15 @@ const limite = rateLimit({
     standardHeaders: true,
     legacyHeaders: false
 })
+const limiteRegistro = rateLimit({
+    windowMs: 60 * 1000,
+    max: 20,
+    message: {
+        error: "Muchas solicitudes"
+    },
+    standardHeaders: true,
+    legacyHeaders: false
+})
 dotenv.config();
 app.use(cors({ origin: ["https://calatrava-parqueadero-para-ti.vercel.app", "http://127.0.0.1:5500", "https://localhost", "http://localhost", "capacitor://localhost"] }))
 const serviceAccount = JSON.parse(
@@ -60,6 +69,22 @@ const verficarUsuario = async (req, res, next) => {
     } catch (error) {
         return res.status(401).json({ error: error.message })
     }
+}
+
+async function datoYaRegistrado({ cedula, placa, uid }) {
+    if (cedula) {
+        const cedulas = await db.collection("usuarios").where("cedula", "==", cedula).limit(2).get();
+        if (cedulas.docs.some((documento) => documento.id !== uid)) {
+            return "Esta cédula ya está registrada";
+        }
+    }
+    if (placa) {
+        const placas = await db.collection("usuarios").where("placa", "==", placa).limit(2).get();
+        if (placas.docs.some((documento) => documento.id !== uid)) {
+            return "Esta placa ya está registrada";
+        }
+    }
+    return null;
 }
 
 async function esCuentaAdmin(correo) {
@@ -1580,6 +1605,28 @@ app.get("/detalleusuario", verficarUsuario, limite, async (req, res) => {
         return res.status(500).json({ error: error.message })
     }
 })
+app.post("/validarregistro", limiteRegistro, async (req, res) => {
+    try {
+        const cedula = req.body?.cedula?.trim();
+        const placa = req.body?.placa?.trim().toUpperCase();
+        if (!cedula || !placa) {
+            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        }
+        if (!/^[0-9]{8,10}$/.test(cedula)) {
+            return res.status(400).json({ error: "La cédula debe tener entre 8 y 10 números." });
+        }
+        if (!/^[A-Z]{3}[0-9]{3}$/.test(placa) && !/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placa)) {
+            return res.status(400).json({ error: "La placa debe tener el formato ABC123 o ABC12D" });
+        }
+        const repetido = await datoYaRegistrado({ cedula, placa });
+        if (repetido) {
+            return res.status(400).json({ error: repetido });
+        }
+        return res.json({ ok: true });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+})
 app.put("/actualizarusuario", verficarUsuario, limite, async (req, res) => {
     try {
         const uid = req.uid;
@@ -1591,6 +1638,10 @@ app.put("/actualizarusuario", verficarUsuario, limite, async (req, res) => {
         const placaLimpia = placa.trim().toUpperCase();
         if (!/^[A-Z]{3}[0-9]{3}$/.test(placaLimpia) && !/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placaLimpia)) {
             return res.status(400).json({ error: "La placa debe tener el formato ABC123 o ABC12D" });
+        }
+        const repetida = await datoYaRegistrado({ placa: placaLimpia, uid });
+        if (repetida) {
+            return res.status(400).json({ error: repetida });
         }
         const referencia = db.collection("usuarios").doc(uid);
         const usuario = await referencia.get();

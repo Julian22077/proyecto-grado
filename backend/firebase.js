@@ -42,6 +42,15 @@ export const addUsuario = async (nombre, correo, contraseña, cedula, placa) => 
     if (!/^[A-Z]{3}[0-9]{3}$/.test(placa)&&!/^[A-Z]{3}[0-9]{2}[A-Z]$/.test(placa)) {
         throw new Error("La placa debe tener el formato ABC123 o ABC12D");
     }
+    const validacion = await fetch("https://proyecto-grado-rouge.vercel.app/validarregistro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cedula: cedula.trim(), placa: placa.trim().toUpperCase() })
+    });
+    const validacionDatos = await validacion.json();
+    if (!validacion.ok) {
+        throw new Error(validacionDatos.error || "No se pudo validar el registro");
+    }
     const userCredential = await createUserWithEmailAndPassword(auth, correo, contraseña);
     const user = userCredential.user;
     await updateProfile(user, { displayName: nombre });
