@@ -160,7 +160,7 @@ form.addEventListener("submit", async (e) => {
                 text: "Los espacios han sido configurados de manera exitosa",
                 icon: "success"
             });
-            return;
+            window.location.reload();
         }
         const crearparqueaderos= await fetch("https://proyecto-grado-rouge.vercel.app/crearparqueaderos",{
             method: "POST",

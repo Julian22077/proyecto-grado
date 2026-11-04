@@ -137,7 +137,7 @@ form.addEventListener("submit", async (e) => {
             await Swal.fire({
                 title: "Configuración guardada",
                 text: "Se han configurado las metas diarias",
-                icon: "succes",
+                icon: "success",
             });
             form.reset()
         }

@@ -49,7 +49,7 @@ containerPlaca.addEventListener("submit", async (e)=>{
         }
         await Swal.fire({
             title: "Exito",
-            text: "Se generó la asignación",
+            text: "Se generó el ingreso directo correctamente",
             icon: "success"
         })
          window.location.href="ingresosdirectos.html"
