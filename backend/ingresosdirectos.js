@@ -36,8 +36,9 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     return;
   }
   function MostrarReserva(lista) {
+    const visibles = lista.filter((data) => !data.factura);
     let html = "";
-    lista.forEach((data) => {
+    visibles.forEach((data) => {
       html += `
       <article class="datos_generales reserva-card">
         <header class="filll reserva-card-top">
@@ -102,7 +103,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
     }
     reservasUsuariosContainer.innerHTML = html;
 
-    lista.forEach((data) => {
+    visibles.forEach((data) => {
 
       const contador = document.getElementById(`contadorr-${data.id}`);
 
@@ -116,7 +117,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
       }
 
     });
-    lista.forEach((data) => {
+    visibles.forEach((data) => {
       const salio = document.getElementById(`salio-${data.id}`);
       salio.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -298,7 +299,7 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
         }
       });
       const imprimir = document.getElementById(`imprimir-${data.id}`)
-      imprimir.addEventListener("submit", (e) => {
+      imprimir.addEventListener("submit", async (e) => {
         e.preventDefault()
         if (data.estado === "activo") {
           Swal.fire({
@@ -346,6 +347,33 @@ onAuthStateChanged(auth, async (usuarioAuth) => {
             title: "Ventana bloqueada",
             text: "Permita las ventanas emergentes para imprimir la factura.",
             icon: "warning"
+          });
+          return;
+        }
+        try {
+          const marcar = await fetch("https://proyecto-grado-rouge.vercel.app/marcarfactura", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ comunId: data.id })
+          })
+          const marcado = await marcar.json();
+          if (!marcar.ok) {
+            await Swal.fire({
+              title: "Error",
+              text: marcado.error,
+              icon: "error"
+            });
+            return;
+          }
+          window.location.reload();
+        } catch (error) {
+          await Swal.fire({
+            title: "Error",
+            text: error.message,
+            icon: "error"
           });
         }
       })

@@ -1142,7 +1142,7 @@ app.post("/validarusocomun", verficarUsuario, limite, async (req, res) => {
             const fechahoy = ahora.toLocaleDateString("sv-SE");
             const horaEntrada = ahora.toLocaleTimeString("sv-SE")
             const referencia = db.collection("usocomun").doc()
-            transaccion.create(referencia, { placa: placa, parqueaderoId: espaciosdisponible, fecha: fechahoy, horaEntrada: horaEntrada, horaSalida: "", precio: 0, estado: "activo", creado: new Date(), pago: false, metodoPago: "" })
+            transaccion.create(referencia, { placa: placa, parqueaderoId: espaciosdisponible, fecha: fechahoy, horaEntrada: horaEntrada, horaSalida: "", precio: 0, estado: "activo", creado: new Date(), pago: false, metodoPago: "", factura: false })
             return { message: "La asignación se creó" }
 
         })
@@ -1227,6 +1227,39 @@ app.post("/validarpago", verficarUsuario, limite, async (req, res) => {
             return { message: "El pago se ha registrado con éxito" }
         })
         return res.json(pagoo)
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+})
+app.post("/marcarfactura", verficarUsuario, limite, async (req, res) => {
+    try {
+        if (req.admin !== true) {
+            return res.status(403).json({ error: "No posee los permisos para hacer esta acción" });
+        }
+        const { comunId } = req.body
+        if (!comunId) {
+            return res.status(400).json({ error: "Faltan datos" })
+        }
+        const resultado = await db.runTransaction(async (transaccion) => {
+            const refcomun = db.collection("usocomun").doc(comunId)
+            const comun = await transaccion.get(refcomun);
+            if (!comun.exists) {
+                throw new Error("El uso común no existe")
+            }
+            const infocomun = comun.data();
+            if (infocomun.estado !== "finalizado") {
+                throw new Error("El usuario no ha salido del parqueadero")
+            }
+            if (!infocomun.pago) {
+                throw new Error("Debe registrar el pago para imprimir la factura")
+            }
+            if (infocomun.factura) {
+                return { message: "La factura ya fue marcada" }
+            }
+            transaccion.update(refcomun, { factura: true })
+            return { message: "Factura marcada" }
+        })
+        return res.json(resultado)
     } catch (error) {
         return res.status(500).json({ error: error.message })
     }
@@ -1802,7 +1835,7 @@ app.post("/detectar", verficarUsuario, upload.single("imagen"), async (req, res)
             const fecha = ahora.toLocaleDateString("sv-SE");
             const horaEntrada = ahora.toLocaleTimeString("sv-SE");
             const referencia = db.collection("usocomun").doc();
-            transaccion.create(referencia, { placa: placa.toUpperCase(), parqueaderoId: espacioDisponible, fecha: fecha, horaEntrada: horaEntrada, horaSalida: "", precio: 0, estado: "activo", creado: new Date(), pago: false, metodoPago: "" });
+            transaccion.create(referencia, { placa: placa.toUpperCase(), parqueaderoId: espacioDisponible, fecha: fecha, horaEntrada: horaEntrada, horaSalida: "", precio: 0, estado: "activo", creado: new Date(), pago: false, metodoPago: "", factura: false });
             return {
                 id: referencia.id,
                 placa: placa.toUpperCase(),
